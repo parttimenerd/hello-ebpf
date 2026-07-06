@@ -281,9 +281,15 @@ private int helper(int x) {
    ls -la /sys/kernel/btf/vmlinux
    ```
 
-4. **Check the verifier log** at runtime if the program loads but behaves incorrectly:
+4. **Check the verifier log** at runtime if the program load fails — hello-ebpf automatically
+   captures the verifier log via `VerifierLogCapture` when loading fails. The full log is
+   embedded in the thrown `BPFVerifierException`'s message. To access it programmatically:
    ```java
-   BPFProgram.load(MyProg.class, BPFProgram.LoadOptions.withVerifierLog());
+   try (var prog = BPFProgram.load(MyProg.class)) {
+       // ...
+   } catch (BPFVerifierException e) {
+       System.err.println(e.verifierLog());
+   }
    ```
 
 ---

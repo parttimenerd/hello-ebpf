@@ -157,9 +157,9 @@ inside a `@BPFFunction` (never as a field). Always release borrowed masks.
 | `BPFJ.currentNs()` | `bpf_ktime_get_ns()` |
 | `BPFJ.getCurrentComm(buf)` | `bpf_get_current_comm(buf, sizeof(buf))` |
 | `BPFJ.bpf_loop(n, callback, ctx, flags)` | `bpf_loop(n, callback, ctx, flags)` |
-| `BPFJ.bpf_probe_read_user(dst, size, src)` | `bpf_probe_read_user(dst, size, src)` |
-| `BPFJ.bpf_probe_read_kernel(dst, size, src)` | `bpf_probe_read_kernel(dst, size, src)` |
-| `BPFJ.bpf_skb_store_bytes(skb, off, from, len, flags)` | `bpf_skb_store_bytes(...)` |
+| `BPFJ.bpf_probe_read_user(dst, src)` | `bpf_probe_read_user(&dst, sizeof(*&dst), src)` |
+| `BPFJ.bpf_probe_read_kernel(dest, src)` | `bpf_probe_read_kernel(&dest, sizeof(dest), src)` |
+| `BPFHelpers.bpf_skb_store_bytes(skb, off, from, len, flags)` | `bpf_skb_store_bytes(...)` |
 
 ## Pointer pattern examples
 

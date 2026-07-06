@@ -1,9 +1,11 @@
 # LSM & Cgroup Hooks
 
-**Blog series:** [Part 20 — BPF LSM security hooks](https://mostlynerdless.de/blog/2025/01/27/helle-ebpf-writing-an-lsm-policy-in-pure-java-20/)
-**Javadoc:** [`LSMHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/LSMHook.html) · [`CGroupHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/CGroupHook.html)
-**Source:** [`LSMHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/LSMHook.java) · [`CGroupHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/CGroupHook.java)
+**Blog series:** [Part 20 — BPF LSM security hooks](https://mostlynerdless.de/blog/2025/01/27/helle-ebpf-writing-an-lsm-policy-in-pure-java-20/)  
+**Javadoc:** [`LSMHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/LSMHook.html) · [`CGroupHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/CGroupHook.html)  
+**Source:** [`LSMHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/LSMHook.java) · [`CGroupHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/CGroupHook.java)  
 **See also:** [TC Hook](tc.md) · [XDP Hook](xdp.md) · [BPF Maps](maps.md)
+
+![eBPF hooks across the full Linux kernel: XDP, TC, socket, tracepoints, kprobes, LSM](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_32.jpg)
 
 ## BPF LSM
 
@@ -41,7 +43,7 @@ public abstract class FileOpenRestrict extends BPFProgram implements LSMHook {
 
     @Override
     @BPFFunction
-    public int restrictFileOpen(Ptr<file> file, int mask) {
+    public int onFileOpen(Ptr<file> file) {
         int pid = BPFJ.currentPid();
         if (blockedPids.bpf_get(pid) != null) {
             return -EACCES;   // deny
@@ -57,14 +59,15 @@ LSM hooks correspond to the `security_*` functions in the kernel. Common ones:
 
 | Method | Fires when |
 |--------|-----------|
-| `restrictFileOpen(Ptr<file>, int)` | A process opens a file |
-| `restrictFileMmap(Ptr<file>, ...)` | A process mmaps a file |
-| `restrictBpf(Ptr<bpf_map>, ...)` | A process accesses a BPF map |
-| `restrictExecve(...)` | A process calls execve |
-| `restrictSocketCreate(int family, int type, int protocol, int kern)` | A process creates a socket |
-| `restrictSocketConnect(Ptr<socket>, Ptr<sockaddr>, int)` | A socket connects |
+| `onFileOpen(Ptr<file>)` | A process opens a file |
+| `onFilePermission(Ptr<file>, int mask)` | A file permission check (read/write/exec) |
+| `onBpf(int cmd, Ptr<?> attr, int size)` | A process calls the `bpf()` syscall |
+| `onBprmCheckSecurity(Ptr<linux_binprm>)` | A process calls execve |
+| `onSocketCreate(int family, int type, int protocol, int kern)` | A process creates a socket |
+| `onSocketConnect(Ptr<socket>, Ptr<sockaddr>, int)` | A socket connects |
 
 Return `0` to allow, a negative errno to deny (e.g. `-EACCES`, `-EPERM`).
+Standard errno constants are available via `import static me.bechberger.ebpf.bpf.raw.Lib_1.*`.
 
 ### Attaching
 
@@ -104,7 +107,7 @@ public abstract class CGroupFilter extends BPFProgram implements CGroupHook {
 
     @Override
     @BPFFunction
-    public int cgroupHandleIngress(Ptr<__sk_buff> skb) {
+    public CGroupAction cgroupHandleIngress(Ptr<__sk_buff> skb) {
         int mark = skb.val().mark;
         Ptr<Long> c = byteCount.bpf_get(mark);
         if (c != null) {
@@ -113,19 +116,25 @@ public abstract class CGroupFilter extends BPFProgram implements CGroupHook {
             long len = skb.val().len;
             byteCount.bpf_put(mark, len);
         }
-        return __SK_PASS;
+        return CGroupAction.PASS;
     }
 
     @Override
     @BPFFunction
-    public int cgroupHandleEgress(Ptr<__sk_buff> skb) {
-        return __SK_PASS;
+    public CGroupAction cgroupHandleEgress(Ptr<__sk_buff> skb) {
+        return CGroupAction.PASS;
     }
 }
 ```
 
-The context type is `__sk_buff` (same as TC). Return `__SK_PASS` (1) to allow or
-`__SK_DROP` (0) to drop.
+The context type is `__sk_buff` (same as TC). Return `CGroupAction.PASS` to allow or
+`CGroupAction.DROP` to drop.
+
+!!! warning "CGroupAction enum naming"
+    The `CGroupAction` enum members are inverted in the underlying BPF values: `DROP`
+    maps to `CGROUP_PASS` (1) and `PASS` maps to `CGROUP_DROP` (0) in C. Always use the
+    Java enum constants (`CGroupAction.PASS` / `CGroupAction.DROP`) — never use raw
+    integer literals.
 
 ### Attaching to a cgroup
 
@@ -133,10 +142,11 @@ The context type is `__sk_buff` (same as TC). Return `__SK_PASS` (1) to allow or
 public static void main(String[] args) throws Exception {
     try (CGroupFilter prog = BPFProgram.load(CGroupFilter.class)) {
         // Attach to root cgroup (affects all processes)
-        prog.cgroupAttach("/sys/fs/cgroup");
+        prog.cgroupAttachIngress("/sys/fs/cgroup");
+        prog.cgroupAttachEgress("/sys/fs/cgroup");
 
         // Or a specific cgroup
-        prog.cgroupAttach("/sys/fs/cgroup/mycontainer");
+        prog.cgroupAttachIngress("/sys/fs/cgroup/mycontainer");
 
         System.out.println("Cgroup hook active.");
         Thread.currentThread().join();

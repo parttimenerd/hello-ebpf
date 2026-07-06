@@ -1,7 +1,8 @@
 # Attach cookies and multi-attach (kprobe.multi / uprobe.multi)
 
-**Javadoc:** [`@KprobeMulti`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/KprobeMulti.html) · [`@UprobeMulti`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/UprobeMulti.html)
-**Source:** [`KprobeMulti.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/KprobeMulti.java) · [`UprobeMulti.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/UprobeMulti.java) · [`BPFProgram.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/BPFProgram.java)
+**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (kprobe fundamentals) · [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/) (compiler plugin enabling multi-attach)  
+**Javadoc:** [`@KProbeMulti`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/KProbeMulti.html) · [`@UProbeMulti`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/UProbeMulti.html)  
+**Source:** [`KProbeMulti.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/KProbeMulti.java) · [`UProbeMulti.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/UProbeMulti.java) · [`BPFProgram.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/BPFProgram.java)  
 **See also:** [Kprobes / Fentry](kprobes.md) · [Uprobes](uprobes.md) · [BPF Maps](maps.md)
 
 Without attach cookies, a single BPF program attached to two different kernel

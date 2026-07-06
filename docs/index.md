@@ -39,6 +39,14 @@ Your Java class
 4. At runtime `BPFProgram.load(MyProgram.class)` reads the bundled `.o` and calls libbpf to load it into the kernel.
 5. Maps, ring buffers, and global variables are accessible from the Java side through a typed API.
 
+!!! warning "BPF code runs in the kernel, not the JVM"
+    `@BPFFunction` methods are compiled to BPF bytecode and verified by the Linux kernel before loading.
+    They run under strict constraints that ordinary Java code does not: the BPF stack is limited to
+    512 bytes, dynamic heap allocation is not available, loops must be bounded, and the kernel verifier
+    rejects any program it cannot prove safe. Runtime exceptions, garbage collection, and JVM reflection
+    do not apply inside `@BPFFunction` methods. If the verifier rejects your program, hello-ebpf prints
+    a human-readable diagnostic — see [Diagnostics](diagnostics.md).
+
 ## Prerequisites
 
 | Requirement | Minimum version |
@@ -47,7 +55,7 @@ Your Java class
 | clang / llvm | 19 |
 | libbpf-dev | any recent |
 | JDK | 22 |
-| Privileges | root or CAP_BPF + CAP_NET_ADMIN |
+| Privileges | root or CAP_BPF + CAP_PERFMON + CAP_NET_ADMIN |
 
 Install the native dependencies on Debian/Ubuntu:
 
@@ -64,10 +72,9 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
+import me.bechberger.ebpf.bpf.XDPContext;
 import me.bechberger.ebpf.bpf.XDPHook;
-import me.bechberger.ebpf.type.Ptr;
-
-import static me.bechberger.ebpf.bpf.raw.Lib_1.*;
+import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 
 @BPF(license = "GPL")
 public abstract class DropEveryThird extends BPFProgram implements XDPHook {
@@ -77,19 +84,19 @@ public abstract class DropEveryThird extends BPFProgram implements XDPHook {
 
     @Override
     @BPFFunction
-    public int xdpHandlePacket(Ptr<xdp_md> ctx) {
+    public xdp_action xdpHandlePacket(XDPContext ctx) {
         long count = packetCount.get() + 1;
         packetCount.set(count);
         // Drop every third packet
         if (count % 3 == 0) {
-            return XDP_DROP;
+            return xdp_action.XDP_DROP;
         }
-        return XDP_PASS;
+        return xdp_action.XDP_PASS;
     }
 
     public static void main(String[] args) throws Exception {
         try (DropEveryThird prog = BPFProgram.load(DropEveryThird.class)) {
-            prog.xdpAttach("eth0");
+            prog.xdpAttach();
             System.out.println("XDP program attached. Press Ctrl-C to stop.");
             while (true) {
                 Thread.sleep(1000);
@@ -108,7 +115,8 @@ sudo java --enable-native-access=ALL-UNNAMED -cp target/myapp.jar DropEveryThird
 ```
 
 !!! note "Network interface"
-    Replace `eth0` with the actual interface name on your machine (`ip link` to list them).
+    `xdpAttach()` attaches to all non-loopback interfaces that are up. To attach to a
+    specific interface, look up its index (from `ip link`) and call `xdpAttach(ifindex)`.
 
 !!! note "--enable-native-access"
     hello-ebpf uses the Panama foreign-function API to call libbpf. Pass

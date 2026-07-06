@@ -1,12 +1,31 @@
 # Tracepoints
 
-**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)
-**Javadoc:** [`@Tracepoint`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Tracepoint.html) · [`@RawTracepoint`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/RawTracepoint.html)
-**Source:** [`Tracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Tracepoint.java) · [`RawTracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/RawTracepoint.java)
+**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)  
+**Javadoc:** [`@Tracepoint`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Tracepoint.html) · [`@RawTracepoint`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/RawTracepoint.html)  
+**Source:** [`Tracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Tracepoint.java) · [`RawTracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/RawTracepoint.java)  
 **See also:** [Kprobes / Fentry](kprobes.md) · [Uprobes](uprobes.md) · [BPF Maps](maps.md)
+
+![eBPF hooks across the full Linux network stack: XDP, TC, socket, tracepoints, kprobes](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_32.jpg)
 
 Tracepoints are stable, versioned hook points compiled into the kernel at strategic locations.
 Unlike kprobes they survive kernel version changes because their argument layout is guaranteed.
+
+## When to use which hook type
+
+| Hook type | Stability | Overhead | Use when |
+|-----------|-----------|----------|---------|
+| `@Tracepoint` | Stable across kernels | Low | Kernel exposes a tracepoint for the event you care about |
+| `@RawTracepoint` | Stable across kernels | Lowest | You need the lowest overhead and can extract args manually |
+| `@Fentry` / `@Fexit` | Depends on function | Very low | No tracepoint available; function is BTF-typed; kernel ≥ 5.5 |
+| `@Kprobe` / `@Kretprobe` | Unstable — breaks across versions | Low | No tracepoint or fentry, or you need an old kernel |
+| `@Ksyscall` | Stable (syscall ABI) | Low | Architecture-portable syscall entry probe |
+| `@Uprobe` | Depends on binary ABI | Low | User-space function entry/return (see [Uprobes](uprobes.md)) |
+| `XDPHook` / `TCHook` | Stable | Lowest / Low | Packet inspection or filtering (see [XDP](xdp.md), [TC](tc.md)) |
+| `LSMHook` | Stable | Low | Security access control (see [LSM](lsm.md)) |
+
+**General rule:** prefer tracepoints → fentry → kprobe, in that order.
+
+---
 
 ## Types of tracepoint hooks
 
@@ -121,7 +140,7 @@ public abstract class SyscallCounter extends BPFProgram {
             SyscallStat fresh = new SyscallStat();
             fresh.pid = pid;
             fresh.count = 1;
-            BPFJ.getCurrentComm(BPFJ.charBuf(16));   // fills comm
+            BPFJ.getCurrentComm(fresh.comm);
             stats.bpf_put(pid, fresh);
         }
     }

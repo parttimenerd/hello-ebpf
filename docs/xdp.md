@@ -27,17 +27,17 @@ rates on commodity hardware.
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.bpf.BPFProgram;
+import me.bechberger.ebpf.bpf.XDPContext;
 import me.bechberger.ebpf.bpf.XDPHook;
-import me.bechberger.ebpf.type.Ptr;
-import static me.bechberger.ebpf.bpf.raw.Lib_1.*;
+import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 
 @BPF(license = "GPL")
 public abstract class MyXDPProg extends BPFProgram implements XDPHook {
 
     @Override
     @BPFFunction
-    public int xdpHandlePacket(Ptr<xdp_md> ctx) {
-        return XDP_PASS;
+    public xdp_action xdpHandlePacket(XDPContext ctx) {
+        return xdp_action.XDP_PASS;
     }
 }
 ```
@@ -45,7 +45,18 @@ public abstract class MyXDPProg extends BPFProgram implements XDPHook {
 `XDPHook` requires you to implement `xdpHandlePacket`. The compiler plugin generates the
 `SEC("xdp")` section automatically.
 
-## The `xdp_md` context
+## The `XDPContext` and `xdp_md` context
+
+The preferred API is `XDPContext`, which wraps `xdp_md` with ergonomic helpers:
+
+| Method | Description |
+|--------|-------------|
+| `ctx.length()` | Packet length in bytes |
+| `ctx.boundsOk(offset, size)` | Verifier-safe bounds check |
+| `ctx.byteAt(offset)` | Read one byte (unsigned) |
+| `ctx.shortAtNetworkOrder(offset)` | Read a big-endian short |
+
+For raw access via `xdp_md`, the underlying struct fields are:
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -55,21 +66,21 @@ public abstract class MyXDPProg extends BPFProgram implements XDPHook {
 | `ingress_ifindex` | `int` | Interface index the packet arrived on |
 | `rx_queue_index` | `int` | RX queue index |
 
-Access packet bytes by casting `data` to a typed pointer:
+Access packet bytes via raw `Ptr<xdp_md>` (deprecated but still supported):
 
 ```java
 @BPFFunction
-public int xdpHandlePacket(Ptr<xdp_md> ctx) {
+public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
     // Cast data offset to pointer
     Ptr<ethhdr> eth = Ptr.cast(Ptr.of(ctx.val().data));
     // Bounds check required by verifier
     if ((long)(eth + 1) > ctx.val().data_end) {
-        return XDP_PASS;
+        return xdp_action.XDP_PASS;
     }
     if (eth.val().h_proto == bpf_htons(ETH_P_IP)) {
         return handleIPv4(ctx, eth);
     }
-    return XDP_PASS;
+    return xdp_action.XDP_PASS;
 }
 ```
 
@@ -77,25 +88,22 @@ public int xdpHandlePacket(Ptr<xdp_md> ctx) {
 
 | Constant | Value | Meaning |
 |----------|-------|---------|
-| `XDP_ABORTED` | 0 | Drop with error (increments counter) |
-| `XDP_DROP` | 1 | Drop silently |
-| `XDP_PASS` | 2 | Pass to normal kernel network stack |
-| `XDP_TX` | 3 | Hairpin — transmit back out on the same interface |
-| `XDP_REDIRECT` | 4 | Redirect to another interface / CPU / socket |
+| `xdp_action.XDP_ABORTED` | 0 | Drop with error (increments counter) |
+| `xdp_action.XDP_DROP` | 1 | Drop silently |
+| `xdp_action.XDP_PASS` | 2 | Pass to normal kernel network stack |
+| `xdp_action.XDP_TX` | 3 | Hairpin — transmit back out on the same interface |
+| `xdp_action.XDP_REDIRECT` | 4 | Redirect to another interface / CPU / socket |
 
 ## Attaching the program
 
 ```java
 public static void main(String[] args) throws Exception {
     try (MyXDPProg prog = BPFProgram.load(MyXDPProg.class)) {
-        // Attach in SKB mode (works everywhere, slower)
-        prog.xdpAttach("eth0", XDPHook.XDPMode.SKB);
+        // Attach to all non-loopback interfaces that are up
+        prog.xdpAttach();
 
-        // Or native mode (requires driver support, fastest)
-        prog.xdpAttach("eth0", XDPHook.XDPMode.NATIVE);
-
-        // Default (tries native, falls back to SKB)
-        prog.xdpAttach("eth0");
+        // Or attach to a specific interface by ifindex (from `ip link`)
+        // prog.xdpAttach(ifindex);
 
         System.out.println("Running. Ctrl-C to stop.");
         Thread.currentThread().join();
@@ -129,25 +137,25 @@ public abstract class BlockIP extends BPFProgram implements XDPHook {
 
     @Override
     @BPFFunction
-    public int xdpHandlePacket(Ptr<xdp_md> ctx) {
+    public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
         Ptr<ethhdr> eth = Ptr.cast(Ptr.of(ctx.val().data));
-        if ((long)(eth + 1) > ctx.val().data_end) return XDP_PASS;
-        if (eth.val().h_proto != bpf_htons(ETH_P_IP)) return XDP_PASS;
+        if ((long)(eth + 1) > ctx.val().data_end) return xdp_action.XDP_PASS;
+        if (eth.val().h_proto != bpf_htons(ETH_P_IP)) return xdp_action.XDP_PASS;
 
         Ptr<iphdr> ip = Ptr.cast(eth + 1);
-        if ((long)(ip + 1) > ctx.val().data_end) return XDP_PASS;
+        if ((long)(ip + 1) > ctx.val().data_end) return xdp_action.XDP_PASS;
 
         if (ip.val().saddr == blockedIp.get()) {
-            return XDP_DROP;
+            return xdp_action.XDP_DROP;
         }
-        return XDP_PASS;
+        return xdp_action.XDP_PASS;
     }
 
     public static void main(String[] args) throws Exception {
         try (BlockIP prog = BPFProgram.load(BlockIP.class)) {
             // Block 192.168.1.100 — store in network byte order
             prog.blockedIp.set(Integer.reverseBytes(0xC0A80164));
-            prog.xdpAttach("eth0");
+            prog.xdpAttach();
             System.out.println("Blocking 192.168.1.100");
             Thread.currentThread().join();
         }
@@ -157,10 +165,10 @@ public abstract class BlockIP extends BPFProgram implements XDPHook {
 
 ## Performance tips
 
-- Use `XDPMode.NATIVE` when the driver supports it (most modern NICs and virtio).
+- Prefer native XDP mode (load without the SKB fallback path) when the driver supports it — most modern NICs and virtio do.
 - Process as much as possible inside the BPF program. Passing packets up to the kernel incurs SKB allocation overhead.
 - Use `BPFPerCpuArray` for counters to avoid inter-CPU synchronisation.
-- Return `XDP_DROP` as early as possible after the bounds checks.
+- Return `xdp_action.XDP_DROP` as early as possible after the bounds checks.
 
 ### Benchmark: XDP vs iptables
 
