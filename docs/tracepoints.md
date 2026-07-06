@@ -3,6 +3,7 @@
 **Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)
 **Javadoc:** [`@Tracepoint`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Tracepoint.html) · [`@RawTracepoint`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/RawTracepoint.html)
 **Source:** [`Tracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Tracepoint.java) · [`RawTracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/RawTracepoint.java)
+**See also:** [Kprobes / Fentry](kprobes.md) · [Uprobes](uprobes.md) · [BPF Maps](maps.md)
 
 Tracepoints are stable, versioned hook points compiled into the kernel at strategic locations.
 Unlike kprobes they survive kernel version changes because their argument layout is guaranteed.
@@ -165,3 +166,11 @@ Some commonly useful tracepoint categories:
 
 - [`SyscallCounter.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/SyscallCounter.java) — count syscalls per PID via tracepoints
 - [`SyscallProgramDemo.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/SyscallProgramDemo.java) — `@Ksyscall` demo
+
+---
+
+## Further reading
+
+- [Tracepoint program type — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_TRACEPOINT/)
+- [Raw tracepoint — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_RAW_TRACEPOINT/)
+- [Kprobes / Fentry](kprobes.md) · [Uprobes](uprobes.md) · [BPF Maps](maps.md)

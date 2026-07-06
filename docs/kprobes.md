@@ -3,6 +3,7 @@
 **Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (introduces kprobe-style attachment)
 **Javadoc:** [`@Kprobe`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Kprobe.html) · [`@Fentry`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Fentry.html)
 **Source:** [`Kprobe.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Kprobe.java) · [`Fentry.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Fentry.java)
+**See also:** [Tracepoints](tracepoints.md) · [Uprobes](uprobes.md) · [Attach Cookies & Multi](attach-cookies-multi.md) · [BPF Maps](maps.md)
 
 Kprobes let you attach BPF programs to almost any kernel function. They are flexible
 but depend on kernel internals that can change between versions. For stable interfaces
@@ -172,3 +173,11 @@ on the kprobe blacklist (`/sys/kernel/debug/kprobes/blacklist`) cannot be used.
 - [`LogOpenAt2Calls.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/LogOpenAt2Calls.java) — kprobe on `openat2`, logs file paths via ring buffer
 - [`KProbeMultiCounter.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/KProbeMultiCounter.java) — multi-kprobe with attach cookies
 - [`CPUProfiler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java) — fentry-based CPU profiler
+
+---
+
+## Further reading
+
+- [kprobe program type — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_KPROBE/)
+- [fentry/fexit program type — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_TRACING/)
+- [Tracepoints](tracepoints.md) · [Uprobes](uprobes.md) · [Attach Cookies & Multi](attach-cookies-multi.md)
