@@ -137,12 +137,12 @@ public class CompilerPlugin implements Plugin {
 
     /**
      * Per-{@code @BPF} class memoization of struct-ops discovery / validation / synthesis.
-     * Keyed by the user's {@code @BPF} class {@link TypeElement} (the superclass of {@code @BPFImpl}).
-     * Computed lazily by {@link #getStructOpsSynthesis} so that the earliest caller
-     * ({@link #getEffectiveBPFFunction}) triggers method-level BTF validation once,
-     * and later callers reuse the same {@link StructOpsSynthesizer.Result}.
+     * Keyed by qualified class name (not {@link TypeElement} reference) because the symbol
+     * object for the same class can differ between annotation-processing rounds, so using
+     * a TypeElement reference as key would cause cache misses when the @BPFImpl class is
+     * compiled in a later round.
      */
-    private final Map<TypeElement, StructOpsSynthesizer.Result> structOpsCache = new HashMap<>();
+    private final Map<String, StructOpsSynthesizer.Result> structOpsCache = new HashMap<>();
 
     /**
      * Guard against emitting the {@code META-INF/ebpf-struct-ops/<userClass>.json} resource more
@@ -442,13 +442,14 @@ public class CompilerPlugin implements Plugin {
      * errors are printed exactly once, not once per {@link #getEffectiveBPFFunction} call.
      */
     StructOpsSynthesizer.Result getStructOpsSynthesis(TypeElement bpfClass) {
-        var cached = structOpsCache.get(bpfClass);
+        String key = bpfClass.getQualifiedName().toString();
+        var cached = structOpsCache.get(key);
         if (cached != null) return cached;
         var env = createProcessingEnvironment();
         var kinds = StructOpsDiscovery.discover(bpfClass, env);
         if (kinds.isEmpty()) {
             var empty = new StructOpsSynthesizer.Result(List.of(), List.of());
-            structOpsCache.put(bpfClass, empty);
+            structOpsCache.put(key, empty);
             return empty;
         }
         // Validate every overridden interface method against its pre-dumped BTF layout.
@@ -519,7 +520,7 @@ public class CompilerPlugin implements Plugin {
             }
         }
         var result = new StructOpsSynthesizer(env, trees).synthesize(bpfClass, kinds);
-        structOpsCache.put(bpfClass, result);
+        structOpsCache.put(key, result);
         return result;
     }
 
