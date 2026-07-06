@@ -2,6 +2,8 @@
 
 **Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) · [Part 8 — Generating C code from Java](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/) · [Part 11 — BTF and 13,000 generated Java classes](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/) · [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/)
 
+**Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`@BPF`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPF.html) · [`@BPFFunction`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFFunction.html) · [`@Type`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Type.html) · [`@BPFMapDefinition`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFMapDefinition.html)
+
 ![Annotation processor and compiler plugin pipeline](https://mostlynerdless.de/wp-content/uploads/2024/07/compiler_pipeline-2000x1125.png)
 
 The kernel BPF verifier operates on eBPF bytecode. The only production-quality
@@ -18,14 +20,14 @@ A single `mvn package` run triggers two distinct javac phases for every
 **Phase 1 — Annotation processor (`bpf-processor`).**
 Runs at round 1 of javac annotation processing
 (`bpf-processor/src/main/java/me/bechberger/ebpf/bpf/processor/Processor.java`).
-It discovers `@BPFMapClass`/`@BPFMapDefinition` fields and `@Type`-annotated
+It discovers [`@BPFMapDefinition`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFMapDefinition.html) fields and [`@Type`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Type.html)-annotated
 records, resolves their BTF struct layouts via `TypeProcessor.java`, and writes a `.bpf.json` manifest
 that the compiler plugin reads in phase 2.
 
 **Phase 2 — Compiler plugin (`bpf-compiler-plugin`).**
 Runs during the compilation pass, after annotation processing
 (`bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/CompilerPlugin.java`).
-For each `@BPF` class it walks the AST of every `@BPFFunction` method, translates
+For each [`@BPF`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPF.html) class it walks the AST of every [`@BPFFunction`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFFunction.html) method, translates
 Java constructs to C, and writes a `.bpf.c` source file. It then invokes clang,
 embeds the resulting `.o` as a jar resource, and replaces each `@BPFFunction`
 body with `throw new MethodIsBPFRelatedFunction()` so the JVM never executes it.
