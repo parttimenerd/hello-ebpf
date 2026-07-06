@@ -163,13 +163,13 @@ public class JfrEmissionTest {
         }
 
         List<RecordedEvent> events = RecordingFile.readAllEvents(dump);
-        assertEquals(n, events.size(),
-                "DispatchEvent must be emitted exactly once per dispatched task");
-
         List<Integer> seenPids = new ArrayList<>();
         for (var ev : events) {
             seenPids.add(ev.getInt("pid"));
         }
+        assertEquals(n, events.size(),
+                "DispatchEvent must be emitted exactly once per dispatched task — got pids: " + seenPids);
+
         Collections.sort(seenPids);
         Collections.sort(expectedPids);
         assertEquals(expectedPids, seenPids,
