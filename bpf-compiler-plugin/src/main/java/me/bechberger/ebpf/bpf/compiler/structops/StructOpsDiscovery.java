@@ -43,19 +43,31 @@ public final class StructOpsDiscovery {
 
     public static List<Kind> discover(TypeElement bpfClass, ProcessingEnvironment env) {
         List<Kind> out = new ArrayList<>();
-        for (TypeMirror ifMirror : bpfClass.getInterfaces()) {
-            if (!(ifMirror instanceof DeclaredType dt)) continue;
-            TypeElement iface = (TypeElement) dt.asElement();
-            StructOps ann = iface.getAnnotation(StructOps.class);
-            if (ann == null) continue;
-            List<ExecutableElement> overridden = collectOverriddenMethods(iface, bpfClass, env);
-            out.add(new Kind(
-                    ann.value(),
-                    iface,
-                    ann.sectionPrefix(),
-                    ann.instanceName(),
-                    ann.emittedNamePrefix(),
-                    overridden));
+        // Walk the superclass chain so that @StructOps interfaces declared on abstract
+        // parent classes (e.g. SchedulerBase implements Scheduler where Scheduler is
+        // @StructOps) are found even when bpfClass is an intermediate abstract class
+        // like PerCpuSchedulerBase that doesn't re-declare the interface.
+        TypeElement cursor = bpfClass;
+        while (cursor != null && !cursor.getQualifiedName().contentEquals("java.lang.Object")) {
+            for (TypeMirror ifMirror : cursor.getInterfaces()) {
+                if (!(ifMirror instanceof DeclaredType dt)) continue;
+                TypeElement iface = (TypeElement) dt.asElement();
+                StructOps ann = iface.getAnnotation(StructOps.class);
+                if (ann == null) continue;
+                // Only add once — first encounter in traversal order (bpfClass → super) wins.
+                boolean alreadyAdded = out.stream().anyMatch(k -> k.iface().equals(iface));
+                if (alreadyAdded) continue;
+                List<ExecutableElement> overridden = collectOverriddenMethods(iface, bpfClass, env);
+                out.add(new Kind(
+                        ann.value(),
+                        iface,
+                        ann.sectionPrefix(),
+                        ann.instanceName(),
+                        ann.emittedNamePrefix(),
+                        overridden));
+            }
+            TypeMirror sup = cursor.getSuperclass();
+            cursor = (sup instanceof DeclaredType d) ? (TypeElement) d.asElement() : null;
         }
         return out;
     }
