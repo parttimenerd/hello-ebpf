@@ -75,7 +75,7 @@ mvn package
 sudo java -jar target/loudness-scheduler.jar
 ```
 
-Requires a microphone (or any ALSA input device) and Linux ≥ 6.11 with sched_ext enabled.
+Requires a microphone (or any ALSA input device) and Linux ≥ 6.14 with sched_ext enabled.
 
 ---
 

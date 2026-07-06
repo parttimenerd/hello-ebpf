@@ -1,8 +1,9 @@
 # Shared maps across BPF programs (`@SharedFrom`)
 
-**Javadoc:** [`@SharedFrom`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/SharedFrom.html)
-**Source:** [`SharedFrom.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/SharedFrom.java)
-**See also:** [BPF Maps](maps.md) · [Uprobes](uprobes.md) · [sched_ext Schedulers](sched_ext.md)
+**Blog series:** [Part 16 — Userspace scheduler with uprobes for lock detection](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) (motivating use case)  
+**Javadoc:** [`@SharedFrom`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/SharedFrom.html)  
+**Source:** [`SharedFrom.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/SharedFrom.java)  
+**See also:** [BPF Maps](maps.md) · [Uprobes](uprobes.md) · [sched_ext Schedulers](sched-ext/index.md)
 
 A single BPF program can only see maps declared in its own ELF object. When
 two cooperating programs need to share state in the kernel — e.g. one program

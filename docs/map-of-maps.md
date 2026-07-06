@@ -1,7 +1,9 @@
 # Map-of-Maps (HASH_OF_MAPS, ARRAY_OF_MAPS)
 
-**Javadoc:** [`BPFHashOfMaps`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashOfMaps.html) · [`BPFArrayOfMaps`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArrayOfMaps.html)
-**Source:** [`BPFHashOfMaps.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFHashOfMaps.java) · [`BPFArrayOfMaps.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArrayOfMaps.java)
+**Blog series:** [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/) (introduces map declarations)  
+**Javadoc:** [`BPFHashOfMaps`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashOfMaps.html) · [`BPFArrayOfMaps`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArrayOfMaps.html)  
+**Source:** [`BPFHashOfMaps.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFHashOfMaps.java) · [`BPFArrayOfMaps.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArrayOfMaps.java)  
+**See also:** [BPF Maps](maps.md) · [Global Variables](global-variables.md) · [Shared Maps](shared-maps.md)
 
 Use a map-of-maps when you need a different map *per key* — e.g. per-CPU
 accounting, per-connection state, or per-user rate limits. A plain
@@ -103,3 +105,11 @@ mvn -pl bpf-samples exec:java \
 - Registering the same physical inner map at multiple outer keys is
   allowed but shares state; use distinct `bpf_map_create` calls for
   true per-key isolation.
+
+---
+
+## Further reading
+
+- [`BPF_MAP_TYPE_HASH_OF_MAPS` — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_HASH_OF_MAPS/)
+- [`BPF_MAP_TYPE_ARRAY_OF_MAPS` — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_ARRAY_OF_MAPS/)
+- [BPF Maps](maps.md) · [Shared Maps](shared-maps.md)

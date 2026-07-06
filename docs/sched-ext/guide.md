@@ -1,10 +1,17 @@
 # Writing a Scheduler — Step-by-step Guide
 
+**Blog series:** [Part 15 — Custom scheduler basics](https://mostlynerdless.de/blog/2024/10/17/hello-ebpf-writing-a-custom-scheduler-in-pure-java-15/) · [Part 17 — Lottery scheduler](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/)  
+**Talk:** [Writing a Linux Scheduler in Java (eBPF Summit 2024)](https://speakerdeck.com/parttimenerd/writing-a-linux-scheduler-in-java-with-ebpf) · [Sound of Scheduling (CLT 2025)](https://speakerdeck.com/parttimenerd/sound-of-scheduling-writing-linux-schedulers-in-java-with-ebpf)  
+**Javadoc:** [`SchedulerBase`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/SchedulerBase.html) · [`Scheduler`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/Scheduler.html) · [`DispatchQueue`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/sched/DispatchQueue.html)  
+**See also:** [Overview](index.md) · [Callbacks Reference](callbacks.md) · [Cookbook](cookbook.md)
+
 This guide walks you through building a sched_ext scheduler in Java, starting from
 the simplest possible program and progressively adding vtime scheduling, per-task
 state, and observability.
 
-Prerequisites: kernel 6.14 with `CONFIG_SCHED_CLASS_EXT=y`. Verify:
+![DSQ model: runnable tasks enqueued into shared DSQ, CPUs move-to-local and run](https://files.speakerdeck.com/presentations/23196bda93134fd39a46549087f9965f/preview_slide_60.jpg)
+
+Prerequisites: kernel ≥ 6.14 with `CONFIG_SCHED_CLASS_EXT=y`. Verify:
 
 ```bash
 ls /sys/kernel/sched_ext    # must exist

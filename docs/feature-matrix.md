@@ -21,7 +21,7 @@ Minimum kernel versions for hello-ebpf features. The project requires kernel 6.1
 | uprobes | 4.1 | `SEC("uprobe/...")` — user-space function entry probe |
 | uretprobes | 4.1 | `SEC("uretprobe/...")` — user-space function return probe |
 | BPF LSM | 5.7 | CONFIG_BPF_LSM=y; lsm=bpf kernel param |
-| sched_ext | 6.11 | CONFIG_SCHED_CLASS_EXT=y |
+| sched_ext | 6.11 | CONFIG_SCHED_CLASS_EXT=y; hello-ebpf requires 6.14 |
 | struct_ops (general) | 5.6 | TCP congestion control; sched_ext requires 6.11 |
 | struct_ops qdisc | 6.10 | `Qdisc_ops` via `BPF_MAP_TYPE_STRUCT_OPS` |
 | struct_ops HID BPF | 6.11 | `hid_bpf_ops` |
@@ -114,5 +114,13 @@ sudo bpftool feature | grep "map type"
 | Debian 12 | 6.1 | Yes | Yes | Yes | No |
 | Fedora 40 | 6.8 | Yes | Yes | Yes | No |
 | RHEL 9 | 5.14 | Yes | Yes | Yes | No |
-| RHEL 10 | 6.11 | Yes | Yes | Yes | Yes |
-| Arch Linux | rolling | Yes | Yes | Yes | Yes (6.11+) |
+| RHEL 10 | 6.11 | Yes | Yes | Yes | No (kernel 6.11 < hello-ebpf floor 6.14) |
+| Arch Linux | rolling | Yes | Yes | Yes | Yes (6.14+) |
+
+---
+
+## See also
+
+- [Install & Prerequisites](getting-started/install.md) — setting up the build environment
+- [Diagnostics](diagnostics.md) — feature probes and load-time error messages
+- [XDP](xdp.md) · [TC](tc.md) · [LSM & Cgroup](lsm.md) · [sched_ext](sched-ext/index.md)

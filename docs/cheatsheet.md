@@ -189,3 +189,12 @@ if (eth.val().h_proto == bpf_htons(ETH_P_IP)) { ... }
 ```
 
 On the Java side, use `Short.reverseBytes()`, `Integer.reverseBytes()`, or `java.nio.ByteOrder`.
+
+---
+
+## Further reading
+
+- [Cookbook](cookbook.md) — verifier-safe patterns and idioms
+- [BPF Maps](maps.md) · [Global Variables](global-variables.md)
+- [XDP](xdp.md) · [TC](tc.md) · [LSM & Cgroup](lsm.md)
+- [Helpers](helpers.md) — full BPF helper reference

@@ -180,3 +180,12 @@ public abstract class MyCubic extends BPFProgram implements TcpCongestionControl
   to a literal `.name = "…"` field initializer in the kernel struct, not
   to a compiled BPF program. Annotating it with `@BPFFunction` confuses
   the synthesiser and produces an invalid object.
+
+---
+
+## Further reading
+
+- [sched_ext](sched-ext/index.md) — the most common `@StructOps` consumer
+- [Samples](samples/index.md) — `HelloCubicSample`, `QdiscOps`, `HidBpfOps`
+- [Diagnostics](diagnostics.md) — verifier rejections and struct_ops error messages
+- [BPF struct_ops — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_STRUCT_OPS/)

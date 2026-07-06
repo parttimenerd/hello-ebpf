@@ -87,6 +87,11 @@ This works with any program type and requires no special load-time wiring.
 
 ## Raw `BPFProgArray`
 
+Use `@BPFTailCallTable` by default — it gives you type-safe enum slots and
+compile-time wiring. Reach for raw `BPFProgArray` only when you need to replace
+individual slots at runtime (e.g. a plugin system that swaps handlers without
+reloading the whole program).
+
 For cases where enum-based slot naming is unnecessary, use `BPFProgArray`
 directly without `@BPFTailCallTable`:
 

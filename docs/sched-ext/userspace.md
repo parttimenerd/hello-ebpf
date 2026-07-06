@@ -376,8 +376,12 @@ with counters from both BPF and Java sides:
 - `ringDrained` — Java consumed from queued ringbuf
 - `ringCanceled` — Java consumed but `enqCnt` was stale, so it skipped dispatch
 - `dispatched` / `dispatchFailed` — kernel dispatch outcomes
-- `stallFallbacks` — tasks rescued by the BPF-side 50 ms stall fallback (means the
-  Java drain stopped — investigate)
+- `stallFallbacks` — tasks rescued by the BPF-side 50 ms stall fallback. When
+  the Java drain loop falls behind, the BPF side promotes waiting tasks from
+  `SHARED_DSQ` directly to the local CPU DSQ so they are not starved. A non-zero
+  count means the Java thread was too slow to drain: investigate GC pauses
+  (check `ringConsumeUs` histogram) or lock contention in the dispatch loop. A
+  handful of fallbacks during JVM startup is normal; sustained fallbacks are a bug.
 - `heartbeatKicks` — `SCX_KICK_IDLE` issued by the BPF heartbeat timer
 
 `formatStats()` is a single-line render suitable for periodic stderr prints.

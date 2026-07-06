@@ -1,6 +1,7 @@
 # BPF Timers (`@BPFTimer`)
 
-**Javadoc:** [`BPFTimer`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFTimer.html)
+**Blog series:** [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/) (compiler plugin enabling `bpf_timer`)  
+**Javadoc:** [`BPFTimer`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFTimer.html)  
 **Source:** [`BPFTimerMap.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFTimerMap.java)
 
 **See also:** [BPF Maps](maps.md) · [Global Variables](global-variables.md) · [XDP Hook](xdp.md)
@@ -291,6 +292,8 @@ public abstract class StatsFlushDemo extends BPFProgram {
 
 ## Further reading
 
-- [`bpf_timer_init` on docs.ebpf.io](https://docs.ebpf.io/linux/helper-function/bpf_timer_init/)
+- [`bpf_timer_init` — docs.ebpf.io](https://docs.ebpf.io/linux/helper-function/bpf_timer_init/)
+- [`bpf_timer_set_callback` — docs.ebpf.io](https://docs.ebpf.io/linux/helper-function/bpf_timer_set_callback/)
+- [`bpf_timer_start` — docs.ebpf.io](https://docs.ebpf.io/linux/helper-function/bpf_timer_start/)
 - [BPF Maps](maps.md)
 - [XDP Hook](xdp.md)

@@ -2,14 +2,14 @@
 
 ## 1. Prerequisites
 
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| Linux kernel | 6.14 | 6.14+ |
-| clang / llvm | 19 | 19 |
-| libbpf-dev | 1.0 | — |
-| bpftool | optional | for debugging |
-| JDK | 22 | 25 |
-| Privileges | root or CAP_BPF + CAP_NET_ADMIN | — |
+| Requirement | Minimum |
+|-------------|---------|
+| Linux kernel | 6.14 |
+| clang / llvm | 19 |
+| libbpf-dev | 1.0 |
+| bpftool | optional (debugging) |
+| JDK | 22 |
+| Privileges | root or CAP_BPF + CAP_PERFMON + CAP_NET_ADMIN |
 
 The framework requires kernel 6.14. Most distro kernels ship with `CONFIG_BPF=y` and
 `CONFIG_BPF_SYSCALL=y`; verify with:
@@ -100,3 +100,11 @@ If the file is absent, check that both `annotationProcessor` and
 `-Xplugin:BPFCompilerPlugin` are present in the compiler configuration and
 that the `bpf` jar (which bundles the plugin classes) is on the compile
 classpath.
+
+---
+
+## Further reading
+
+- [Your First BPF Program](hello.md) — write and run your first eBPF program in Java
+- [How the Plugin Works](how-it-works.md) — the full build pipeline explained
+- [Feature Matrix](../feature-matrix.md) — minimum kernel versions per feature

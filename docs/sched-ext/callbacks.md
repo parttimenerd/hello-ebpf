@@ -2,7 +2,8 @@
 
 **Javadoc:** [`Scheduler`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/Scheduler.html) · [`SchedulerBase`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/SchedulerBase.html) · [`DispatchQueue`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/sched/DispatchQueue.html)  
 **BPF reference:** [sched_ext_ops — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_STRUCT_OPS/sched_ext_ops/) · [sched-ext kernel docs](https://docs.kernel.org/scheduler/sched-ext.html)  
-**Source:** [`Scheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java) · [`SchedulerBase.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/SchedulerBase.java)
+**Source:** [`Scheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java) · [`SchedulerBase.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/SchedulerBase.java)  
+**See also:** [Overview](index.md) · [Writing a Scheduler](guide.md) · [Cookbook](cookbook.md)
 
 ## How callbacks work
 

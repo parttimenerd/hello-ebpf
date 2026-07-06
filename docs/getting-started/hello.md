@@ -67,7 +67,7 @@ bash: opening: /usr/share/bash-completion/bash_completion
 ```
 
 !!! warning "Root required"
-    Loading BPF programs requires `root` or the `CAP_BPF` + `CAP_PERFMON` capabilities. The `sudo` prefix is the simplest path.
+    Loading BPF programs requires `root` or `CAP_BPF` + `CAP_PERFMON` + `CAP_NET_ADMIN`. The `sudo` prefix is the simplest path.
 
 !!! note "--enable-native-access"
     hello-ebpf uses the Panama foreign-function API to call libbpf. Pass
@@ -211,5 +211,12 @@ sudo ./run.sh TimerDemo
 `run.sh` automatically passes `--enable-native-access=ALL-UNNAMED` and sets the classpath. See the [full samples index](../samples/index.md) for everything available.
 
 ---
+
+## Further reading
+
+- [How the Plugin Works](how-it-works.md) — the full Java-to-C-to-`.o` pipeline in depth
+- [BPF Maps](../maps.md) — share typed data between BPF programs and Java at runtime
+- [TC](../tc.md) · [XDP](../xdp.md) — full hook documentation
+- [Cookbook](../cookbook.md) — verifier-safe patterns and common idioms
 
 The HelloWorld program is the subject of [Part 1 of the hello-ebpf blog series](https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/).

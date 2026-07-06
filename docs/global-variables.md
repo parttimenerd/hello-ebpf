@@ -32,6 +32,8 @@ public abstract class MyProg extends BPFProgram {
 ```
 
 The initial value passed to the constructor is written into the map at load time.
+Each call to `BPFProgram.load(MyProg.class)` creates a fresh map — values do not
+persist across runs.
 
 ### BPF-side access (inside `@BPFFunction`)
 
@@ -235,4 +237,4 @@ This avoids padding holes and ensures the Java and C representations match witho
 ## Further reading
 
 - [BPF global variables (maps-backed) — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_ARRAY/)
-- [BPF Maps](maps.md) · [Kprobes / Fentry](kprobes.md)
+- [BPF Maps](maps.md) · [Kprobes / Fentry](kprobes.md) · [Writing a Scheduler (runtime control via GlobalVariable)](sched-ext/guide.md#step-6--runtime-control-with-globalvariable)

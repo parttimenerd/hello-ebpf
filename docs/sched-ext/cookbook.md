@@ -2,13 +2,13 @@
 
 **Blog series:** [Part 15 — Custom scheduler basics](https://mostlynerdless.de/blog/2024/10/17/hello-ebpf-writing-a-custom-scheduler-in-pure-java-15/) · [Part 16 — Userspace scheduler](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) · [Part 17 — Lottery scheduler](https://mostlynerdless.de/blog/2024/12/13/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-17/) · [Part 18 — bpf_for_each lambda](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/) · [Part 19 — Scheduler cookbook](https://mostlynerdless.de/blog/2025/01/20/helle-ebpf-a-scheduler-cookbook-19/) · [Part 20 — LSM + scheduler hardening](https://mostlynerdless.de/blog/2025/01/27/helle-ebpf-writing-an-lsm-policy-in-pure-java-20/)
 
-With sched_ext (available since Linux 6.11), you can replace the kernel's default
+With sched_ext (introduced in Linux 6.11, stable in 6.14), you can replace the kernel's default
 process scheduler with your own policy — written entirely in Java, compiled to BPF
 under the hood, and deployed without rebooting or touching kernel source.
 
 ## Prerequisites
 
-You need a kernel ≥ 6.11 built with `CONFIG_SCHED_CLASS_EXT=y`. Check with:
+You need a kernel ≥ 6.14 built with `CONFIG_SCHED_CLASS_EXT=y`. Check with:
 
 ```bash
 ls /sys/kernel/sched_ext   # should exist
@@ -329,7 +329,7 @@ in the output map each BPF instruction back to the original Java source line.
 
 ## Where to go next
 
-- **Reference**: [`docs/sched_ext.md`](../sched_ext.md) — full callback table, DSQ
+- **Reference**: [Callback Reference](callbacks.md) — full callback table, DSQ
   kfunc reference, `@Property` options, per-task storage patterns, exit info API
 - **18 sample schedulers** in `bpf-samples/src/main/java/…/samples/sched/`,
   ranging from `MinimalScheduler` (one method) to `ChaosScheduler` (random vtimes,

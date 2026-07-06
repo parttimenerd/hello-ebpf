@@ -1,8 +1,9 @@
 # BPF Arenas (`@InArena`)
 
-**Javadoc:** [`BPFArena`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArena.html)
-**Source:** [`BPFArena.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArena.java)
-**See also:** [BPF Maps](maps.md) · [Global Variables](global-variables.md) · [sched_ext](sched_ext.md)
+**Blog series:** [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/) (introduces the compiler plugin enabling arena support)  
+**Javadoc:** [`BPFArena`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArena.html)  
+**Source:** [`BPFArena.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArena.java)  
+**See also:** [BPF Maps](maps.md) · [Global Variables](global-variables.md) · [sched_ext Schedulers](sched-ext/index.md)
 
 A `BPF_MAP_TYPE_ARENA` is a page-granular memory region backed by a BPF map.
 Both the BPF program and userspace address it directly — the BPF side through
@@ -56,7 +57,7 @@ Pass `null` for `addrHint` and `NUMA_NO_NODE` for `nodeId` unless you have a
 specific placement requirement.
 
 Real-world usage:
-`bpf/src/main/java/me/bechberger/ebpf/bpf/UserspaceSchedulerBase.java`, lines 269–284 and 544.
+[`UserspaceSchedulerBase.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/UserspaceSchedulerBase.java).
 
 ---
 

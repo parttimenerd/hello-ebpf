@@ -17,7 +17,7 @@ deploy custom scheduling policies from a user-space Java program.
 
 ## Prerequisites
 
-- Kernel ≥ 6.11 with `CONFIG_SCHED_CLASS_EXT=y`
+- Kernel ≥ 6.14 with `CONFIG_SCHED_CLASS_EXT=y`
 - Verify: `ls /sys/kernel/sched_ext` should exist
 - At most one sched_ext scheduler can be active at a time — stop any running scx service
   with `systemctl stop scx` before attaching your own.

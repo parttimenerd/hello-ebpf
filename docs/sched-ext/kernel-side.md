@@ -1,5 +1,7 @@
 # sched_ext — Kernelspace Scheduler
 
+**See also:** [Overview](index.md) · [Writing a Scheduler](guide.md) · [Callbacks Reference](callbacks.md) · [Cookbook](cookbook.md)
+
 A kernelspace scheduler runs entirely inside the kernel: every scheduling decision
 happens in BPF, directly in kernel context, with no round-trip to user space.
 This gives you the lowest possible latency and the full sched_ext API surface.

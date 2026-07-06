@@ -1,8 +1,9 @@
 # CPU Profiling and JVM GC Tracing
 
-**Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`BPFStackTraceMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFStackTraceMap.html) · [`PerfEvent`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/perf/PerfEvent.html)
-**Source:** [`CPUProfiler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java) · [`JvmGcPauseTracer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/JvmGcPauseTracer.java)
-**See also:** [Uprobes](uprobes.md) · [BPF Maps](maps.md) · [Tracepoints](tracepoints.md)
+**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (perf events / stack traces) · [Part 16 — Userspace scheduler with uprobes for lock detection](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) (uprobe-based JVM observation)  
+**Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`BPFStackTraceMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFStackTraceMap.html) · [`PerfEvent`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/perf/PerfEvent.html)  
+**Source:** [`CPUProfiler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java) · [`JvmGcPauseTracer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/JvmGcPauseTracer.java)  
+**See also:** [Uprobes](uprobes.md) · [BPF Maps](maps.md) · [Tracepoints](tracepoints.md) · [Kprobes / Fentry](kprobes.md)
 
 hello-ebpf ships two profiling tools that use `SEC("perf_event")` and uprobe BPF
 programs to observe running JVM processes.
@@ -51,6 +52,13 @@ Kernel frames are resolved via `/proc/kallsyms`. User-space frames are resolved
 using ELF `.dynsym` (preferred) or `.symtab` sections, with address layout from
 `/proc/PID/maps`. ELF parsing is done with [jelf](https://github.com/fornwall/jelf).
 Frames that cannot be resolved fall back to `libname+0xoffset` or `[unknown]+0xip`.
+
+If your flamegraph is dominated by `libname+0xoffset` entries, the binary was
+stripped of debug symbols. Verify with `nm /path/to/binary | head` or
+`readelf -s /path/to/binary | head` — a stripped binary shows no `FUNC` entries.
+For JVM processes, pass `-XX:+PreserveFramePointer` to improve native frame
+unwinding; Java frames are resolved separately via `/proc/PID/maps` + JVM
+attach (future work).
 
 The `StackSymbolizer` helper class handles all symbol resolution and can be reused
 independently of `CPUProfiler`:

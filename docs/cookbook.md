@@ -325,3 +325,12 @@ because the plugin needs to know which arena a pointer belongs to.
 At the Java side, `workspace.mmap()` gives you a `MemorySegment` that
 overlaps the same pages, so userspace can read and write the same memory
 without a syscall per access.
+
+---
+
+## Further reading
+
+- [BPF Maps](maps.md) · [Global Variables](global-variables.md) · [BPF Arenas](arenas.md)
+- [Cheatsheet](cheatsheet.md) — quick reference for annotations, maps, and helpers
+- [Diagnostics](diagnostics.md) — reading the verifier log when a program is rejected
+- [BPF verifier concepts — docs.ebpf.io](https://docs.ebpf.io/linux/concepts/verifier/)

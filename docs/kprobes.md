@@ -1,9 +1,11 @@
 # Kprobes, Kretprobes, Fentry & Fexit
 
-**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (introduces kprobe-style attachment)
-**Javadoc:** [`@Kprobe`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Kprobe.html) · [`@Fentry`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Fentry.html)
-**Source:** [`Kprobe.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Kprobe.java) · [`Fentry.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Fentry.java)
+**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (introduces kprobe-style attachment)  
+**Javadoc:** [`@Kprobe`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Kprobe.html) · [`@Fentry`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Fentry.html)  
+**Source:** [`Kprobe.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Kprobe.java) · [`Fentry.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Fentry.java)  
 **See also:** [Tracepoints](tracepoints.md) · [Uprobes](uprobes.md) · [Attach Cookies & Multi](attach-cookies-multi.md) · [BPF Maps](maps.md)
+
+![eBPF hooks across the full Linux network stack: XDP, TC, socket, tracepoints, kprobes](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_32.jpg)
 
 Kprobes let you attach BPF programs to almost any kernel function. They are flexible
 but depend on kernel internals that can change between versions. For stable interfaces
@@ -180,4 +182,4 @@ on the kprobe blacklist (`/sys/kernel/debug/kprobes/blacklist`) cannot be used.
 
 - [kprobe program type — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_KPROBE/)
 - [fentry/fexit program type — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_TRACING/)
-- [Tracepoints](tracepoints.md) · [Uprobes](uprobes.md) · [Attach Cookies & Multi](attach-cookies-multi.md)
+- [Tracepoints](tracepoints.md) (includes hook-type comparison table) · [Uprobes](uprobes.md) · [Attach Cookies & Multi](attach-cookies-multi.md)

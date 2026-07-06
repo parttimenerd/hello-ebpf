@@ -271,7 +271,10 @@ The generated C uses `BPF_CORE_READ` for every struct field access. This macro
 emits BTF relocations into the `.o`; libbpf resolves them at load time against
 the running kernel's BTF. The result is a single `.o` that loads on any kernel
 ≥ 5.2 that exports BTF (`CONFIG_DEBUG_INFO_BTF=y`), without recompilation or
-per-kernel headers.
+per-kernel headers. CO-RE handles field offset changes across kernel versions,
+but it cannot compensate for fields that have been removed or structs that have
+been fundamentally restructured — in those cases the load succeeds but reads
+return incorrect data. In practice this is rare for stable kernel ABI surfaces.
 
 hello-ebpf auto-generates ~13,000 Java wrapper classes from the kernel's BTF
 so you get typed access to every kernel struct without maintaining headers manually.
@@ -296,6 +299,15 @@ code — share the same file descriptor returned by `BPFProgram.load()`.
 For the error-classifier, diagnostic messages, and plugin extension points, see
 [Architecture: Compiler Plugin](../architecture/plugin.md) and
 [Diagnostics](../diagnostics.md).
+
+---
+
+## Further reading
+
+- [Your First BPF Program](hello.md) — hands-on walkthrough using the pipeline
+- [Diagnostics](../diagnostics.md) — reading verifier logs and error messages
+- [Cheatsheet](../cheatsheet.md) — quick reference for annotations and helpers
+- [hello-ebpf at LPC 2024 (slides)](https://speakerdeck.com/parttimenerd/hello-ebpf-writing-ebpf-programs-directly-in-java)
 
 ---
 
