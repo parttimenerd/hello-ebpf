@@ -49,7 +49,7 @@ Build and run:
 ```bash
 cd my-bpf-app
 mvn package
-sudo java -cp target/my-bpf-app.jar com.example.App
+sudo java --enable-native-access=ALL-UNNAMED -cp target/my-bpf-app.jar com.example.App
 ```
 
 The archetype's generated `pom.xml` includes the `bpf` dependency, the

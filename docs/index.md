@@ -102,11 +102,45 @@ Build and run:
 
 ```bash
 mvn package
-sudo java -cp target/myapp.jar DropEveryThird
+sudo java --enable-native-access=ALL-UNNAMED -cp target/myapp.jar DropEveryThird
 ```
 
 !!! note "Network interface"
     Replace `eth0` with the actual interface name on your machine (`ip link` to list them).
+
+!!! note "--enable-native-access"
+    hello-ebpf uses the Panama foreign-function API to call libbpf. Pass
+    `--enable-native-access=ALL-UNNAMED` on every `java` invocation to suppress the
+    module-system warning (required on JDK 24+).
+
+## Samples
+
+Ready-to-run programs in [`bpf-samples/`](https://github.com/parttimenerd/hello-ebpf/tree/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples):
+
+| Sample | What it does |
+|--------|-------------|
+| [HelloWorld](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloWorld.java) | Print filenames on every `openat2` call |
+| [HashMapSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java) | Count `openat2` calls per process using `BPFHashMap` |
+| [RingSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/RingSample.java) | Stream filename+pid events to userspace via ring buffer |
+| [SyscallCounter](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/SyscallCounter.java) | Count all syscalls over 5 s with a global variable |
+| [XDPDropEveryThirdPacket](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPDropEveryThirdPacket.java) | Drop every third incoming packet at XDP |
+| [PacketCountByLength](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketCountByLength.java) | Histogram of packet lengths using XDP |
+| [TCDropEveryThirdOutgoingPacket](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCDropEveryThirdOutgoingPacket.java) | Drop ~1/3 of outgoing packets via TC egress |
+| [TCFirewall](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCFirewall.java) | Block ingress traffic on ports specified at runtime |
+| [Firewall](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java) | Full XDP firewall with per-IP rules and ring-buffer event log |
+| [PacketLogger](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketLogger.java) | Log packets via XDP + TC to a ring buffer |
+| [KProbeMultiCounter](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/KProbeMultiCounter.java) | One program attached to 20 syscall entries (`kprobe.multi`) |
+| [LSMDemo](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/LSMDemo.java) | Observe `file_open`, `bpf`, `socket_create` LSM hooks |
+| [CGroupBlockHTTPEgress](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CGroupBlockHTTPEgress.java) | Block all cgroup egress HTTP traffic |
+| [TimerDemo](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TimerDemo.java) | Self-rearming 1-second BPF timer |
+| [TailCallDemo](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TailCallDemo.java) | XDP tail calls via `BPFProgArray` |
+| [HelloCubicSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloCubicSample.java) | Register a TCP congestion algorithm via `struct_ops` |
+| [CPUProfiler](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java) | CPU profiler with stack-trace symbolisation |
+| [FeatureProbeSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/FeatureProbeSample.java) | Print kernel version and feature-probe table |
+| [sched/MinimalScheduler](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java) | Minimal FIFO sched_ext scheduler in Java |
+| [sched/RustlandFifoSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java) | Minimal FIFO userspace scheduler (policy entirely in Java) |
+
+See the [full samples index](samples/index.md) for all programs with hook types and descriptions.
 
 ## Blog series
 

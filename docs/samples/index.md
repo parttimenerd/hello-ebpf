@@ -40,6 +40,7 @@ includes.
 | [PacketCountByLength](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketCountByLength.java) | XDPHook | Counts XDP packets by length using XDPContext ergonomic API | |
 | [XDPDropEveryThirdPacket](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPDropEveryThirdPacket.java) | XDPHook | Drops every third incoming packet with a BPFFunction helper | |
 | [TCDropEveryThirdOutgoingPacket](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCDropEveryThirdOutgoingPacket.java) | TCHook | Drops ~1/3 of outgoing packets using TC egress with Park-Miller RNG | |
+| [TCFirewall](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCFirewall.java) | TCHook, BasePacketParser | Blocks ingress traffic on ports specified at runtime via BPFHashMap | |
 | [CGroupBlockHTTPEgress](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CGroupBlockHTTPEgress.java) | CGroupHook | Blocks all cgroup egress HTTP traffic | |
 | [LSMDemo](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/LSMDemo.java) | @LSM (file_open, bpf, socket_create) | Observes three LSM hooks and counts events with global variables | |
 | [KProbeMultiCounter](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/KProbeMultiCounter.java) | @KProbeMulti | Attaches one program to 20 syscall entries using kprobe.multi | |
@@ -108,6 +109,7 @@ includes.
 | Sample | Purpose |
 |---|---|
 | TCDropEveryThirdOutgoingPacket | Drops ~1/3 of outgoing packets via TC egress with Park-Miller RNG |
+| TCFirewall | Blocks ingress traffic on ports specified at runtime |
 | CGroupBlockHTTPEgress | Blocks all cgroup egress HTTP traffic |
 
 ### kprobe / uprobe
