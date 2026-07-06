@@ -59,7 +59,67 @@ The compiler plugin covers the following Java-to-C mappings:
 - BPF map operations (`bpf_get`, `put`, etc.) → corresponding kernel helper calls.
 - `@BPFFunction` calls within the same class → static C function calls.
 
-## §3 Inspecting the generated C
+## §3 Extending the plugin — `@BuiltinBPFFunction` templates
+
+**Javadoc:** [`@BuiltinBPFFunction`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BuiltinBPFFunction.html)
+
+When a method in a `@BPFInterface` or map class cannot be expressed as a normal `@BPFFunction` body — because the C code is a single expression, involves a GNU statement expression, or needs to reference the receiver or a specific argument positionally — annotate it with `@BuiltinBPFFunction` and provide a C template string. The plugin substitutes `$`-placeholders at call sites and inlines the result directly.
+
+### Placeholder reference
+
+| Placeholder | Expands to |
+|-------------|-----------|
+| `$this` | The receiver expression (map variable name, context pointer, …) |
+| `$arg1`, `$arg2`, … | The n-th argument expression (1-based) |
+| `$args` | All arguments, comma-separated |
+| `$argsN_` | Arguments from the N-th onwards |
+| `$pointery$argN` | `&argN` if it is a value type; `argN` if it is already a pointer or String |
+| `$typeof$argN` | `__typeof__(argN)` — useful in GNU statement expressions for temporary variables |
+| `$sizeof$argN` | `sizeof(argN)` |
+| `$deref$argN` | `*(argN)` |
+| `$str$argN` | Raw string content of a `StringConstant` argument (no surrounding quotes) |
+| `$strlen$argN` | Length of a `StringConstant` argument as an integer literal |
+| `$T1`, `$T2`, … | n-th generic type argument of the enclosing map class |
+| `$funcN` | Promotes the n-th lambda argument to a named top-level C function; expands to that function's name |
+| `$lambdaN:code` | Inline body of the n-th lambda argument |
+
+A leading `!` in the template wraps the whole expression in `!(…)` — useful for helpers that return 0 on success.
+
+### Examples
+
+```java
+// Simple field access on the receiver
+@BuiltinBPFFunction("($this->data)")
+int data();
+
+// Map lookup — $pointery wraps non-pointer keys in & automatically
+@BuiltinBPFFunction("bpf_map_lookup_elem(&$this, $pointery$arg1)")
+Ptr<V> bpf_get(K key);
+
+// Map update, return value inverted to boolean
+@BuiltinBPFFunction("!bpf_map_update_elem(&$this, $pointery$arg1, $pointery$arg2, BPF_ANY)")
+boolean put(K key, V value);
+
+// GNU statement expression for atomic increment
+@BuiltinBPFFunction("({ __typeof__($arg2) *___v = bpf_map_lookup_elem(&$this, $pointery$arg1); " +
+                    "if (___v) __sync_fetch_and_add(___v, $arg2); })")
+void bpf_increment(K key, V delta);
+
+// GNU statement expression for lookup-or-default
+@BuiltinBPFFunction("({ __typeof__($arg2) *___v = bpf_map_lookup_elem(&$this, $pointery$arg1); " +
+                    "___v ? *___v : $arg2; })")
+V bpf_getOrDefault(K key, V defaultValue);
+
+// Composite expression using a literal and a helper
+@BuiltinBPFFunction("scx_bpf_dsq_insert($arg1, 1 + scx_bpf_task_cpu($arg1), SCX_SLICE_DFL, $arg2)")
+void insertOnCurrentCpu(task_struct task, long slice);
+```
+
+The template source and parser live in
+`bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/MethodTemplate.java`.
+Real-world examples are in `BPFBaseMap.java`, `XDPContext.java`, and `TCContext.java`.
+
+
 
 The generated `.bpf.c` is written to the annotation output directory after
 `mvn package`:
