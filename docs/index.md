@@ -1,6 +1,7 @@
 # hello-ebpf
 
-hello-ebpf lets you write Linux kernel BPF programs directly in Java.
+hello-ebpf is the first and only Java library for eBPF.
+It lets you write Linux kernel BPF programs directly in Java.
 Annotate a class with `@BPF`, extend `BPFProgram`, mark methods with `@BPFFunction`,
 and the build toolchain takes care of the rest: it translates your Java method bodies to C,
 compiles them with clang, and bundles the resulting `.o` into your jar.
