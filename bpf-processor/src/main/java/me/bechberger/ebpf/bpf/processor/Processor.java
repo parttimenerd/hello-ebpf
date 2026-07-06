@@ -1018,7 +1018,7 @@ public class Processor extends AbstractProcessor {
         if (current.contains("hello-ebpf fallbacks")) return;
         String fallbacks = """
 
-/* ── hello-ebpf fallbacks: kfuncs/macros added in kernels 6.11-6.15 ── */
+/* ── hello-ebpf fallbacks: kfuncs/macros missing from kernel 6.8 vmlinux.h ── */
 
 /* __ulong: enum-backed map field annotation (kernel 6.14, bpf_helpers.h) */
 #ifndef ___bpf_concat
@@ -1051,6 +1051,21 @@ extern bool scx_bpf_dsq_move_to_local(__u64 dsq_id) __weak __ksym;
 #ifndef scx_bpf_kick_cpu_declared__
 #define scx_bpf_kick_cpu_declared__
 extern void scx_bpf_kick_cpu(__s32 cpu, __u64 flags) __weak __ksym;
+#endif
+
+/* sched_ext kfuncs present in 6.12+ (absent from kernel 6.8 vmlinux.h) */
+#ifndef scx_bpf_create_dsq_declared__
+#define scx_bpf_create_dsq_declared__
+extern __s32 scx_bpf_create_dsq(__u64 dsq_id, __s32 node) __weak __ksym;
+#endif
+#ifndef scx_bpf_dsq_insert_declared__
+#define scx_bpf_dsq_insert_declared__
+extern void scx_bpf_dsq_insert(struct task_struct *p, __u64 dsq_id, __u64 slice, __u64 enq_flags) __weak __ksym;
+extern void scx_bpf_dsq_insert_vtime(struct task_struct *p, __u64 dsq_id, __u64 slice, __u64 vtime, __u64 enq_flags) __weak __ksym;
+#endif
+#ifndef scx_bpf_select_cpu_dfl_declared__
+#define scx_bpf_select_cpu_dfl_declared__
+extern __s32 scx_bpf_select_cpu_dfl(struct task_struct *p, __s32 prev_cpu, __u64 wake_flags, bool *is_idle) __weak __ksym;
 #endif
 """;
         Files.writeString(vmLinuxFile, current + fallbacks);
