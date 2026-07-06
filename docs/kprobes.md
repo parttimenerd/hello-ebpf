@@ -5,8 +5,6 @@
 **Source:** [`Kprobe.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Kprobe.java) · [`Fentry.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Fentry.java)  
 **See also:** [Tracepoints](tracepoints.md) · [Uprobes](uprobes.md) · [Attach Cookies & Multi](attach-cookies-multi.md) · [BPF Maps](maps.md)
 
-![eBPF hooks across the full Linux network stack: XDP, TC, socket, tracepoints, kprobes](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_32.jpg)
-
 Kprobes let you attach BPF programs to almost any kernel function. They are flexible
 but depend on kernel internals that can change between versions. For stable interfaces
 prefer tracepoints; use kprobes when no tracepoint covers the function you need.

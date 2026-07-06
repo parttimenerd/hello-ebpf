@@ -1,6 +1,6 @@
 # sched_ext — Cookbook
 
-**Blog series:** [Part 15 — Custom scheduler basics](https://mostlynerdless.de/blog/2024/10/17/hello-ebpf-writing-a-custom-scheduler-in-pure-java-15/) · [Part 16 — Userspace scheduler](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) · [Part 17 — Lottery scheduler](https://mostlynerdless.de/blog/2024/12/13/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-17/) · [Part 18 — bpf_for_each lambda](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/) · [Part 19 — Scheduler cookbook](https://mostlynerdless.de/blog/2025/01/20/helle-ebpf-a-scheduler-cookbook-19/) · [Part 20 — LSM + scheduler hardening](https://mostlynerdless.de/blog/2025/01/27/helle-ebpf-writing-an-lsm-policy-in-pure-java-20/)
+**Blog series:** [Part 15 — Custom scheduler basics](https://mostlynerdless.de/blog/2024/10/17/hello-ebpf-writing-a-custom-scheduler-in-pure-java-15/) · [Part 16 — Userspace scheduler](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) · [Part 17 — Lottery scheduler](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/) · [Part 18 — bpf_for_each lambda](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/) · [Part 19 — Concurrency Testing](https://mostlynerdless.de/blog/2025/02/25/helle-ebpf-concurrency-testing-using-custom-linux-schedulers-19/)
 
 With sched_ext (introduced in Linux 6.11, stable in 6.14), you can replace the kernel's default
 process scheduler with your own policy — written entirely in Java, compiled to BPF
@@ -34,9 +34,11 @@ with a global FIFO queue:
 @Property(name = "sched_name", value = "hello")   // ② name shown in /sys/kernel/sched_ext/
 public abstract class HelloScheduler extends SchedulerBase implements Scheduler {
 
+    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
+
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        dsqInsert(p, enq_flags);  // put the task in the shared FIFO queue
+        shared.insertScaled(p, EnqFlags.passThrough(enq_flags));
     }
 
     public static void main(String[] args) throws Exception {
@@ -114,7 +116,7 @@ runs; the task with the smallest vtime runs next.
 ```java
 @Override
 public void enqueue(Ptr<task_struct> p, long enq_flags) {
-    vtimeEnqueue(p, enq_flags, vtimeNow.get());  // vtime-ordered insert
+    shared.insertVtimeClamped(p, vtimeNow.get(), EnqFlags.passThrough(enq_flags));
 }
 
 @Override
@@ -164,7 +166,7 @@ public abstract class MyScheduler extends PerCpuSchedulerBase implements Schedul
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         if (isMigrationDisabled(p)) {
-            dsqInsertLocal(p, enq_flags);  // pin to the task's current CPU
+            dsqInsertLocal(p, enq_flags);  // pin to the task's current CPU DSQ
         } else {
             dsqInsert(p, enq_flags);       // allow migration via shared DSQ
         }

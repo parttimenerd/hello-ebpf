@@ -34,3 +34,7 @@ The processor sees only annotations and type declarations, not method bodies. It
 1. **Add a new annotation.** Define the annotation in the `annotations/` module (not in `bpf-processor/` or `bpf/`).
 2. **Add a processor round in `TypeProcessor` or `Processor`.** If the annotation describes a type shape, add a resolution branch in `TypeProcessor.processType()`. If it affects the generated implementation class, add logic in `Processor.processBPFProgram()`.
 3. **Write an integration test.** Use the `InMemoryJavaCompiler` helper already used in `bpf-compiler-plugin-test/`. Compile a minimal `@BPF` class that uses the new annotation and assert on the generated Java source or on any diagnostic messages emitted.
+
+---
+
+*Next: [Error Classifier](errors.md)*

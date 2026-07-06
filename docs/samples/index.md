@@ -174,3 +174,7 @@ includes.
 | StackSymbolizer | Translates raw instruction pointers to symbols via kallsyms and ELF |
 | FeatureProbeSample | Prints kernel version and feature-probe table |
 | HttpUtil | URL query-string parser used by FirewallSpring |
+
+---
+
+*Next: [Architecture — Compiler Plugin](../architecture/plugin.md)*

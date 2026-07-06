@@ -6,9 +6,7 @@
 **Source:** [`XDPHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/XDPHook.java)
 **See also:** [TC Hook](tc.md) · [BPF Maps](maps.md) · [Global Variables](global-variables.md)
 
-![Java config/log component talking to the XDP kernel program](https://mostlynerdless.de/wp-content/uploads/2024/04/xdp_filter-1-2000x1005.png)
-
-![XDP hook position: NIC → XDP (red arrow) before Linux Network Stack → Application](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_50.jpg)
+![Java config/log component talking to the XDP kernel program](img/xdp-filter.png)
 
 XDP (eXpress Data Path) is the fastest hook point in the Linux network stack. BPF programs run
 directly in the network driver, before any SKB allocation, achieving multi-million-packets-per-second
@@ -66,7 +64,7 @@ For raw access via `xdp_md`, the underlying struct fields are:
 | `ingress_ifindex` | `int` | Interface index the packet arrived on |
 | `rx_queue_index` | `int` | RX queue index |
 
-Access packet bytes via raw `Ptr<xdp_md>` (deprecated but still supported):
+Access packet bytes via raw `Ptr<xdp_md>` (lower-level, but needed for header parsing):
 
 ```java
 @BPFFunction
@@ -128,6 +126,10 @@ On the Java side use `Short.reverseBytes()` / `Integer.reverseBytes()` or `ByteB
 
 ## Full example — block a specific source IP
 
+This example uses `Ptr<xdp_md>` (rather than `XDPContext`) because it needs raw
+pointer arithmetic to walk Ethernet and IP headers — the pattern that requires bounds
+checks and `Ptr.cast`.
+
 ```java
 @BPF(license = "GPL")
 public abstract class BlockIP extends BPFProgram implements XDPHook {
@@ -170,17 +172,7 @@ public abstract class BlockIP extends BPFProgram implements XDPHook {
 - Use `BPFPerCpuArray` for counters to avoid inter-CPU synchronisation.
 - Return `xdp_action.XDP_DROP` as early as possible after the bounds checks.
 
-### Benchmark: XDP vs iptables
-
-These charts are from the JavaZone 2024 talk using Cloudflare's published data.
-XDP reaches ~10 Mpps — roughly 10× faster than iptables in PREROUTING, and even
-faster with NIC offloading.
-
-![Packet-dropping performance: iptables PREROUTING baseline (Cloudflare data)](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_10.jpg)
-
-![Same chart extended with XDP at ~10 Mpps — dramatic speed advantage over iptables](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_12.jpg)
-
-![XDP chart with "even faster with offloading" annotation for NIC-offloaded XDP](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_14.jpg)
+**Benchmark data (JavaZone 2024):** Using Cloudflare's published data, XDP reaches ~10 Mpps — roughly 10× faster than iptables in PREROUTING, and even faster with NIC offloading.
 
 ### Talk: Building a Lightning Fast Firewall with Java & eBPF
 

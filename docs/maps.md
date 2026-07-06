@@ -3,18 +3,13 @@
 **Blog series:** [Part 2 — Recording data in basic eBPF maps](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/) · [Part 6 — Ring buffers in libbpf](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/) · [Part 10 — Global variables](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/)  
 **Javadoc:** [`BPFHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashMap.html) · [`BPFArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArray.html) · [`BPFRingBuffer`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFRingBuffer.html) · [`BPFPerCpuArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.html) · [`BPFPerCpuHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.html)  
 **Source:** [`BPFHashMap.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFHashMap.java) · [`BPFArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArray.java) · [`BPFRingBuffer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFRingBuffer.java) · [`BPFPerCpuArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.java) · [`BPFPerCpuHashMap.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.java)  
-**See also:** [Ring Buffer](maps.md#bpfringbuffere) · [Global Variables](global-variables.md) · [Map of Maps](map-of-maps.md) · [Shared Maps](shared-maps.md) · [Tail Calls](tail-calls.md)
+**See also:** [Ring Buffer](maps.md#bpfringbuffer) · [Global Variables](global-variables.md) · [Map of Maps](map-of-maps.md) · [Shared Maps](shared-maps.md) · [Tail Calls](tail-calls.md)
 
 Maps are the primary mechanism for sharing data between BPF programs and user-space Java code.
 hello-ebpf provides typed Java wrappers for all major map types. Maps are declared as fields on
 your `@BPF` class and annotated with `@BPFMapDefinition`.
 
-**Blog series:** [Part 2 — Recording data in basic eBPF maps](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/) · [Part 6 — Ring buffers in libbpf](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/)
-**Javadoc:** [`BPFHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashMap.html) · [`BPFArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArray.html) · [`BPFRingBuffer`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFRingBuffer.html) · [`BPFPerCpuArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.html) · [`BPFPerCpuHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.html)
-
-![eBPF map as bidirectional bridge between kernel and user space](https://mostlynerdless.de/wp-content/uploads/2024/01/ebpf_maps-2000x425.png)
-
-![BPF map data-sharing: eBPF Program ↔ BPF Map ↔ Userland Program with sample data](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_30.jpg)
+![eBPF map as bidirectional bridge between kernel and user space](img/ebpf-maps.png)
 
 ## Declaration pattern
 
@@ -321,6 +316,45 @@ jumptable.bpf_tail_call(ctx, index);
 prog.jumptable.register(0, prog.getProgramByName("handle_ipv4"));
 prog.jumptable.register(1, prog.getProgramByName("handle_ipv6"));
 ```
+
+---
+
+## BPFTaskStorage<V>
+
+**When to use:** Per-task state in `struct_ops` (sched_ext) programs. The kernel owns the
+lifecycle — entries are automatically removed when the task exits, no explicit delete needed.
+Safer than a hash map keyed by PID because there are no stale entries and lookup is O(1).
+
+**Map type:** `BPF_MAP_TYPE_TASK_STORAGE`  
+**Kernel minimum:** 5.11
+
+**Declaration:**
+```java
+@Type
+record TaskCtx(long wakeupCount, long lastRunNs) {}
+
+@BPFMapDefinition(maxEntries = 0)  // maxEntries is ignored for task storage
+BPFTaskStorage<TaskCtx> taskCtx;
+```
+
+**BPF-side API:**
+```java
+// In @BPFFunction
+Ptr<TaskCtx> ctx = taskCtx.bpf_get_or_create(p);  // p is Ptr<task_struct>
+if (ctx != null) {
+    ctx.val().wakeupCount += 1;
+}
+```
+
+`bpf_get_or_create` returns a pointer to the task's storage, creating it (zeroed) if it
+doesn't exist yet. No null check needed for the create path — it returns null only on OOM.
+
+The Java side cannot iterate task storage (kernel constraint). It can only be used from BPF
+programs attached to `struct_ops` entries.
+
+**Full example:** [sched/TaskStorageScheduler.java](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TaskStorageScheduler.java) — FIFO scheduler with per-task wakeup counts.
+
+See [sched_ext guide §4](sched-ext/guide.md#step-4-per-task-state-with-bpftaskstorage) for a complete walkthrough.
 
 ---
 

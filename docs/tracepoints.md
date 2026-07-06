@@ -5,8 +5,6 @@
 **Source:** [`Tracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Tracepoint.java) · [`RawTracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/RawTracepoint.java)  
 **See also:** [Kprobes / Fentry](kprobes.md) · [Uprobes](uprobes.md) · [BPF Maps](maps.md)
 
-![eBPF hooks across the full Linux network stack: XDP, TC, socket, tracepoints, kprobes](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_32.jpg)
-
 Tracepoints are stable, versioned hook points compiled into the kernel at strategic locations.
 Unlike kprobes they survive kernel version changes because their argument layout is guaranteed.
 
@@ -16,8 +14,8 @@ Unlike kprobes they survive kernel version changes because their argument layout
 |-----------|-----------|----------|---------|
 | `@Tracepoint` | Stable across kernels | Low | Kernel exposes a tracepoint for the event you care about |
 | `@RawTracepoint` | Stable across kernels | Lowest | You need the lowest overhead and can extract args manually |
-| `@Fentry` / `@Fexit` | Depends on function | Very low | No tracepoint available; function is BTF-typed; kernel ≥ 5.5 |
-| `@Kprobe` / `@Kretprobe` | Unstable — breaks across versions | Low | No tracepoint or fentry, or you need an old kernel |
+| `@Fentry` / `@Fexit` | Depends on function | Very low | No tracepoint available; function is BTF-typed; kernel ≥ 5.5 (see [Kprobes](kprobes.md)) |
+| `@Kprobe` / `@Kretprobe` | Unstable — breaks across versions | Low | No tracepoint or fentry, or you need an old kernel (see [Kprobes](kprobes.md)) |
 | `@Ksyscall` | Stable (syscall ABI) | Low | Architecture-portable syscall entry probe |
 | `@Uprobe` | Depends on binary ABI | Low | User-space function entry/return (see [Uprobes](uprobes.md)) |
 | `XDPHook` / `TCHook` | Stable | Lowest / Low | Packet inspection or filtering (see [XDP](xdp.md), [TC](tc.md)) |
@@ -34,7 +32,7 @@ Unlike kprobes they survive kernel version changes because their argument layout
 | `@Tracepoint(category, name)` | `tp/category/name` | Typed context struct per tracepoint |
 | `@RawTracepoint(name)` | `raw_tp/name` | Raw args array; more flexible, less safe |
 | `@Ksyscall(name)` | arch-specific kprobe | Architecture-portable syscall probe |
-| `implements SystemCallHooks` | multiple sections | Convenience interface for common syscalls |
+| `implements SystemCallHooks` | multiple sections | Convenience interface for common syscalls — see [below](#systemcallhooks) |
 
 ## `@Tracepoint`
 
@@ -117,7 +115,31 @@ public int onOpenAt(Ptr<pt_regs> ctx) {
 }
 ```
 
-## Example — count syscalls per process
+## `SystemCallHooks`
+
+`SystemCallHooks` is a convenience interface that provides typed default methods for every
+syscall entry and exit. Override only the methods you need; the rest are no-ops.
+
+```java
+import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
+
+@BPF(license = "GPL")
+public abstract class OpenLogger extends BPFProgram implements SystemCallHooks {
+
+    @Override
+    public void enterOpenat2(int dfd, String filename, Ptr<open_how> how) {
+        BPFJ.bpf_trace_printk("open: %s\n", filename);
+    }
+}
+```
+
+Each method follows the convention `enter<Syscall>` / `exit<Syscall>` with typed arguments
+derived from the syscall signature. A `kprobeEnter<Syscall>` / `kprobeExit<Syscall>` variant
+is also available for kprobe-style attachment when tracepoints are not sufficient.
+
+`SystemCallHooks` is the recommended starting point for the [hello-ebpf tutorial](getting-started/hello.md).
+
+
 
 ```java
 @BPF(license = "GPL")

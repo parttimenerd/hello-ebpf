@@ -9,8 +9,6 @@ This guide walks you through building a sched_ext scheduler in Java, starting fr
 the simplest possible program and progressively adding vtime scheduling, per-task
 state, and observability.
 
-![DSQ model: runnable tasks enqueued into shared DSQ, CPUs move-to-local and run](https://files.speakerdeck.com/presentations/23196bda93134fd39a46549087f9965f/preview_slide_60.jpg)
-
 Prerequisites: kernel ≥ 6.14 with `CONFIG_SCHED_CLASS_EXT=y`. Verify:
 
 ```bash

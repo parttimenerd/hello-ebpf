@@ -16,7 +16,7 @@ kernel — all in one step.
 |--------------------------|-------------------------|-------------:|
 | `SchedExtOps`            | `sched_ext_ops`         |         6.12 |
 | `TcpCongestionControl`   | `tcp_congestion_ops`    |          5.6 |
-| `QdiscOps`               | `Qdisc_ops`         |         6.10 |
+| `QdiscOps`               | `Qdisc_ops`             |         6.10 |
 | `HidBpfOps`              | `hid_bpf_ops`           |         6.11 |
 
 hello-ebpf's kernel floor is 6.14, so all four are available without

@@ -5,7 +5,7 @@
 **Source:** [`BPFProgArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFProgArray.java)  
 **See also:** [XDP Hook](xdp.md) · [TC Hook](tc.md) · [BPF Maps](maps.md)
 
-![Stack frames with vs without a tail call — no stack growth with tail calls](https://mostlynerdless.de/wp-content/uploads/2024/02/tail_call-2000x599.png)
+![Stack frames with vs without a tail call — no stack growth with tail calls](img/tail-call.png)
 
 BPF programs cannot recurse or exceed the verifier's instruction budget, so
 long dispatch chains are split into stages connected by **tail calls**:

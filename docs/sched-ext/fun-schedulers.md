@@ -96,33 +96,10 @@ Requires a microphone (or any ALSA input device) and Linux ≥ 6.14 with sched_e
 
 ---
 
-## Chaos Scheduler
-
-**Blog:** [Part 19 — Concurrency Testing using Custom Linux Schedulers](https://mostlynerdless.de/blog/2025/02/25/helle-ebpf-concurrency-testing-using-custom-linux-schedulers-19/)  
-**Talk:** [p99conf 2025 + FOSDEM 2025](https://speakerdeck.com/parttimenerd/concurrency-testing-using-custom-linux-schedulers-p99conf) (with Jake Hillion, Meta)  
-**Source:** [`ChaosScheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/ChaosScheduler.java)
-
-A scheduler that **intentionally schedules badly** to shake out concurrency bugs in Java
-programs. It introduces four chaos traits: random vtime delays (tasks are queued with a
-random delay, producing non-deterministic ordering), CPU frequency throttling (all CPUs
-are throttled to a random fraction of peak performance on every tick), slice degradation
-(targeted tasks get a shorter time slice, forcing more context switches), and a cold-start
-penalty (first-woken tasks get a further slice reduction, maximising thread interleaving).
-
-```bash
-sudo ./run.sh ChaosScheduler              # chaos all user tasks
-sudo ./run.sh ChaosScheduler $(pgrep java) # target your JVM
-```
-
-See the [dedicated page](chaos-scheduler.md) for the full design, tuning knobs, and
-instructions for using it from a JUnit 5 test harness.
-
----
-
 ## Taskclicker
 
 **Source:** [github.com/Mr-Pine/taskclicker](https://github.com/Mr-Pine/taskclicker)  
-**Contest:** [sched-ext-kit-contest](https://github.com/parttimenerd/sched-ext-kit-contest)
+**Submitted to:** [sched-ext-kit-contest](https://github.com/parttimenerd/sched-ext-kit-contest)
 
 Taskclicker is a Linux CPU scheduler where **you are the scheduler.** A GUI shows you all
 runnable tasks; you click a task to dispatch it to a CPU.
@@ -132,7 +109,7 @@ runnable tasks; you click a task to dispatch it to a CPU.
 > well, it exists now, for better or for worse so have fun."
 > — Mr-Pine, README
 
-![Taskclicker screenshot: runnable task list, CPU slots, click to schedule](https://raw.githubusercontent.com/Mr-Pine/taskclicker/master/images/screenshot.png)
+![Taskclicker screenshot: runnable task list, CPU slots, click to schedule](../img/taskclicker-screenshot.png)
 
 Can you keep your system fully interactive before the 30-second task timer runs out?
 (Spoiler: the README was written with Taskclicker running.)
@@ -144,50 +121,6 @@ desktop game. Build and run:
 xhost si:localuser:root
 sudo ./gradlew run
 ```
-
----
-
-## Minimal Scheduler
-
-The simplest scheduler that actually works: two methods, no extra DSQs, about 20 lines of
-Java. A good starting point for your own experiments.
-
-**Source:** [`MinimalScheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java)
-
-```java
-@BPF(license = "GPL")
-@Property(name = "sched_name", value = "minimal_scheduler")
-public abstract class MinimalScheduler extends SchedulerBase implements Scheduler {
-
-    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
-
-    @Override
-    public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        shared.insertScaled(p, EnqFlags.passThrough(enq_flags));
-    }
-
-    public static void main(String[] args) throws Exception {
-        try (var program = BPFProgram.load(MinimalScheduler.class)) {
-            program.runSchedulerLoop();
-        }
-    }
-}
-```
-
-See [Writing a Scheduler](guide.md) to go from here to something more sophisticated.
-
----
-
-## Lottery Scheduler
-
-Assigns each task a random time slice drawn from a uniform distribution. Tasks with a
-longer slice advance less in the virtual-time DSQ, producing a fair lottery among all
-runnable tasks without per-task bookkeeping.
-
-**Blog post:** [Part 17 — Writing a Lottery Scheduler in Java with sched_ext](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/)  
-**Source:** [`LotteryScheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotteryScheduler.java)
-
-![Lottery bowl: tasks enter, CPUs draw randomly](https://mostlynerdless.de/wp-content/uploads/2024/12/lottery_bowl.png)
 
 ---
 

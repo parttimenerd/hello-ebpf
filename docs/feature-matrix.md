@@ -48,6 +48,7 @@ Minimum kernel versions for hello-ebpf features. The project requires kernel 6.1
 | Queue | 4.20 | BPF_MAP_TYPE_QUEUE |
 | Stack | 4.20 | BPF_MAP_TYPE_STACK |
 | BPF arenas | 6.9 | BPF_MAP_TYPE_ARENA |
+| Task storage | 5.11 | BPF_MAP_TYPE_TASK_STORAGE; per-task state, auto-freed on exit |
 
 ## Language features
 

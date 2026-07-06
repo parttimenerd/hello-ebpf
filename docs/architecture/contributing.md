@@ -62,3 +62,7 @@ For tests that need `vng`, write logs to `/tmp` rather than the repo directory: 
 - Do not write inline C strings inside `@BPF` classes. Use `@BuiltinBPFFunction` templates with `$arg1`, `$typeof`, `$lambda`, etc. placeholders instead. The template language is documented in `memory/reference_method_template_language.md`.
 - BPF integration tests live in `bpf/src/test/java/` and are tagged so they are skipped when running without root or a kernel. Check existing tests (e.g. `XDPTest.java`) for the `@Tag` convention in use.
 - Do not name `@StructOps` interface method arguments `ctx` — the `BPF_PROG` macro reserves that identifier and clang will reject the generated C (`feedback_bpf_prog_macro_ctx_collision.md`).
+
+---
+
+*Next: [Changelog](../changelog.md)*

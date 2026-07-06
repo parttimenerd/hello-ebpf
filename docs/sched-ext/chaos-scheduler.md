@@ -6,9 +6,9 @@ programs — the same class of bugs that are notoriously hard to reproduce deter
 
 **Source:** [`ChaosScheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/ChaosScheduler.java)  
 **Blog post:** [Part 19 — Concurrency Testing using Custom Linux Schedulers](https://mostlynerdless.de/blog/2025/02/25/helle-ebpf-concurrency-testing-using-custom-linux-schedulers-19/)  
-**Talks:** [p99conf 2025 — Concurrency Testing using Custom Linux Schedulers](https://speakerdeck.com/parttimenerd/concurrency-testing-using-custom-linux-schedulers-p99conf) · [FOSDEM 2025 — same talk](https://archive.fosdem.org/2025/schedule/event/fosdem-2025-4489-concurrency-testing-using-custom-linux-schedulers/)  
-**FOSDEM video:** [video.fosdem.org](https://video.fosdem.org/2025/ud6215/fosdem-2025-4489-concurrency-testing-using-custom-linux-schedulers.mp4)  
-**Related:** [scx_chaos — Jake Hillion, LPC 2025](https://www.youtube.com/watch?v=YdP0UE6gGkw) (kernel counterpart; Hillion co-authored the p99conf talk)
+**Talks:** [p99conf 2025](https://speakerdeck.com/parttimenerd/concurrency-testing-using-custom-linux-schedulers-p99conf) · [FOSDEM 2025](https://archive.fosdem.org/2025/schedule/event/fosdem-2025-4489-concurrency-testing-using-custom-linux-schedulers/) (co-authored with Jake Hillion, Meta)  
+**LWN coverage:** [Concurrency testing with sched_ext](https://lwn.net/Articles/1007689/)  
+**Related:** [scx_chaos upstream](https://www.youtube.com/watch?v=YdP0UE6gGkw) — Jake Hillion's LPC 2025 talk on the kernel-side counterpart
 
 ---
 
@@ -117,14 +117,12 @@ it varies actual execution speed, not just scheduling order.
 
 ### Targeting
 
-`isChaosTarget(p)` returns:
-- **false** for kthreads and tasks with scheduling constraints (affinity-pinned,
-  migration-disabled)
-- **true** for all user tasks when `targetTgid == 0`
-- **true** for tasks in the specified TGID's descendant tree (walks `real_parent`
-  up to 8 levels) when `targetTgid != 0`
+`isChaosTarget(p)` returns **false** for kthreads and affinity-pinned or
+migration-disabled tasks. For user tasks it returns **true** unconditionally
+when `targetTgid == 0`, or when the task is in the specified TGID's descendant
+tree (walks `real_parent` up to 8 levels) when `targetTgid != 0`.
 
-The ancestor walk is bounded because the BPF verifier requires bounded loops.
+The 8-level bound is required because the BPF verifier rejects unbounded loops.
 
 ---
 
@@ -185,6 +183,32 @@ Hillion from Meta, who brought the same ideas to kernel `scx_chaos`) walks throu
 
 **Slides (p99conf):** [speakerdeck.com/parttimenerd/concurrency-testing-using-custom-linux-schedulers-p99conf](https://speakerdeck.com/parttimenerd/concurrency-testing-using-custom-linux-schedulers-p99conf)  
 **Slides + video (FOSDEM 2025):** [archive.fosdem.org](https://archive.fosdem.org/2025/schedule/event/fosdem-2025-4489-concurrency-testing-using-custom-linux-schedulers/)
+
+<video controls width="100%" preload="metadata"
+       src="https://video.fosdem.org/2025/ud6215/fosdem-2025-4489-concurrency-testing-using-custom-linux-schedulers.av1.webm"
+       type="video/webm">
+  <a href="https://video.fosdem.org/2025/ud6215/fosdem-2025-4489-concurrency-testing-using-custom-linux-schedulers.mp4">Download video (FOSDEM 2025)</a>
+</video>
+
+### What the press said
+
+LWN.net covered the scheduler in
+[*Concurrency testing with sched_ext*](https://lwn.net/Articles/1007689/).
+Note: the LWN piece is a condensed summary — the
+[blog post](https://mostlynerdless.de/blog/2025/02/25/helle-ebpf-concurrency-testing-using-custom-linux-schedulers-19/)
+has the full narrative.
+
+> "When a thread is ready to run, instead of assigning it to a CPU right away, their
+> scheduler will put it to sleep for a random amount of time based on some configurable
+> parameters."
+
+> "The idea of running threads in a random order is not new. There are plenty of
+> specialized concurrency testing tools that do something similar. But
+> concurrency-fuzz-scheduler is not nearly as fine-grained as such tools usually are."
+
+> "Hillion and Bechberger's concurrency-fuzz-scheduler is a promising example of a
+> sched_ext scheduler that does something more than act as a testbed for scheduling
+> ideas."
 
 ---
 

@@ -108,3 +108,7 @@ classpath.
 - [Your First BPF Program](hello.md) — write and run your first eBPF program in Java
 - [How the Plugin Works](how-it-works.md) — the full build pipeline explained
 - [Feature Matrix](../feature-matrix.md) — minimum kernel versions per feature
+
+---
+
+*Next: [Your First BPF Program](hello.md)*

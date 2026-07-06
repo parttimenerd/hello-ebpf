@@ -10,3 +10,7 @@ The JavaDoc covers the public API of:
 - `me.bechberger.ebpf.bpf.sched` — `DispatchQueue`, `CpuMask`, `EnqFlags`, `KickFlags`
 - `me.bechberger.ebpf.annotations` — `@BPF`, `@BPFFunction`, `@Type`, `@InArena`, etc.
 - `me.bechberger.ebpf.type` — `Ptr`, `Str`
+
+---
+
+*Next: [Diagnostics](../diagnostics.md)*

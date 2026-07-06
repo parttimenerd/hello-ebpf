@@ -113,3 +113,7 @@ void myNewClassHintHasRequiredParts() {
 The `everyErrorClassHasAFourPartHint` test in `VerifierFixSuggesterTest` iterates all `ErrorClass`
 values automatically, so any new constant without a hint will fail CI without requiring a bespoke
 per-class test.
+
+---
+
+*Next: [Contributing](contributing.md)*

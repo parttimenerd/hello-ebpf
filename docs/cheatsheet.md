@@ -59,6 +59,7 @@ Quick reference for every mapping the hello-ebpf compiler plugin understands.
 | `BPFQueue<V>` | `BPF_MAP_TYPE_QUEUE` |
 | `BPFStack<V>` | `BPF_MAP_TYPE_STACK` |
 | `BPFProgArray` | `BPF_MAP_TYPE_PROG_ARRAY` (tail calls) |
+| `BPFTaskStorage<V>` | `BPF_MAP_TYPE_TASK_STORAGE` (per-task state, sched_ext) |
 
 All maps are annotated with `@BPFMapDefinition(maxEntries = N)`.
 

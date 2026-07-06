@@ -400,3 +400,7 @@ via `Lib_1.*`):
 | `bpf_htonl(x)` | `__builtin_bswap32(x)` |
 | `bpf_ntohl(x)` | `__builtin_bswap32(x)` |
 | `bpf_cpu_to_be64(x)` | `__builtin_bswap64(x)` |
+
+---
+
+*Next: [JavaDoc API](javadoc.md)*

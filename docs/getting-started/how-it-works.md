@@ -5,11 +5,7 @@
 
 **Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`@BPF`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPF.html) · [`@BPFFunction`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFFunction.html) · [`@Type`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Type.html) · [`@BPFMapDefinition`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFMapDefinition.html)
 
-![Annotation processor and compiler plugin pipeline](https://mostlynerdless.de/wp-content/uploads/2024/07/compiler_pipeline-2000x1125.png)
-
-![hello-ebpf compiler pipeline: Java Code → Annotation Preprocessor → Java Compiler → AST → Plugin → BPF bytecode](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_54.jpg)
-
-![eBPF hooks across the full Linux network stack: XDP, TC, socket, tracepoints, kprobes](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_32.jpg)
+![Annotation processor and compiler plugin pipeline](../img/compiler-pipeline.png)
 
 The kernel BPF verifier operates on eBPF bytecode. The only production-quality
 compiler that targets that bytecode is clang. hello-ebpf does not bypass that
@@ -279,13 +275,9 @@ return incorrect data. In practice this is rare for stable kernel ABI surfaces.
 hello-ebpf auto-generates ~13,000 Java wrapper classes from the kernel's BTF
 so you get typed access to every kernel struct without maintaining headers manually.
 
-![Annotation preprocessor: GlobalVariable before/after expansion to C](https://files.speakerdeck.com/presentations/fa14b57b593b48b1a48c2767e5177eca/preview_slide_26.jpg)
+![BTF type tree for u32: TYPEDEF __u32 → INT unsigned int (4 bytes)](../img/btf-u32-tree.png)
 
-![VMLinux generation: BTF + Man Pages + Helper Docs → 13k Java Classes / BPFHelpers](https://files.speakerdeck.com/presentations/fa14b57b593b48b1a48c2767e5177eca/preview_slide_38.jpg)
-
-![BTF type tree for u32: TYPEDEF __u32 → INT unsigned int (4 bytes)](https://mostlynerdless.de/wp-content/uploads/2024/07/u32_tree-2000x377.png)
-
-![BTF type tree for ethhdr: 3 members with byte offsets → ARRAY → TYPEDEF → INT](https://mostlynerdless.de/wp-content/uploads/2024/07/ethhdr-2000x1111.png)
+![BTF type tree for ethhdr: 3 members with byte offsets → ARRAY → TYPEDEF → INT](../img/btf-ethhdr.png)
 
 ## §7 What the processor and plugin do not touch
 
@@ -318,4 +310,3 @@ class generation in depth — good companion to this page.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/bWs5GHYpYxg" title="hello-ebpf: Writing eBPF Programs Directly in Java — LPC 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-![eBPF Ecosystem layered stack: Use Cases → Projects → SDKs → Kernel Runtime](https://files.speakerdeck.com/presentations/fa14b57b593b48b1a48c2767e5177eca/preview_slide_2.jpg)

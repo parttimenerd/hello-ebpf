@@ -31,10 +31,9 @@ sched_ext lets you:
 - Deploy different schedulers per workload
 - Roll back instantly if a scheduler misbehaves (watchdog auto-detaches in `timeout_ms`)
 - Ship schedulers as ordinary jar files
+- Use the full JVM ecosystem — data structures, profiling, third-party libraries — in your scheduling policy
 
-![CPU time-slicing: tasks A and B alternating on the CPU timeline](https://files.speakerdeck.com/presentations/23196bda93134fd39a46549087f9965f/preview_slide_10.jpg)
-
-![Global DSQ dispatching to per-CPU local queues via work-stealing](https://files.speakerdeck.com/presentations/3a45bfdc15384a939b3ead644ea09b40/preview_slide_60.jpg)
+![Tasks flow from kernel enqueue through DSQs to CPU dispatch](../img/sched-ext/task-control-diagram.png)
 
 ## Quick start
 
@@ -112,7 +111,7 @@ sched.waitWhileSchedulerIsAttachedProperly() // blocks until detached
 
 The diagram below shows how dispatching works across the kernel and userspace scheduler paths:
 
-![Tasks flow from kernel enqueue through DSQs to CPU dispatch](https://mostlynerdless.de/wp-content/uploads/2024/12/task_control_diagram-2000x1680.png)
+![Tasks flow from kernel enqueue through DSQs to CPU dispatch](../img/sched-ext/task-control-diagram.png)
 
 ---
 

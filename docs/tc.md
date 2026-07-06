@@ -5,7 +5,7 @@
 **Source:** [`TCHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/TCHook.java)
 **See also:** [XDP Hook](xdp.md) · [BPF Maps](maps.md) · [LSM & Cgroup](lsm.md)
 
-![Linux network stack showing XDP (driver) and TC (after SKB allocation) hook points](https://mostlynerdless.de/wp-content/uploads/2024/08/network_stack-1.png)
+![Linux network stack showing XDP (driver) and TC (after SKB allocation) hook points](img/network-stack.png)
 
 TC (Traffic Control) hooks let you inspect and modify packets at the Linux TC subsystem layer.
 Unlike XDP which runs in the driver, TC programs operate on full `sk_buff` (socket buffer) objects,

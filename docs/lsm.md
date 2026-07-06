@@ -5,8 +5,6 @@
 **Source:** [`LSMHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/LSMHook.java) · [`CGroupHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/CGroupHook.java)  
 **See also:** [TC Hook](tc.md) · [XDP Hook](xdp.md) · [BPF Maps](maps.md)
 
-![eBPF hooks across the full Linux kernel: XDP, TC, socket, tracepoints, kprobes, LSM](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_32.jpg)
-
 ## BPF LSM
 
 BPF LSM (Linux Security Module) lets you attach BPF programs to the same hook points as
@@ -129,7 +127,6 @@ public abstract class CGroupFilter extends BPFProgram implements CGroupHook {
 
 The context type is `__sk_buff` (same as TC). Return `CGroupAction.PASS` to allow or
 `CGroupAction.DROP` to drop.
-
 
 ### Attaching to a cgroup
 

@@ -5,7 +5,7 @@
 **Source:** [`GlobalVariable.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/GlobalVariable.java)
 **See also:** [BPF Maps](maps.md) · [Kprobes](kprobes.md) · [Tracepoints](tracepoints.md)
 
-![Process memory segments — stack, heap, data, bss, text](https://mostlynerdless.de/wp-content/uploads/2024/05/memory_segments.png)
+![Process memory segments — stack, heap, data, bss, text](img/memory-segments.png)
 
 hello-ebpf provides a rich type system for sharing structured data between BPF programs and
 Java. This page covers `GlobalVariable<T>`, `@Type` records, `@Size(N)`, and `@Unsigned`.
@@ -237,4 +237,4 @@ This avoids padding holes and ensures the Java and C representations match witho
 ## Further reading
 
 - [BPF global variables (maps-backed) — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_ARRAY/)
-- [BPF Maps](maps.md) · [Kprobes / Fentry](kprobes.md) · [Writing a Scheduler (runtime control via GlobalVariable)](sched-ext/guide.md#step-6--runtime-control-with-globalvariable)
+- [BPF Maps](maps.md) · [Kprobes / Fentry](kprobes.md) · [Writing a Scheduler (runtime control via GlobalVariable)](sched-ext/guide.md#step-6-runtime-control-with-globalvariable)

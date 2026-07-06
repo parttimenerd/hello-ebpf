@@ -200,11 +200,11 @@ public abstract class TimerDemo extends BPFProgram implements XDPHook {
 }
 ```
 
-## Example 2 — periodic stats reset
+## Example 2 — periodic tick with GlobalVariable
 
-This program attaches a tracepoint to `sched_process_exec` and counts how many times each
-PID has triggered it. A BPF timer fires every 5 seconds, resets all counters, and emits a
-summary line via `bpf_trace_printk` — no userspace polling loop required.
+A BPF timer fires every 5 seconds and increments a `GlobalVariable` counter. The
+Java main loop reads and prints it. This shows the two-map pattern (one map owns
+the timer, one holds state) and the deferred-arm idiom without a tracepoint.
 
 ```java
 package me.bechberger.ebpf.samples;
@@ -217,6 +217,7 @@ import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.BPFTimer;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.BPFJ;
+import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
 import me.bechberger.ebpf.type.Ptr;
@@ -224,67 +225,64 @@ import me.bechberger.ebpf.type.Ptr;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.*;
 
 @BPF(license = "GPL")
-public abstract class StatsFlushDemo extends BPFProgram {
+public abstract class PeriodicTickDemo extends BPFProgram {
 
     @Type
-    static class FlushTimer {
+    static class TickTimer {
         bpf_timer timer;
         @Unsigned int initialized;
     }
 
-    /** Per-PID exec count, keyed by tgid. */
-    @BPFMapDefinition(maxEntries = 4096)
-    BPFHashMap<@Unsigned Integer, @Unsigned Long> execCounts;
+    /** Dummy context struct required by SEC("syscall") programs. */
+    @Type
+    static class ArmCtx { @Unsigned int unused; }
 
-    /** Single-slot map that owns the flush timer. */
     @BPFMapDefinition(maxEntries = 1)
-    BPFHashMap<@Unsigned Integer, FlushTimer> flushTimerMap;
+    BPFHashMap<@Unsigned Integer, TickTimer> tickTimerMap;
+
+    final GlobalVariable<@Unsigned Long> ticks = new GlobalVariable<>(0L);
 
     @BPFTimer
     @BPFFunction
-    public int flushCallback(Ptr<?> map, Ptr<Integer> key, Ptr<FlushTimer> val) {
-        // Clear every entry by iterating with bpf_for_each_map_elem would require
-        // a helper not available in all contexts; instead just zero the map via
-        // individual deletes for the entries we know about, or simply re-arm and
-        // let the periodic reset signal be visible via bpf_trace_printk.
-        bpf_trace_printk("stats-flush: resetting exec counters (5 s tick)\n");
-        bpf_map_delete_elem(Ptr.of(execCounts), key); // placeholder: clears slot 0
-        // Re-arm for another 5 seconds.
+    public int tickCallback(Ptr<?> map, Ptr<Integer> key, Ptr<TickTimer> val) {
+        ticks.set(ticks.get() + 1L);
         bpf_timer_start(Ptr.of(val.val().timer), 5_000_000_000L, 0);
         return 0;
     }
 
-    /** Tracepoint fires on every execve; increment the per-PID counter. */
-    @BPFFunction
-    public void handleExec() {
-        int pid = (int) bpf_get_current_pid_tgid();
-        Ptr<Long> count = execCounts.bpf_get(pid);
-        if (count != null) {
-            count.set(count.val() + 1L);
-        } else {
-            execCounts.bpf_put(pid, 1L);
-        }
-        // Arm the flush timer the first time we see any exec.
+    /** Called from Java to arm the timer once after load. */
+    @BPFFunction(
+            headerTemplate = "int $name($params)",
+            section = "syscall",
+            autoAttach = false
+    )
+    public int armTimer(Ptr<ArmCtx> unused) {
         int slot = 0;
-        Ptr<FlushTimer> ft = flushTimerMap.bpf_get(slot);
-        if (ft != null && ft.val().initialized == 0) {
-            ft.val().initialized = 1;
-            bpf_timer_init(Ptr.of(ft.val().timer), Ptr.of(flushTimerMap), 1);
-            BPFJ.bpf_timer_set_callback(Ptr.of(ft.val().timer), this::flushCallback);
-            bpf_timer_start(Ptr.of(ft.val().timer), 5_000_000_000L, 0);
-        }
+        Ptr<TickTimer> tt = tickTimerMap.bpf_get(slot);
+        if (tt == null) return -1;
+        if (tt.val().initialized != 0) return 0;
+        tt.val().initialized = 1;
+        bpf_timer_init(Ptr.of(tt.val().timer), Ptr.of(tickTimerMap), 1 /* CLOCK_MONOTONIC */);
+        BPFJ.bpf_timer_set_callback(Ptr.of(tt.val().timer), this::tickCallback);
+        bpf_timer_start(Ptr.of(tt.val().timer), 5_000_000_000L, 0);
+        return 0;
     }
 
     public static void main(String[] args) throws InterruptedException {
-        try (StatsFlushDemo program = BPFProgram.load(StatsFlushDemo.class)) {
-            // Pre-allocate the timer slot so the BPF side can find it.
-            FlushTimer ft = new FlushTimer();
-            ft.timer = BPFJ.newZeroedTimer();
-            program.flushTimerMap.put(0, ft);
+        try (PeriodicTickDemo program = BPFProgram.load(PeriodicTickDemo.class)) {
+            // Pre-allocate the timer slot.
+            TickTimer tt = new TickTimer();
+            tt.timer = BPFJ.newZeroedTimer();
+            program.tickTimerMap.put(0, tt);
 
-            System.out.println("Loaded — exec counts will be printed and reset every 5 s.");
-            System.out.println("Trace output: sudo cat /sys/kernel/debug/tracing/trace_pipe");
-            Thread.currentThread().join(); // run until Ctrl-C
+            // Arm via BPF_PROG_TEST_RUN on the SEC("syscall") program.
+            program.runSyscallProgram("armTimer", new ArmCtx());
+
+            System.out.println("Timer armed — prints every 5 s. Ctrl-C to stop.");
+            while (true) {
+                Thread.sleep(1000);
+                System.out.printf("ticks: %d%n", program.ticks.get());
+            }
         }
     }
 }

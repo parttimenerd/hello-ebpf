@@ -1,6 +1,6 @@
 # Diagnostics — Compiler Plugin Errors
 
-**Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html)
+**Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html)  
 **Source:** [`BPFProgram.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/BPFProgram.java)
 **See also:** [Getting started](getting-started/how-it-works.md) · [BPF Maps](maps.md)
 
