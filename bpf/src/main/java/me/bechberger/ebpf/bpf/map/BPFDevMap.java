@@ -63,7 +63,7 @@ public class BPFDevMap extends BPFMap {
     /**
      * Stores {@code ifindex} at slot {@code key}.
      *
-     * @param key     slot index (0 ≤ key < maxEntries)
+     * @param key     slot index (0 &le; key &lt; maxEntries)
      * @param ifindex output interface index (0 = remove the entry)
      * @return {@code true} on success
      */

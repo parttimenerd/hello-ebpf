@@ -1534,12 +1534,12 @@ public abstract class BPFProgram implements AutoCloseable {
      * applicable.
      * <p>
      * Auto-attaches all programs that are prefixed by "SEC(...)" in the eBPF program.
-     * It works with
-     * <li>
-     *     <ul>fentry, fexit of syscalls: e.g. <code>SEC("fentry/do_unlinkat")
-     * int BPF_PROG(do_unlinkat, int dfd, struct filename *name)</code>, <code>SEC("fexit/do_unlinkat")
-     * int BPF_PROG(do_unlinkat_exit, int dfd, struct filename *name, long ret)</code></ul>
-     * </li>
+     * It works with:
+     * <ul>
+     *   <li>fentry, fexit of syscalls: e.g. {@code SEC("fentry/do_unlinkat")
+     * int BPF_PROG(do_unlinkat, int dfd, struct filename *name)}, {@code SEC("fexit/do_unlinkat")
+     * int BPF_PROG(do_unlinkat_exit, int dfd, struct filename *name, long ret)}</li>
+     * </ul>
      * See <a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">syscalls(2)</a> for a list of syscalls.
      * @return
      */
