@@ -444,6 +444,7 @@ public class CompilerPlugin implements Plugin {
     StructOpsSynthesizer.Result getStructOpsSynthesis(TypeElement bpfClass) {
         String key = bpfClass.getQualifiedName().toString();
         var cached = structOpsCache.get(key);
+        System.err.println("DEBUG_CACHE: getStructOpsSynthesis key=" + key + " cached=" + (cached != null ? "HIT" : "MISS") + " cacheKeys=" + structOpsCache.keySet());
         if (cached != null) return cached;
         var env = createProcessingEnvironment();
         var kinds = StructOpsDiscovery.discover(bpfClass, env);
