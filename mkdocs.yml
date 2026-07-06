@@ -12,6 +12,8 @@ not_in_nav: |
   sched-ext/sound-scheduler.md
 theme:
   name: material
+  logo: img/logo.svg
+  favicon: img/logo.svg
   features:
     - navigation.tabs
     - navigation.sections
