@@ -268,6 +268,10 @@ public final class StructOpsSynthesizer {
                     ? TreeConstants.integerReturnLiteral(env, concrete)
                     : Optional.empty();
             if (lit.isEmpty()) {
+                System.err.println("DEBUG_STRUCTOPS: int data field '" + field.name()
+                        + "' on class=" + bpfClass.getQualifiedName()
+                        + " concrete=" + (concrete != null ? concrete.getEnclosingElement() + "." + concrete.getSimpleName() : "null")
+                        + " ifaceMethod=" + ifaceMethod.getEnclosingElement() + "." + ifaceMethod.getSimpleName());
                 env.getMessager().printMessage(
                         Diagnostic.Kind.ERROR,
                         "@StructOps data field '" + field.name()
@@ -282,6 +286,10 @@ public final class StructOpsSynthesizer {
                 ? TreeConstants.stringReturnLiteral(env, concrete)
                 : Optional.empty();
         if (literal.isEmpty()) {
+            System.err.println("DEBUG_STRUCTOPS: data field '" + field.name()
+                    + "' on class=" + bpfClass.getQualifiedName()
+                    + " concrete=" + (concrete != null ? concrete.getEnclosingElement() + "." + concrete.getSimpleName() : "null")
+                    + " ifaceMethod=" + ifaceMethod.getEnclosingElement() + "." + ifaceMethod.getSimpleName());
             env.getMessager().printMessage(
                     Diagnostic.Kind.ERROR,
                     "@StructOps data field '" + field.name()
