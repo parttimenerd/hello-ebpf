@@ -21,17 +21,7 @@ No C files, no Makefiles, no separate build step. Just Java.
 - Human-readable [verifier diagnostics](diagnostics.md)
 
 
-```
-Your Java class
-      │
-      │  javac + hello-ebpf compiler plugin
-      ▼
-  Generated C  ──► clang ──► .o (embedded in jar)
-                                    │
-                            BPFProgram.load()
-                                    │
-                               libbpf / kernel
-```
+![Annotation processor and compiler plugin pipeline](img/compiler-pipeline.png)
 
 1. You write a class like `MyProgram extends BPFProgram`.
 2. Methods annotated `@BPFFunction` are extracted and translated to C by the compiler plugin.
