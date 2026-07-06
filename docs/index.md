@@ -17,7 +17,7 @@ No C files, no Makefiles, no separate build step. Just Java.
 - [sched_ext](sched-ext/index.md): write a Linux CPU scheduler in Java, or run the policy entirely in [userspace](sched-ext/userspace.md)
 - [BPF maps](maps.md): [hash](maps.md#bpfhashmapk-v), [array](maps.md#bpfarrayv), [ring buffer](maps.md#bpfringbuffere), [per-CPU](maps.md#bpfpercpuarrayv), [task storage](sched-ext/cookbook.md#per-task-storage), [map-of-maps](map-of-maps.md), [shared maps](shared-maps.md)
 - [Global variables](global-variables.md), [tail calls](tail-calls.md), [BPF arenas](arenas.md), [timers](timers.md), [struct_ops](struct-ops.md), [attach cookies](attach-cookies-multi.md)
-- CO-RE: compile once, run on any kernel with BTF
+- [CO-RE](getting-started/how-it-works.md#6-co-re-and-portability): compile once, run on any kernel with BTF
 - Human-readable [verifier diagnostics](diagnostics.md)
 
 
