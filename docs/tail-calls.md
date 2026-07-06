@@ -3,6 +3,7 @@
 **Blog series:** [Part 4 — Tail calls and your first eBPF application](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/)
 **Javadoc:** [`BPFProgArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFProgArray.html)
 **Source:** [`BPFProgArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFProgArray.java)
+**See also:** [XDP Hook](xdp.md) · [TC Hook](tc.md) · [BPF Maps](maps.md)
 
 ![Stack frames with vs without a tail call — no stack growth with tail calls](https://mostlynerdless.de/wp-content/uploads/2024/02/tail_call-2000x599.png)
 
@@ -135,6 +136,14 @@ in semantics.
 - **Program type**: every program loaded into a `BPFProgArray` must match
   the type of the program that calls it (e.g. all XDP, all TC). The kernel
   rejects mismatched types at load time.
+
+---
+
+## Further reading
+
+- [Tail calls — docs.ebpf.io](https://docs.ebpf.io/linux/concepts/tail-calls/)
+- [BPF_MAP_TYPE_PROG_ARRAY — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_PROG_ARRAY/)
+- [XDP Hook](xdp.md) · [TC Hook](tc.md) · [BPF Maps](maps.md)
 
 ## See also
 

@@ -3,6 +3,7 @@
 **Blog series:** [Part 10 — Global variables](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/)
 **Javadoc:** [`GlobalVariable`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/GlobalVariable.html)
 **Source:** [`GlobalVariable.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/GlobalVariable.java)
+**See also:** [BPF Maps](maps.md) · [Kprobes](kprobes.md) · [Tracepoints](tracepoints.md)
 
 ![Process memory segments — stack, heap, data, bss, text](https://mostlynerdless.de/wp-content/uploads/2024/05/memory_segments.png)
 
@@ -228,3 +229,10 @@ When sharing structs across the Java/BPF boundary, field order matters:
 
 This avoids padding holes and ensures the Java and C representations match without manual
 `__attribute__((packed))` annotations.
+
+---
+
+## Further reading
+
+- [BPF global variables (maps-backed) — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_ARRAY/)
+- [BPF Maps](maps.md) · [Kprobes / Fentry](kprobes.md)

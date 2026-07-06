@@ -2,6 +2,7 @@
 
 **Javadoc:** [`BPFHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashMap.html) · [`BPFArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArray.html) · [`BPFRingBuffer`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFRingBuffer.html) · [`BPFPerCpuArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.html) · [`BPFPerCpuHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.html)
 **Source:** [`BPFHashMap.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFHashMap.java) · [`BPFArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArray.java) · [`BPFRingBuffer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFRingBuffer.java) · [`BPFPerCpuArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.java) · [`BPFPerCpuHashMap.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.java)
+**See also:** [Ring Buffer](maps.md#bpfringbuffere) · [Global Variables](global-variables.md) · [Map of Maps](map-of-maps.md) · [Shared Maps](shared-maps.md) · [Tail Calls](tail-calls.md)
 
 Maps are the primary mechanism for sharing data between BPF programs and user-space Java code.
 hello-ebpf provides typed Java wrappers for all major map types. Maps are declared as fields on
@@ -115,7 +116,7 @@ prog.histogram.put(42, 0L);
 ## BPFRingBuffer<E>
 
 **When to use:** Low-overhead, variable-size event streaming from BPF to user-space.
-Prefer over perf event arrays for new code (kernel ≥5.8).
+Prefer over perf event arrays for new code.
 
 **Map type:** `BPF_MAP_TYPE_RINGBUF`
 
@@ -172,7 +173,7 @@ long total = perCpu.stream().mapToLong(Long::longValue).sum();
 **When to use:** Probabilistic membership test. Zero false negatives; small false-positive rate.
 Useful for quick rejection of known-bad IPs or processes.
 
-**Map type:** `BPF_MAP_TYPE_BLOOM_FILTER` (kernel ≥5.16)
+**Map type:** `BPF_MAP_TYPE_BLOOM_FILTER`
 
 **Declaration:**
 ```java
@@ -226,7 +227,7 @@ long total = perCpuValues.stream().mapToLong(Long::longValue).sum();
 per-user maps where each key needs its own independent state. See [Map-of-Maps](map-of-maps.md)
 for full documentation.
 
-**Map types:** `BPF_MAP_TYPE_HASH_OF_MAPS` / `BPF_MAP_TYPE_ARRAY_OF_MAPS` (kernel ≥ 4.12)
+**Map types:** `BPF_MAP_TYPE_HASH_OF_MAPS` / `BPF_MAP_TYPE_ARRAY_OF_MAPS`
 
 **Declaration:**
 ```java
@@ -353,3 +354,13 @@ prog.counts.forEach((k, v) -> {
 - [`RingSample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/RingSample.java) — BPFRingBuffer event streaming
 - [`HelloArrayOfMaps.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloArrayOfMaps.java) — BPFArrayOfMaps / BPFHashOfMaps
 - [`PerCpuInnerMapSample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PerCpuInnerMapSample.java) — per-CPU inner maps
+
+---
+
+## Further reading
+
+- [BPF map types — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/)
+- [BPF_MAP_TYPE_HASH — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_HASH/)
+- [BPF_MAP_TYPE_RINGBUF — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_RINGBUF/)
+- [BPF_MAP_TYPE_PERCPU_ARRAY — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_PERCPU_ARRAY/)
+- [Global Variables](global-variables.md) · [Map of Maps](map-of-maps.md) · [Shared Maps](shared-maps.md)
