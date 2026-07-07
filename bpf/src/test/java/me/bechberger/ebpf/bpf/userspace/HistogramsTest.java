@@ -7,11 +7,9 @@ import org.junit.jupiter.api.Timeout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.foreign.MemorySegment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,17 +33,11 @@ public class HistogramsTest {
     // ── Shared test subclass ──────────────────────────────────────────────────
 
     /**
-     * Test subclass: overrides BPF lifecycle seams and the three histogram
-     * recording seams so tests run on any JVM without a BPF file descriptor.
-     *
-     * <p>Overrides {@link UserspaceScheduler#drainRaw()} to fill the package-private
-     * {@link UserspaceScheduler#taskPool} with controllable {@link QueuedTask}s,
-     * exactly as {@link JfrEmissionTest.JfrTestSched} does.
+     * Test subclass: extends {@link FakeSchedulerBase} (which provides all BPF lifecycle
+     * no-ops and the {@code fakeTasks}-driven {@code drainRaw}) and additionally overrides
+     * the three histogram recording seams to capture calls into in-heap lists.
      */
-    static class HistTestSched extends UserspaceScheduler {
-
-        /** Tasks to inject via the drainRaw seam. */
-        final List<QueuedTask> fakeTasks = new ArrayList<>();
+    static class HistTestSched extends FakeSchedulerBase {
 
         /** Captured recordBatchSize calls: list of values passed. */
         final List<Long> batchSizeValues = new ArrayList<>();
@@ -55,55 +47,6 @@ public class HistogramsTest {
 
         /** Captured recordRingConsume calls: list of values passed. */
         final List<Long> ringConsumeValues = new ArrayList<>();
-
-        /** Return value for submitDispatch — 0 = success. */
-        int submitResult = 0;
-
-        // ── BPF lifecycle seams ─────────────────────────────────────────────
-        @Override protected void loadAndAttachBpf()      { /* no-op */ }
-        @Override protected void cleanupBpf()            { /* no-op */ }
-        @Override protected boolean isAttached()         { return false; }
-        @Override protected MemorySegment idleMaskView() { return null; }
-
-        // ── framework-PID seams ─────────────────────────────────────────────
-        @Override protected void putFrameworkPid(int pid) { /* no-op */ }
-        @Override
-        protected Iterable<Map.Entry<Integer, Byte>> frameworkPidsIterable() {
-            return java.util.Collections.emptyList();
-        }
-
-        // ── submit seam ─────────────────────────────────────────────────────
-        @Override
-        protected int submitDispatch(int targetCpu, int pid, long enqCnt, long sliceNs, long vtime) {
-            return submitResult;
-        }
-
-        // ── drain seam ──────────────────────────────────────────────────────
-
-        /**
-         * Fill the real {@code taskPool} with {@link #fakeTasks} and return their count.
-         * The production {@code drainBatchOnce} then runs the real dispatch logic
-         * (and the histogram recording calls) on those tasks.
-         *
-         * <p>Returns 0 when {@code fakeTasks} is empty so the early-return path
-         * in {@code drainBatchOnce} is taken (no histograms recorded).
-         *
-         * <p>Does NOT call {@code recordRingConsume} — that is done by the real
-         * production {@code drainRaw}; since this override replaces {@code drainRaw}
-         * entirely, ring-consume timing is not tested here. A separate test method
-         * ({@code ringConsumeRecordedThroughRealDrainRaw}) exercises the production
-         * path by not overriding drainRaw.
-         */
-        @Override
-        protected int drainRaw() {
-            int n = fakeTasks.size();
-            ensureTaskPool(n);
-            for (int i = 0; i < n; i++) {
-                taskPool[i] = fakeTasks.get(i);
-            }
-            batchCtx.count = n;
-            return n;
-        }
 
         // ── histogram recording seams ───────────────────────────────────────
 
@@ -127,11 +70,7 @@ public class HistogramsTest {
      * Minimal test subclass that does NOT override {@link UserspaceScheduler#drainRaw},
      * so the production implementation runs. bpfHandle is null, which means drainRaw
      * sleeps 10 ms and returns 0 — but it also calls {@code recordRingConsume(0)}
-     * only when bpfHandle is non-null. Instead we need a version whose bpfHandle is
-     * null but records ring-consume through the real timing path.
-     *
-     * <p>Actually, the production {@code drainRaw} guards on {@code bpfHandle == null}
-     * and returns 0 without recording. So we test ringConsume by calling
+     * only when bpfHandle is non-null. We test ringConsume by calling
      * {@code recordRingConsume} directly with a known value to verify the seam capture.
      */
     // (no additional subclass needed — see ringConsumeRecordedWithNonNegativeValue below)
