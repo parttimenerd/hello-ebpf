@@ -14,6 +14,9 @@ public final class Opts {
     /** Ring buffer poll budget — return to Java after this many events even if more remain. */
     public int ringPollBudget = 1024;
 
+    /** Max signals drained per run-loop iteration. 0 disables signal draining entirely. */
+    public int signalPollBudget = 256;
+
     /** Warn (don't fail) if ZGC isn't detected at start. Recommend ZGC for sub-ms pauses. */
     public boolean verifyZgcOnStart = true;
 

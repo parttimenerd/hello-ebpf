@@ -435,6 +435,7 @@ public abstract class UserspaceScheduler {
             if (!isAttached())       { exitCause = ExitCause.DETACHED;  break; }
             maybeRescanFrameworkPids();
             drainBatchOnce();
+            if (opts.signalPollBudget > 0) drainSignalsOnce();
             long now = System.nanoTime();
             if (now - lastTickNs >= TICK_PERIOD_NS) {
                 emitTickEvent();
@@ -541,6 +542,41 @@ public abstract class UserspaceScheduler {
         long nsAfterConsume = System.nanoTime();
         recordRingConsume((nsAfterConsume - nsBeforeConsume) / 1_000L);
         return result;
+    }
+
+    /** Override to react to BPF-emitted signals. Default: no-op. */
+    protected void onSignal(Signal s) { }
+
+    /**
+     * Raw signal drain seam. Default consumes the real signals ring, handing each record
+     * segment to {@code sink}. The offline harness overrides this to feed synthetic records.
+     * Returns the number of records handed to the sink.
+     */
+    protected int drainSignalsRaw(java.util.function.Consumer<MemorySegment> sink) {
+        if (bpfHandle == null) return 0;
+        int[] budget = { opts == null ? 256 : opts.signalPollBudget };
+        SegmentCallback cb = (seg, size, ctx) -> {
+            if (budget[0]-- <= 0) return 1;
+            sink.accept(seg);
+            return 0;
+        };
+        return bpfHandle.signals.consumeRaw(cb, null);
+    }
+
+    /** Drain the signals ring once, decoding each record and calling {@link #onSignal}. */
+    protected final void drainSignalsOnce() {
+        drainSignalsRaw(seg -> {
+            Signal s = new Signal(
+                seg.get(ValueLayout.JAVA_INT,  0),
+                seg.get(ValueLayout.JAVA_INT,  4),
+                seg.get(ValueLayout.JAVA_LONG, 8),
+                seg.get(ValueLayout.JAVA_LONG, 16));
+            try {
+                onSignal(s);
+            } catch (Throwable t) {
+                System.err.println("[sched] onSignal() threw: " + t);
+            }
+        });
     }
 
     /**
