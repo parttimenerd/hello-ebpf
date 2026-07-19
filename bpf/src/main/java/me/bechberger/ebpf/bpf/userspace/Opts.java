@@ -29,5 +29,8 @@ public final class Opts {
     /** Number of policy worker threads. 1 (default) = today's single-threaded loop, byte-identical. */
     public int workerThreads = 1;
 
+    /** Decision-trace ring capacity. 0 (default) = disabled, zero cost. */
+    public int decisionTraceCapacity = 0;
+
     public static Opts defaults() { return new Opts(); }
 }

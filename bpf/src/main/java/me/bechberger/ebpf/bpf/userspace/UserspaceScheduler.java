@@ -48,6 +48,9 @@ public abstract class UserspaceScheduler {
     /** Set by {@link #runLoop} just before it returns so {@link #runUntilExit} can log why. */
     private volatile ExitCause exitCause = ExitCause.NOT_EXITED;
     private Opts opts = Opts.defaults();
+    private DecisionTrace decisionTrace = new DecisionTrace(0);   // disabled until runUntilExit
+    private TaskClassifier<?> classMetricsClassifier;             // optional; set via setClassMetrics
+    private final java.util.Map<Enum<?>, Log2Histogram> perClassHist = new java.util.concurrent.ConcurrentHashMap<>();
 
     /** Why {@link #runLoop} returned. Used by the exit diagnostic in {@link #runUntilExit}. */
     public enum ExitCause {
@@ -207,6 +210,7 @@ public abstract class UserspaceScheduler {
      */
     public final void runUntilExit(Opts opts) {
         this.opts = opts;
+        this.decisionTrace = new DecisionTrace(opts.decisionTraceCapacity);
         loadAndAttachBpf();
         // loadAndAttachBpf has already seeded kernel-thread PIDs and done the
         // initial /proc/self/task rescan; the next periodic rescan happens on
@@ -230,6 +234,22 @@ public abstract class UserspaceScheduler {
      */
     public final ExitCause exitCause() {
         return exitCause;
+    }
+
+    /** Snapshot of the most recent scheduling decisions (empty unless Opts.decisionTraceCapacity > 0). */
+    public java.util.List<DecisionTrace.TraceEntry> recentDecisions() {
+        return decisionTrace.recentDecisions();
+    }
+
+    /** Enable per-class metrics keyed by the given classifier. Optional; off by default. */
+    public <C extends Enum<C>> void setClassMetrics(TaskClassifier<C> classifier) {
+        this.classMetricsClassifier = classifier;
+    }
+
+    /** Per-class latency/count summary; {@code null} if no classifier set or the class is unseen. */
+    public ClassMetrics perClass(Enum<?> cls) {
+        var h = perClassHist.get(cls);
+        return h == null ? null : ClassMetrics.of(h);
     }
 
     /**
@@ -810,6 +830,7 @@ public abstract class UserspaceScheduler {
      * @param t   task to dispatch
      * @param cpu policy-provided CPU, or {@link #ANY_CPU}
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     void dispatchInternal(QueuedTask t, int cpu) {
         var ev = new DispatchEvent();
         ev.pid = t.pid;
@@ -825,6 +846,14 @@ public abstract class UserspaceScheduler {
                 ev.rc  = rc;
                 ev.commit();
             }
+        }
+        if (decisionTrace.enabled()) {
+            decisionTrace.record(System.nanoTime(), t.pid, target, DecisionTrace.Kind.DISPATCH, 0);
+        }
+        if (classMetricsClassifier != null) {
+            TaskClassifier<?> cls = classMetricsClassifier;
+            Enum<?> c = ((TaskClassifier) cls).classOf(t);
+            if (c != null) perClassHist.computeIfAbsent(c, k -> new Log2Histogram()).add(1);
         }
         if (rc == 0) sDispatched++;
         else         sDispatchFailed++;
@@ -858,6 +887,9 @@ public abstract class UserspaceScheduler {
      */
     public final void preempt(int pid) {
         submitControl(me.bechberger.ebpf.bpf.userspace.ControlKind.PREEMPT, pid, ANY_CPU, 0L);
+        if (decisionTrace.enabled()) {
+            decisionTrace.record(System.nanoTime(), pid, ANY_CPU, DecisionTrace.Kind.PREEMPT, 0);
+        }
     }
 
     /**
@@ -874,6 +906,9 @@ public abstract class UserspaceScheduler {
      */
     public final void kick(int cpu, long flags) {
         submitControl(me.bechberger.ebpf.bpf.userspace.ControlKind.KICK, ANY_CPU, cpu, flags);
+        if (decisionTrace.enabled()) {
+            decisionTrace.record(System.nanoTime(), -1, cpu, DecisionTrace.Kind.KICK, (int) flags);
+        }
     }
 
     /**
