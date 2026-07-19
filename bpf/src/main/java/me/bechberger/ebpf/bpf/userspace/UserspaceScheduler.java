@@ -626,8 +626,24 @@ public abstract class UserspaceScheduler {
      *
      * @param t   task to dispatch (flyweight from current batch, or a {@link QueuedTask#copy()})
      * @param cpu target CPU, or {@link #ANY_CPU} to let BPF pick any idle CPU
+     * @throws NullPointerException     if {@code t} is null
+     * @throws IllegalArgumentException if {@code cpu} is neither {@link #ANY_CPU} nor a valid
+     *                                  CPU index in {@code [0, nrCpus)} — a common cause of
+     *                                  silent dispatch failures (the kernel rejects the target)
      */
     public final void dispatchTask(QueuedTask t, int cpu) {
+        if (t == null) {
+            throw new NullPointerException(
+                    "dispatchTask(null): pass a task from the current batch or a QueuedTask.copy()");
+        }
+        if (cpu != ANY_CPU && (cpu < 0 || cpu >= nrCpus)) {
+            throw new IllegalArgumentException(
+                    "dispatchTask: cpu " + cpu + " is out of range for pid " + t.pid
+                    + " — must be ANY_CPU (" + ANY_CPU + ") or in [0, " + nrCpus + "). "
+                    + "Passing a bad CPU here makes the kernel reject the dispatch silently "
+                    + "(it only shows up as SchedStatsSnapshot.dispatchFailed). Use ANY_CPU to "
+                    + "let BPF pick an idle CPU, or selectCpu(pid, prevCpu) for a locality hint.");
+        }
         dispatchInternal(t, cpu);
     }
 
