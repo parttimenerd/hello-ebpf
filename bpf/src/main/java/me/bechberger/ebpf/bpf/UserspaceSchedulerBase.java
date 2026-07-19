@@ -151,10 +151,10 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      */
     @Type
     public static class TaskCtx {
-        @Unsigned long enqCnt;
-        @Unsigned long startTs;
-        @Unsigned long stopTs;
-        @Unsigned long execRuntime;
+        public @Unsigned long enqCnt;
+        public @Unsigned long startTs;
+        public @Unsigned long stopTs;
+        public @Unsigned long execRuntime;
     }
 
     /**
@@ -172,18 +172,18 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
 
     @Type
     public static class QueuedTaskCtx {
-        int pid;
-        int prevCpu;
-        @Unsigned long nrCpusAllowed;
-        @Unsigned long flags;
-        @Unsigned long startTs;
-        @Unsigned long stopTs;
-        @Unsigned long execRuntime;
-        @Unsigned long weight;
-        @Unsigned long vtime;
-        @Unsigned long enqCnt;
-        @Size(16) byte[] comm;
-        @Size(EXT_CAP) public byte[] ext;   // per-task extension tail; zeroed unless fillExtension writes it
+        public int pid;
+        public int prevCpu;
+        public @Unsigned long nrCpusAllowed;
+        public @Unsigned long flags;
+        public @Unsigned long startTs;
+        public @Unsigned long stopTs;
+        public @Unsigned long execRuntime;
+        public @Unsigned long weight;
+        public @Unsigned long vtime;
+        public @Unsigned long enqCnt;
+        public @Size(16) byte[] comm;
+        public @Size(EXT_CAP) byte[] ext;   // per-task extension tail; zeroed unless fillExtension writes it
     }
 
     /**
@@ -246,7 +246,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * (Task 6: stale-dispatch cancellation path).
      */
     @BPFMapDefinition(maxEntries = 1)   // BPF_MAP_TYPE_TASK_STORAGE — kernel ignores maxEntries; 1 satisfies plugin validator
-    BPFTaskStorage<TaskCtx> taskCtx;
+    protected BPFTaskStorage<TaskCtx> taskCtx;
 
     // ─── Ring-buf maps ────────────────────────────────────────────
     // 4 MiB ≈ 52k QueuedTaskCtx records at ~80 B each — large enough to absorb
@@ -271,7 +271,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@link #MAX_CPUS} = 1 024 CPUs.
      */
     @BPFMapDefinition(maxEntries = 1)   // 1 page = 4 KiB; 16 words cover MAX_CPUS
-    BPFArena idleMask;
+    protected BPFArena idleMask;
 
     /**
      * Pre-allocated arena base pointer — obtained in {@link #init()} via
@@ -285,7 +285,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * satisfied.
      */
     @InArena
-    Ptr<Long> idleMaskBase;
+    protected Ptr<Long> idleMaskBase;
 
     /**
      * Scheduler stats array. Single entry of type {@link SchedStats} at index 0.
@@ -293,13 +293,13 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * Java reads via {@code bpf_map_lookup_elem} syscall (acceptable: cold path).
      */
     @BPFMapDefinition(maxEntries = 1)   // single SchedStats slot
-    BPFArray<SchedStats> stats;
+    protected BPFArray<SchedStats> stats;
 
     // ─── Hash and array maps ──────────────────────────────────────
 
     /** PIDs of threads that belong to the scheduler process; value is ignored. */
     @BPFMapDefinition(maxEntries = 8192)
-    BPFHashMap<Integer, Byte> frameworkPids;
+    protected BPFHashMap<Integer, Byte> frameworkPids;
 
     /**
      * Single-entry array holding a {@link HeartbeatVal} (which wraps a
@@ -307,7 +307,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * field inside the map-value struct, not the map value itself.
      */
     @BPFMapDefinition(maxEntries = 1)
-    BPFArray<HeartbeatVal> heartbeat;
+    protected BPFArray<HeartbeatVal> heartbeat;
 
     // ─── Observability histograms (Task 14) ──────────────────────────────────
     // All five histograms use 64 buckets (BCC log2_hist layout: bucket i counts
@@ -319,7 +319,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * Recorded on the Java side after each non-empty drain.
      */
     @BPFMapDefinition(maxEntries = 64)
-    BPFHistogram batchSizeHist;
+    protected BPFHistogram batchSizeHist;
 
     /**
      * log2 histogram of kernel→user→kernel round-trip time in microseconds.
@@ -332,7 +332,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * deferred to Task 21 obs-benchmark.
      */
     @BPFMapDefinition(maxEntries = 64)
-    BPFHistogram roundTripUsHist;
+    protected BPFHistogram roundTripUsHist;
 
     /**
      * log2 histogram of enqueue→dispatch latency in microseconds.
@@ -342,7 +342,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@code dispatchOne} once a per-task enqueue timestamp is available.
      */
     @BPFMapDefinition(maxEntries = 64)
-    BPFHistogram dispatchLatencyUsHist;
+    protected BPFHistogram dispatchLatencyUsHist;
 
     /**
      * log2 histogram of ring-queue depth at enqueue time.
@@ -353,7 +353,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * available in BPF context.
      */
     @BPFMapDefinition(maxEntries = 64)
-    BPFHistogram queueDepthHist;
+    protected BPFHistogram queueDepthHist;
 
     /**
      * log2 histogram of time spent in one {@code consumeRaw} call in microseconds.
@@ -361,7 +361,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@code drainBatchOnce}.
      */
     @BPFMapDefinition(maxEntries = 64)
-    BPFHistogram ringConsumeUsHist;
+    protected BPFHistogram ringConsumeUsHist;
 
     // ─── Histogram accessor seams (Task 14) ──────────────────────────────────
     //
@@ -435,26 +435,26 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@code attachScheduler()}, read by {@link #enqueue} to gate the
      * framework-PID fast path, and by the {@code onFork} tracepoint (Task 7).
      */
-    final GlobalVariable<Integer> schedulerTgid = new GlobalVariable<>(0);
+    protected final GlobalVariable<Integer> schedulerTgid = new GlobalVariable<>(0);
 
     /** Timestamp of the last Java→kernel dispatch, used for the stall-fallback check. */
-    final GlobalVariable<@Unsigned Long> lastUserDispatchNs = new GlobalVariable<>(0L);
+    protected final GlobalVariable<@Unsigned Long> lastUserDispatchNs = new GlobalVariable<>(0L);
 
     /** Timestamp of the last {@link #enqueue} that routed a task to userspace. */
-    final GlobalVariable<@Unsigned Long> lastEnqueueNs = new GlobalVariable<>(0L);
+    protected final GlobalVariable<@Unsigned Long> lastEnqueueNs = new GlobalVariable<>(0L);
 
     /**
      * Pending-task hint written by {@code UserspaceScheduler.notifyComplete(pending)}.
      * BPF's {@link #enqueue} reads this to suppress the ring-buf wakeup when
      * Java already has queued work (wake-suppress, Task 6).
      */
-    final GlobalVariable<@Unsigned Long> nrUserPending = new GlobalVariable<>(0L);
+    protected final GlobalVariable<@Unsigned Long> nrUserPending = new GlobalVariable<>(0L);
 
     /**
      * CPU the scheduler thread last ran on. The heartbeat timer (Task 7) kicks
      * this CPU to keep the Java run loop ticking even when no enqueues arrive.
      */
-    final GlobalVariable<Integer> schedulerCpu = new GlobalVariable<>(0);
+    protected final GlobalVariable<Integer> schedulerCpu = new GlobalVariable<>(0);
 
     /**
      * PID of {@code kswapd}; 0 means not found. Populated by Java at startup via
@@ -462,13 +462,13 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@code SCX_DSQ_LOCAL_ON} to avoid latency from the userspace round-trip
      * (Task 5).
      */
-    final GlobalVariable<Integer> kswapdPid = new GlobalVariable<>(0);
+    protected final GlobalVariable<Integer> kswapdPid = new GlobalVariable<>(0);
 
     /**
      * PID of {@code khugepaged}; 0 means not found. Same role as
      * {@link #kswapdPid} (Task 5).
      */
-    final GlobalVariable<Integer> khugepageDPid = new GlobalVariable<>(0);
+    protected final GlobalVariable<Integer> khugepageDPid = new GlobalVariable<>(0);
 
     // ─── Java-side testability seams ─────────────────────────────
     //

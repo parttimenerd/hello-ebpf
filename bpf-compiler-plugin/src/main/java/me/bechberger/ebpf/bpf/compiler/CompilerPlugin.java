@@ -1142,6 +1142,18 @@ public class CompilerPlugin implements Plugin {
         // is required for the verifier to set prog->aux->arena.
         var arenaPassResult = new ArenaAssociationPass().apply(this, declMethodSymbols, decls);
         decls = arenaPassResult.updatedDecls();
+        // NOTE (arena-association across module boundaries — KNOWN GAP): the pass above
+        // injects `bpf_arena_associate_<N>();` into this program's OWN struct_ops entries
+        // and emits the per-arena helper, so a @BPF program compiled WITH its arena-using
+        // sources in the current unit loads correctly. A cross-module @BPF SUBCLASS that
+        // inherits an arena-reaching struct_ops entry as a raw-C @InternalMethodDefinition
+        // body does NOT get the association call/helper: this program-impl phase runs in a
+        // LATER annotation-processing round than the base source, so re-storing the
+        // post-pass body onto the base method symbol here cannot reach the already-written
+        // base .class file. Fixing this requires persisting per-entry arena reachability in
+        // the base source round and injecting into the inherited bodies at subclass compile
+        // time. Until then, a subclass that inherits an arena-using struct_ops entry is
+        // rejected by the verifier with "addr_space_cast ... has an associated arena".
         // Synthetic top-level functions (e.g. lambdas lifted for bpf_loop / bpf_for_each_map_elem).
         // These come BEFORE the main function decls in declarator-emission order so that the
         // helper that takes their address has a forward declaration in scope.
@@ -1239,6 +1251,18 @@ public class CompilerPlugin implements Plugin {
         if (!prototypes.isBlank()) {
             if (!interfaceCode.isBlank()) {
                 interfaceCode = interfaceCode + "\n\n";
+            }
+            // The prototypes reference struct tags (e.g. `struct QueuedTaskCtx *`) whose
+            // full definitions are emitted LATER by combineCode (in the type-decl block,
+            // after `code`). A prototype that mentions an as-yet-undeclared struct tag
+            // declares a fresh prototype-scoped incomplete type; when the matching body
+            // is defined later against the real file-scope struct, clang rejects it with
+            // "conflicting types". Emit file-scope forward declarations (`struct X;`) for
+            // every struct tag used in the prototypes FIRST so the prototype and the
+            // eventual definition refer to the same incomplete-then-completed tag.
+            var structForwardDecls = extractStructForwardDecls(prototypes);
+            if (!structForwardDecls.isBlank()) {
+                interfaceCode = interfaceCode + structForwardDecls + "\n\n";
             }
             interfaceCode = interfaceCode + prototypes;
         }
@@ -1680,6 +1704,31 @@ public class CompilerPlugin implements Plugin {
         // looks like an ALL_CAPS(name,...) call rather than a normal declarator.
         if (signature.matches("(?s).* [A-Z0-9_]+\\([a-z0-9A-Z_]+,.*\\).*")) return null;
         return signature + ";";
+    }
+
+    /**
+     * Collect file-scope {@code struct X;} forward declarations for every struct tag
+     * referenced in the synthesised inherited-function prototypes.
+     *
+     * <p>When a subclass re-emits inherited bodies, their prototypes are placed above
+     * the struct/map/#define block that {@code combineCode} appends after {@code code}.
+     * A prototype mentioning an undeclared {@code struct QueuedTaskCtx} would otherwise
+     * introduce a fresh prototype-scoped incomplete type, causing a "conflicting types"
+     * error once the real file-scope struct is defined and the body is emitted. Emitting
+     * {@code struct QueuedTaskCtx;} first pins the tag to file scope so prototype and
+     * definition agree.
+     *
+     * @param prototypes the joined prototype block
+     * @return a newline-joined block of {@code struct X;} declarations (may be empty)
+     */
+    String extractStructForwardDecls(String prototypes) {
+        if (prototypes == null || prototypes.isBlank()) return "";
+        var matcher = java.util.regex.Pattern.compile("\\bstruct\\s+([A-Za-z_][A-Za-z0-9_]*)").matcher(prototypes);
+        var names = new java.util.LinkedHashSet<String>();
+        while (matcher.find()) {
+            names.add(matcher.group(1));
+        }
+        return names.stream().map(n -> "struct " + n + ";").collect(Collectors.joining("\n"));
     }
 
     String combineCode(String code, List<FuncDecl> decls, Set<Define> defines) {

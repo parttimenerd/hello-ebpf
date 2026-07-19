@@ -32,6 +32,6 @@ import java.lang.annotation.Target;
         ElementType.PARAMETER,
         ElementType.TYPE_USE
 })
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 public @interface InArena {
 }
