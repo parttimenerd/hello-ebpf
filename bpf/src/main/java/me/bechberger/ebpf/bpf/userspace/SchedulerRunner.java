@@ -12,7 +12,6 @@ package me.bechberger.ebpf.bpf.userspace;
  * }</pre>
  *
  * <p>Reads {@code --stats-interval <sec>} (default 5; 0 = off) from {@code args}.
- * (Metrics-port wiring is Sub-project D and layered on separately.)
  */
 public final class SchedulerRunner {
     private SchedulerRunner() {}
