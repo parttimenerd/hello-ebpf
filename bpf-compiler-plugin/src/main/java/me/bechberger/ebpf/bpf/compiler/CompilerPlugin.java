@@ -660,16 +660,49 @@ public class CompilerPlugin implements Plugin {
         // these inherited implementations without needing the source in the current unit.
         var methodSymbol = (MethodSymbol) trees.getElement(path.path());
         if (methodSymbol != null && !(methodSymbol.owner instanceof Symbol.ClassSymbol ownerClass && ownerClass.isInterface())) {
-            // Prepend any required #define lines so the injected snippet is self-contained.
-            var definesPrefix = code.requiredDefines().stream()
-                    .map(d -> d.toPrettyString())
-                    .collect(java.util.stream.Collectors.joining("\n"));
-            var codeStr = definesPrefix.isBlank()
-                    ? code.decl.toPrettyString()
-                    : definesPrefix + "\n" + code.decl.toPrettyString();
-            storeInternalMethodDefinition(methodSymbol, codeStr);
+            storeInternalMethodDefinition(methodSymbol, buildInternalMethodCode(code, List.of()));
         }
         return true;
+    }
+
+    /**
+     * Serialize a {@link FuncDeclStatementResult} into the self-contained C snippet persisted
+     * via {@link InternalMethodDefinition} so a downstream compilation (a {@code @BPF} subclass
+     * inheriting this method) can inject it verbatim.
+     *
+     * <p>Order of the emitted string: {@code [extraDefines]} then {@code [requiredDefines]} then
+     * {@code [synthetic lambda defs]} then {@code [main body]}.
+     * <ul>
+     *   <li>{@code extraDefines} — carrier {@code #define}s (e.g. {@code FRAMEWORK_DSQ_ID}) that
+     *       are only known at program-impl time; supplied when re-storing (GAP 2).</li>
+     *   <li>synthetic lambda defs — lambdas lifted to top-level C functions (e.g.
+     *       {@code __bpf_lambda_dispatch_0}); emitted before the main body so the body's call
+     *       sites see them already defined. They are self-contained {@code static __always_inline}
+     *       defs. Identical defs are deduped (GAP 1).</li>
+     * </ul>
+     * The subclass-side reader synthesises a forward prototype from the FIRST function in the
+     * string only; leading {@code #define} lines are skipped by {@code extractFunctionPrototype}.
+     */
+    private String buildInternalMethodCode(FuncDeclStatementResult code, List<String> extraDefines) {
+        var parts = new ArrayList<String>();
+        // Carrier #defines that could only be resolved at program-impl time, deduped against
+        // the method's own requiredDefines below to avoid emitting the same macro twice.
+        var definesPrefix = code.requiredDefines().stream()
+                .map(d -> d.toPrettyString())
+                .collect(java.util.stream.Collectors.joining("\n"));
+        for (var d : extraDefines) {
+            if (d != null && !d.isBlank() && (definesPrefix.isBlank() || !definesPrefix.contains(d))) {
+                parts.add(d);
+            }
+        }
+        if (!definesPrefix.isBlank()) parts.add(definesPrefix);
+        var syntheticDefs = code.syntheticFunctions().stream()
+                .map(FunctionDeclarationStatement::toPrettyString)
+                .distinct()
+                .collect(java.util.stream.Collectors.joining("\n\n"));
+        if (!syntheticDefs.isBlank()) parts.add(syntheticDefs);
+        parts.add(code.decl.toPrettyString());
+        return String.join("\n", parts);
     }
 
     private void storeInternalMethodDefinition(MethodSymbol methodSymbol, String codeStr) {
@@ -1079,6 +1112,28 @@ public class CompilerPlugin implements Plugin {
         var superClassName = superClassElement.getQualifiedName().toString();
         carriers.forEach((fieldName, carrier) ->
                 abstractionFieldCarrierOverrides.put(superClassName + "." + fieldName, carrier));
+        // GAP 2: carrier #define ride-along. The numeric carrier id (e.g. FRAMEWORK_DSQ_ID) is
+        // only minted at THIS program-impl compile, so it was not available when
+        // processBPFFunction persisted each @BPFFunction body. Re-store the
+        // @InternalMethodDefinition for every base method whose body references a carrier
+        // placeholder, prepending the matching #define so it rides along with the inherited
+        // body when a subclass injects it. Without this, a subclass inheriting a body that
+        // references FRAMEWORK_DSQ_ID gets no #define and clang fails with an undeclared id.
+        if (!carriers.isEmpty()) {
+            for (int i = 0; i < declMethodSymbols.size(); i++) {
+                var methodSymbol = declMethodSymbols.get(i);
+                var result = declsWithDefines.get(i);
+                var bodyText = buildInternalMethodCode(result, List.of());
+                var extraDefines = carriers.entrySet().stream()
+                        .filter(e -> bodyText.contains(e.getKey() + "_DSQ_ID"))
+                        .map(e -> "#define " + e.getKey() + "_DSQ_ID " + e.getValue())
+                        .distinct()
+                        .toList();
+                if (!extraDefines.isEmpty()) {
+                    storeInternalMethodDefinition(methodSymbol, buildInternalMethodCode(result, extraDefines));
+                }
+            }
+        }
         // Emit #define NAME value for any auto-id carriers so field references that were
         decls = injectAbstractionPrologues(decls, declJavaNames, (JCClassDecl) bpfProgram);
         // Arena association pass: inject per-arena helper calls into struct_ops entry handlers
@@ -1172,15 +1227,20 @@ public class CompilerPlugin implements Plugin {
                 .collect(Collectors.joining("\n"));
 
         var defaultCode = defaultCodeBodies.stream().collect(Collectors.joining("\n\n"));
-        if (!prototypes.isBlank()) {
-            defaultCode = defaultCode.isBlank() ? prototypes : prototypes + "\n\n" + defaultCode;
-        }
 
-        if (!defaultCode.isBlank()) {
+        // The inherited bodies reference this program's struct/map/#define block (e.g.
+        // `struct DispatchedTaskCtx`, the `frameworkPids` map, `FRAMEWORK_DSQ`). That block
+        // is emitted by combineCode AFTER `code`, so prepending the bodies into `code` puts
+        // them BEFORE their own type/map/define declarations — clang then rejects them with
+        // "incomplete definition" / "use of undeclared identifier". Emit the forward
+        // prototypes early (into `code`, so any own-code call resolves) but append the
+        // inherited body DEFINITIONS at the very end of the program (after structs/maps/
+        // defines and this program's own decls) via `deferredInheritedBodies`.
+        if (!prototypes.isBlank()) {
             if (!interfaceCode.isBlank()) {
                 interfaceCode = interfaceCode + "\n\n";
             }
-            interfaceCode = interfaceCode + defaultCode;
+            interfaceCode = interfaceCode + prototypes;
         }
 
         if (!interfaceCode.isBlank()) {
@@ -1282,7 +1342,9 @@ public class CompilerPlugin implements Plugin {
             }
         }
 
-        var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after()
+        var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines)
+                + (defaultCode.isBlank() ? "" : "\n\n" + defaultCode)
+                + "\n\n" + implAnn.after()
                 + (structOpsInstanceBlock.isEmpty() ? "" : "\n\n" + structOpsInstanceBlock), properties);
 
         // Define __arena (clang AS1 qualifier) when the program references

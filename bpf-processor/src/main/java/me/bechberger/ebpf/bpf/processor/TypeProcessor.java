@@ -847,14 +847,25 @@ public class TypeProcessor {
     private List<Define> createDefineStatements(TypeElement typeElement) {
         var seen = new java.util.LinkedHashSet<String>();
         var result = new ArrayList<Define>();
-        // Own fields first
-        typeElement.getEnclosedElements().stream()
-                .filter(e -> e.getKind() == ElementKind.FIELD)
-                .map(e -> (VariableElement) e)
-                .map(this::processField)
-                .filter(Objects::nonNull)
-                .filter(d -> seen.add(d.name()))
-                .forEach(result::add);
+        // Own fields first, then constants inherited from every @BPF superclass
+        // (mirrors the map / @Type / global-variable superclass walks). When one @BPF
+        // program extends another, the base's `static final` constants (e.g. a shared
+        // DSQ id) must be re-emitted into the subclass's C or its inherited @BPFFunction
+        // bodies reference undeclared identifiers (e.g. FRAMEWORK_DSQ).
+        TypeElement current = typeElement;
+        while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
+            current.getEnclosedElements().stream()
+                    .filter(e -> e.getKind() == ElementKind.FIELD)
+                    .map(e -> (VariableElement) e)
+                    .map(this::processField)
+                    .filter(Objects::nonNull)
+                    .filter(d -> seen.add(d.name()))
+                    .forEach(result::add);
+            var superMirror = current.getSuperclass();
+            var superElem = (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE)
+                    ? processingEnv.getTypeUtils().asElement(superMirror) : null;
+            current = (superElem instanceof TypeElement te) ? te : null;
+        }
         // Constants from @BPFInterface interfaces (transitively)
         collectBPFInterfaceDefines(typeElement.asType(), seen, result);
         return result;
