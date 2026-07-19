@@ -43,6 +43,18 @@ public final class BtfLoader {
                             PanamaUtil.POINTER,
                             JAVA_INT));
 
+    private static final HandlerWithErrno<MemorySegment> BTF__TYPE_BY_ID =
+            new HandlerWithErrno<>("btf__type_by_id",
+                    FunctionDescriptor.of(PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            JAVA_INT));
+
+    private static final HandlerWithErrno<MemorySegment> BTF__NAME_BY_OFFSET =
+            new HandlerWithErrno<>("btf__name_by_offset",
+                    FunctionDescriptor.of(PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            JAVA_INT));
+
     private static volatile MemorySegment BTF = null;
     private static volatile Boolean AVAILABLE = null;
     private static final Object LOCK = new Object();
@@ -96,10 +108,28 @@ public final class BtfLoader {
             MemorySegment n = arena.allocateFrom(name);
             PanamaUtil.ResultAndErr<Integer> r =
                     BTF__FIND_BY_NAME_KIND.call(arena, BTF, n, kind);
-            return r.result() > 0;
+            int id = r.result();
+            if (id <= 0) return false;
+            // Some libbpf builds on certain kernels return a stale positive id
+            // for a name that is not actually present. Verify by reading the
+            // matched type's name back and confirming it equals the query.
+            return nameOfType(arena, id).equals(name);
         } catch (Throwable t) {
             return false;
         }
+    }
+
+    /** Resolve the name of the BTF type with the given id, or "" if unavailable. */
+    private static String nameOfType(Arena arena, int id) {
+        PanamaUtil.ResultAndErr<MemorySegment> tr = BTF__TYPE_BY_ID.call(arena, BTF, id);
+        MemorySegment type = tr.result();
+        if (type == null || type.address() == 0) return "";
+        // struct btf_type begins with __u32 name_off at offset 0.
+        int nameOff = type.reinterpret(Integer.BYTES).get(JAVA_INT, 0);
+        PanamaUtil.ResultAndErr<MemorySegment> nr = BTF__NAME_BY_OFFSET.call(arena, BTF, nameOff);
+        MemorySegment namePtr = nr.result();
+        if (namePtr == null || namePtr.address() == 0) return "";
+        return namePtr.reinterpret(Long.MAX_VALUE).getString(0);
     }
 
     /**
