@@ -89,6 +89,14 @@
  * test. ({@code .feed()} with no arguments runs an empty batch, which is how you advance time and
  * trigger {@code schedule} without new arrivals.)
  *
+ * <p>Schedulers that target concrete CPUs (core pinning, NUMA pools) should read the CPU count
+ * through {@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler#cpuCount() cpuCount()}
+ * rather than {@code Runtime.getRuntime().availableProcessors()}. Then
+ * {@link me.bechberger.ebpf.bpf.userspace.SchedulerHarness#withCpus(int) withCpus(n)} can model a
+ * machine of any size in a test — including one larger than the host — and the dispatch-range
+ * validation lines up with the modeled size. See
+ * {@code me.bechberger.ebpf.samples.sched.CorePartitionSample}.
+ *
  * <h2>Observability</h2>
  * <ul>
  *   <li>{@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler#stats() stats()} returns a
