@@ -128,8 +128,13 @@ public abstract class UserspaceScheduler {
     }
 
     private final AtomicInteger cpuCursor = new AtomicInteger(0);
-    /** CPU count cached once at construction; avoids per-call syscall in {@link #pickIdleCpu}. */
-    private final int nrCpus = Runtime.getRuntime().availableProcessors();
+    /**
+     * CPU count used for dispatch-range validation and {@link #pickIdleCpu} wrap-around.
+     * Defaults to the host core count; {@link SchedulerHarness#withCpus(int)} overrides it so
+     * an offline test of a CPU-targeting scheduler validates against the modeled machine size
+     * rather than the (possibly smaller) host running the test.
+     */
+    int nrCpus = Runtime.getRuntime().availableProcessors();
 
     /** Timestamp of the last /proc/self/task rescan (nanoseconds, from System.nanoTime()). */
     private long lastRescanNs;
@@ -980,6 +985,14 @@ public abstract class UserspaceScheduler {
      *
      * @return an idle CPU number, or {@link #ANY_CPU} if none is currently idle
      */
+    /**
+     * Number of CPUs this scheduler targets. Defaults to the host core count; a
+     * {@link SchedulerHarness#withCpus(int)}-configured offline test overrides it. Read this
+     * (instead of {@code Runtime.getRuntime().availableProcessors()}) when computing concrete
+     * CPU targets, so placement respects the modeled machine size under test.
+     */
+    protected final int cpuCount() { return nrCpus; }
+
     protected final int pickIdleCpu() {
         MemorySegment view = idleMaskView();
         if (view == null) return ANY_CPU;

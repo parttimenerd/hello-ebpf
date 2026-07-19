@@ -50,7 +50,18 @@ public final class SchedulerHarness {
         return new SchedulerHarness(sched);
     }
 
-    public SchedulerHarness withCpus(int n) { this.cpus = n; return this; }
+    /**
+     * Model a machine with {@code n} CPUs. This drives the scheduler's dispatch-range
+     * validation and idle-CPU wrap-around, so a CPU-targeting scheduler can be tested for a
+     * machine size other than the host running the test (e.g. asserting core-pool placement on
+     * a modeled 8-CPU box while the CI runner has 4).
+     */
+    public SchedulerHarness withCpus(int n) {
+        if (n < 1) throw new IllegalArgumentException("withCpus requires at least 1 CPU: " + n);
+        this.cpus = n;
+        sched.nrCpus = n;
+        return this;
+    }
 
     /**
      * Install a virtual clock starting at {@code startNs}, replacing the scheduler's

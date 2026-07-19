@@ -32,9 +32,6 @@ public final class CorePartitionSample extends UserspaceScheduler {
 
     private static final long INTERACTIVE_WEIGHT = 100;
 
-    private final int cpuCount = Runtime.getRuntime().availableProcessors();
-    private final int split = Math.max(1, cpuCount / 2);
-
     // Round-robin cursors, one per pool, so tasks fan out across a pool's cores.
     private int interactiveCursor = 0;
     private int batchCursor = 0;
@@ -45,8 +42,14 @@ public final class CorePartitionSample extends UserspaceScheduler {
             .policy(Pool.BATCH, t -> nextBatchCpu())
             .build();
 
+    /** Boundary between the two pools; read lazily so a harness withCpus() override is honoured. */
+    private int split() {
+        return Math.max(1, cpuCount() / 2);
+    }
+
     /** Cores [0, split) — always at least core 0. */
     private int nextInteractiveCpu() {
+        int split = split();
         int cpu = interactiveCursor % split;
         interactiveCursor++;
         return cpu;
@@ -57,7 +60,8 @@ public final class CorePartitionSample extends UserspaceScheduler {
      * the batch pool collapses onto core 0.
      */
     private int nextBatchCpu() {
-        int poolSize = cpuCount - split;
+        int split = split();
+        int poolSize = cpuCount() - split;
         if (poolSize <= 0) return 0;
         int cpu = split + (batchCursor % poolSize);
         batchCursor++;

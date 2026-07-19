@@ -12,19 +12,16 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Offline proof that CorePartitionSample keeps interactive and batch work on disjoint core pools. */
 class CorePartitionSampleTest {
 
+    // Model a fixed 8-CPU machine via withCpus(8); split is [0,4) interactive, [4,8) batch,
+    // regardless of how many cores the test host actually has.
+    private static final int CPUS = 8;
+    private static final int SPLIT = CPUS / 2;
+
     private QueuedTask task(int pid, long weight) {
         var t = new QueuedTask();
         t.pid = pid;
         t.weight = weight;
         return t;
-    }
-
-    private int cpuCount() {
-        return Runtime.getRuntime().availableProcessors();
-    }
-
-    private int split() {
-        return Math.max(1, cpuCount() / 2);
     }
 
     @Test
@@ -39,44 +36,37 @@ class CorePartitionSampleTest {
     @Test
     void interactiveTasksDispatchToLowHalf() {
         var sched = new CorePartitionSample();
-        var harness = SchedulerHarness.forScheduler(sched).withCpus(cpuCount());
+        var harness = SchedulerHarness.forScheduler(sched).withCpus(CPUS);
         harness.feed(task(1, 100), task(2, 200), task(3, 5000)).runBatch();
 
         List<Integer> cpus = harness.dispatches().stream()
                 .map(SchedulerHarness.Dispatch::targetCpu).toList();
         assertEquals(3, cpus.size());
         for (int cpu : cpus) {
-            assertTrue(cpu >= 0 && cpu < split(),
-                    "interactive task landed outside the low pool [0," + split() + "): " + cpu);
+            assertTrue(cpu >= 0 && cpu < SPLIT,
+                    "interactive task landed outside the low pool [0," + SPLIT + "): " + cpu);
         }
     }
 
     @Test
     void batchTasksDispatchToHighHalf() {
-        int cpuCount = cpuCount();
-        // The high-half assertion is only meaningful when there are >= 2 CPUs to split.
-        if (cpuCount < 2) return;
-
         var sched = new CorePartitionSample();
-        var harness = SchedulerHarness.forScheduler(sched).withCpus(cpuCount);
+        var harness = SchedulerHarness.forScheduler(sched).withCpus(CPUS);
         harness.feed(task(10, 1), task(11, 50), task(12, 99)).runBatch();
 
         List<Integer> cpus = harness.dispatches().stream()
                 .map(SchedulerHarness.Dispatch::targetCpu).toList();
         assertEquals(3, cpus.size());
         for (int cpu : cpus) {
-            assertTrue(cpu >= split() && cpu < cpuCount,
-                    "batch task landed outside the high pool [" + split() + "," + cpuCount + "): " + cpu);
+            assertTrue(cpu >= SPLIT && cpu < CPUS,
+                    "batch task landed outside the high pool [" + SPLIT + "," + CPUS + "): " + cpu);
         }
     }
 
     @Test
     void interactiveAndBatchNeverShareACore() {
-        int cpuCount = cpuCount();
-        if (cpuCount < 2) return;
-
         var sched = new CorePartitionSample();
-        var harness = SchedulerHarness.forScheduler(sched).withCpus(cpuCount);
+        var harness = SchedulerHarness.forScheduler(sched).withCpus(CPUS);
         // Interleave classes; each must still stay in its own pool.
         harness.feed(task(1, 200), task(2, 1), task(3, 300), task(4, 5)).runBatch();
 
@@ -87,7 +77,18 @@ class CorePartitionSampleTest {
         int batchCpu = dispatches.stream()
                 .filter(d -> d.pid() == 2 || d.pid() == 4)
                 .mapToInt(SchedulerHarness.Dispatch::targetCpu).min().orElseThrow();
-        assertTrue(interactiveCpu < split(), "interactive pool leaked into high half");
-        assertTrue(batchCpu >= split(), "batch pool leaked into low half");
+        assertTrue(interactiveCpu < SPLIT, "interactive pool leaked into high half");
+        assertTrue(batchCpu >= SPLIT, "batch pool leaked into low half");
+    }
+
+    @Test
+    void singleCpuCollapsesBothPoolsOntoCoreZero() {
+        var sched = new CorePartitionSample();
+        var harness = SchedulerHarness.forScheduler(sched).withCpus(1);
+        harness.feed(task(1, 200), task(2, 1)).runBatch();
+
+        for (var d : harness.dispatches()) {
+            assertEquals(0, d.targetCpu(), "on a 1-CPU box every task must land on core 0");
+        }
     }
 }
