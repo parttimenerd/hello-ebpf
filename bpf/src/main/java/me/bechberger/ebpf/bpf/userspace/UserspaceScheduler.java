@@ -80,6 +80,20 @@ public abstract class UserspaceScheduler {
     /** Task pool — package-private so test subclasses can seed fake tasks via {@link #drainRaw()}. */
     QueuedTask[] taskPool;
 
+    // ── Offline harness support (package-private; no effect in production) ──────
+    java.util.List<QueuedTask> offlineFeed;                                    // set by harness
+    java.util.function.Consumer<int[]> offlineDispatchSink;                    // {targetCpu, pid} sink
+
+    /** Package-private: drive one batch from {@link #offlineFeed} with no BPF handle. */
+    void runBatchOffline() {
+        if (offlineFeed == null) return;
+        int n = offlineFeed.size();
+        if (taskPool == null || taskPool.length < n) taskPool = new QueuedTask[Math.max(n, 1)];
+        for (int i = 0; i < n; i++) taskPool[i] = offlineFeed.get(i);
+        batchCtx.count = n;
+        schedule(taskPool, n);
+    }
+
     /** Worker pool for multithreaded ({@code opts.workerThreads > 1}) sharded dispatch; null when single-threaded. */
     private java.util.concurrent.ExecutorService workerPool;
 
@@ -825,6 +839,10 @@ public abstract class UserspaceScheduler {
      * @return 0 on success, non-zero on error
      */
     protected int submitDispatch(int targetCpu, int pid, long enqCnt, long sliceNs, long vtime) {
+        if (offlineDispatchSink != null) {          // offline mode
+            offlineDispatchSink.accept(new int[]{ targetCpu, pid });
+            return 0;
+        }
         // Sharded workers may submit concurrently; the single dispatch ring is not thread-safe.
         // TODO(perf): evaluate N dispatch rings instead of one lock
         synchronized (dispatchLock) {
