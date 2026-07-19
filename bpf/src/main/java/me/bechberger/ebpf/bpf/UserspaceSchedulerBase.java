@@ -808,9 +808,9 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     /**
-     * Emit a typed signal to the Java scheduler. Best-effort: drops under ring
-     * overflow are counted in {@link Stats#SIGNALS_DROPPED}. Callable from any
-     * BPF callback.
+     * Emit a typed signal to the Java scheduler. Best-effort: successful submits
+     * bump {@link Stats#SIGNALS_DELIVERED}, drops under ring overflow are counted
+     * in {@link Stats#SIGNALS_DROPPED}. Callable from any BPF callback.
      */
     @BPFFunction
     public void emitSignal(int kind, int pid, long payload) {
@@ -821,6 +821,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         s.val().payload = payload;
         s.val().ts      = currentNs();
         signals.submit(s);
+        incStat(Stats.SIGNALS_DELIVERED, 1);
     }
 
     /**

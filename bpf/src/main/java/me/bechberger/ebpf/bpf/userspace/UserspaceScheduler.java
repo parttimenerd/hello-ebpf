@@ -472,8 +472,8 @@ public abstract class UserspaceScheduler {
     }
 
     /**
-     * Cumulative signal records delivered to {@link #onSignal(Signal)}.
-     * Zero if no BPF handle is attached.
+     * Cumulative signals successfully emitted BPF-side via {@code emitSignal}
+     * (submitted to the signals ring). Zero if no BPF handle is attached.
      */
     public long signalsDelivered() {
         return bpfHandle != null ? bpfHandle.readSignalsDelivered() : cachedSignalsDelivered;
