@@ -1077,6 +1077,21 @@ extern u64 scx_bpf_now(void) __weak __ksym;
 #define scx_bpf_task_cpu_declared__
 extern s32 scx_bpf_task_cpu(const struct task_struct *p) __weak __ksym;
 #endif
+#ifndef scx_bpf_dispatch_nr_slots_declared__
+#define scx_bpf_dispatch_nr_slots_declared__
+extern __u32 scx_bpf_dispatch_nr_slots(void) __weak __ksym;
+#endif
+
+/* generic task / cpumask kfuncs (absent from kernel 6.8 vmlinux.h) */
+#ifndef bpf_task_from_pid_declared__
+#define bpf_task_from_pid_declared__
+extern struct task_struct *bpf_task_from_pid(s32 pid) __weak __ksym;
+extern void bpf_task_release(struct task_struct *p) __weak __ksym;
+#endif
+#ifndef bpf_cpumask_test_cpu_declared__
+#define bpf_cpumask_test_cpu_declared__
+extern bool bpf_cpumask_test_cpu(u32 cpu, const struct cpumask *cpumask) __weak __ksym;
+#endif
 """;
         Files.writeString(vmLinuxFile, current + fallbacks);
     }
