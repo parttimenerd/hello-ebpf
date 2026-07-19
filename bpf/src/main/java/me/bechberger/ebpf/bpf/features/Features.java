@@ -127,6 +127,7 @@ public final class Features {
     static void resetCacheForTest() {
         CACHE.clear();
         CACHED_VERSION = null;
+        me.bechberger.ebpf.bpf.features.probes.BtfLoader.resetForTest();
     }
 
     /** Substitute the dispatcher. Test-only. Pass {@code null} to restore the default. */

@@ -102,7 +102,13 @@ public final class BtfLoader {
         }
     }
 
-    static void resetForTest() {
+    /**
+     * Drops the cached vmlinux BTF handle so the next probe re-parses
+     * {@code /sys/kernel/btf/vmlinux} from scratch. Test-only: guards against
+     * a stale handle leaking across test classes when the full reactor runs
+     * many BPF-loading tests in one JVM.
+     */
+    public static void resetForTest() {
         synchronized (LOCK) {
             BTF = null;
             AVAILABLE = null;
