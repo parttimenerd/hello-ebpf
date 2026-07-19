@@ -86,4 +86,29 @@ class EdfRateLimitSampleTest {
                 "held task drains once the rate-limit gap elapses");
         assertEquals(1, harness.dispatches().get(0).pid());
     }
+
+    @Test
+    void evictedHeldPidCanBeReQueuedLater() {
+        var sched = new EdfRateLimitSample();
+        var harness = SchedulerHarness.forScheduler(sched).withCpus(8).withVirtualClock(0);
+
+        // t=0: dispatch pid 1, recording lastDispatch=0.
+        harness.feed(task(1, 100)).runBatch();
+        assertEquals(1, harness.dispatches().size());
+
+        // Re-arrive immediately: rate-limited, so pid 1 is now held via deferUntil.
+        harness.clear();
+        harness.feed(task(1, 100)).runBatch();
+        assertEquals(0, harness.dispatches().size(), "held while rate-limited");
+
+        // Jump the clock far enough that tick()'s horizon (now - 20s) evicts the held
+        // entry, then let the pid re-arrive. If eviction leaves `held` stuck, the pid can
+        // never be re-queued and is starved forever — this asserts it recovers.
+        harness.advanceMillis(60_000);   // +60 s: held entry's notBefore (~4 ms) is now < horizon
+        harness.tick();                  // evicts the stale held entry
+        harness.clear();
+        harness.feed(task(1, 100)).runBatch();
+        assertEquals(1, harness.dispatches().size(),
+                "a pid whose held entry was evicted must be re-dispatchable, not starved");
+    }
 }

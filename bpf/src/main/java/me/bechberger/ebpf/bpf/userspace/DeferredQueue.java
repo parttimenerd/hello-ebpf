@@ -22,7 +22,7 @@ import java.util.function.Consumer;
  */
 public final class DeferredQueue {
 
-    private record Entry(QueuedTask task, long key, long notBeforeNs, long seq) {}
+    private record Entry(QueuedTask task, long key, long notBeforeNs, boolean timeGated, long seq) {}
 
     // Order by (key, then pid, then insertion seq) for a total, stable order.
     private final PriorityQueue<Entry> heap = new PriorityQueue<>((a, b) -> {
@@ -36,12 +36,12 @@ public final class DeferredQueue {
 
     /** Store a copy of {@code t} to (re)consider at or after {@code notBeforeNs}. */
     public void deferUntil(QueuedTask t, long notBeforeNs) {
-        heap.add(new Entry(t.copy(), notBeforeNs, notBeforeNs, seqCounter++));
+        heap.add(new Entry(t.copy(), notBeforeNs, notBeforeNs, true, seqCounter++));
     }
 
     /** Store a copy of {@code t} keyed by {@code key} (vtime/deadline). Min-key drains first. */
     public void deferOrdered(QueuedTask t, long key) {
-        heap.add(new Entry(t.copy(), key, Long.MIN_VALUE, seqCounter++));
+        heap.add(new Entry(t.copy(), key, Long.MIN_VALUE, false, seqCounter++));
     }
 
     /**
@@ -65,9 +65,26 @@ public final class DeferredQueue {
         heap.addAll(deferredBack);
     }
 
-    /** Evict entries whose {@code notBeforeNs} is strictly older than {@code horizonNs}. */
+    /**
+     * Evict time-gated ({@link #deferUntil}) entries whose {@code notBeforeNs} is strictly older
+     * than {@code horizonNs}. {@link #deferOrdered} entries carry no time gate and are never
+     * evicted by this call.
+     */
     public void evictOlderThan(long horizonNs) {
-        heap.removeIf(e -> e.notBeforeNs < horizonNs);
+        evictOlderThan(horizonNs, null);
+    }
+
+    /**
+     * Like {@link #evictOlderThan(long)} but reports each evicted task to {@code onEvict} first,
+     * so a caller can keep a side map (e.g. a "currently held" set) consistent with the queue.
+     * {@code onEvict} may be {@code null}.
+     */
+    public void evictOlderThan(long horizonNs, Consumer<QueuedTask> onEvict) {
+        heap.removeIf(e -> {
+            boolean evict = e.timeGated && e.notBeforeNs < horizonNs;
+            if (evict && onEvict != null) onEvict.accept(e.task);
+            return evict;
+        });
     }
 
     public int size() { return heap.size(); }

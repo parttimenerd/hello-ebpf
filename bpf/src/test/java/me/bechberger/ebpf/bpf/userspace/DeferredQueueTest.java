@@ -68,6 +68,33 @@ class DeferredQueueTest {
     }
 
     @Test
+    void evictOlderThanLeavesOrderedEntriesAlone() {
+        var q = new DeferredQueue();
+        q.deferOrdered(task(1, 0), 10);   // vtime-ordered, no time gate
+        q.deferOrdered(task(2, 0), 20);
+        q.deferUntil(task(3, 0), 5);      // time-gated, older than the horizon
+        q.evictOlderThan(1_000);          // must drop only the time-gated entry
+        assertEquals(2, q.size(),
+                "deferOrdered entries must survive evictOlderThan (they carry no time gate)");
+
+        List<Integer> got = new ArrayList<>();
+        q.drainEligible(0, Integer.MAX_VALUE, t -> got.add(t.pid));
+        assertEquals(List.of(1, 2), got, "ordered entries survive and still drain in key order");
+    }
+
+    @Test
+    void evictOlderThanReportsEvictedTasksToSink() {
+        var q = new DeferredQueue();
+        q.deferUntil(task(1, 0), 10);     // evicted
+        q.deferUntil(task(2, 0), 100);    // survives
+        q.deferOrdered(task(3, 0), 5);    // ordered — never evicted, never reported
+        List<Integer> evicted = new ArrayList<>();
+        q.evictOlderThan(50, t -> evicted.add(t.pid));
+        assertEquals(List.of(1), evicted, "only the aged-out time-gated entry is reported");
+        assertEquals(2, q.size(), "ordered + still-fresh time-gated entries remain");
+    }
+
+    @Test
     void storesCopiesSafeAcrossBatches() {
         var q = new DeferredQueue();
         var t = task(42, 7);

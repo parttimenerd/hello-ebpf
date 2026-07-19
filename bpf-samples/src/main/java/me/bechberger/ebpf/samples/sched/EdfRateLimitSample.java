@@ -102,8 +102,9 @@ public final class EdfRateLimitSample extends UserspaceScheduler {
         long horizon = nanoTime() - DEADLINE_NS * 1_000L;
         lastDispatchNs.entrySet().removeIf(e -> e.getValue() < horizon);
         // Drop stale deferred entries whose notBefore is far in the past but which
-        // (defensively) never drained; keeps the heap from leaking on edge cases.
-        queue.evictOlderThan(horizon);
+        // (defensively) never drained; keeps the heap from leaking on edge cases. Clear
+        // the matching `held` entry too, or the pid can never be re-queued (starvation).
+        queue.evictOlderThan(horizon, t -> held.remove(t.pid));
     }
 
     @Override
