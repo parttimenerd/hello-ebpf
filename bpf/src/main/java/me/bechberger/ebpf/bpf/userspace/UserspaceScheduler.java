@@ -87,6 +87,23 @@ public abstract class UserspaceScheduler {
     java.util.List<QueuedTask> offlineFeed;                                    // set by harness
     java.util.function.Consumer<int[]> offlineDispatchSink;                    // {targetCpu, pid} sink
 
+    /**
+     * Monotonic nanosecond clock. Defaults to {@link System#nanoTime()} in production;
+     * {@link SchedulerHarness} can replace it with a virtual clock so time-based policies
+     * (rate limiting, EDF deadlines, {@code deferUntil}) become offline-testable.
+     * Read via {@link #nanoTime()} everywhere — never call {@code System.nanoTime()} directly
+     * in a scheduler that wants to be harness-testable.
+     */
+    java.util.function.LongSupplier nanoClock = System::nanoTime;
+
+    /**
+     * The current time in nanoseconds from a monotonic clock. Overridable indirectly by the
+     * test harness. Scheduler subclasses (and framework internals) should call this instead of
+     * {@link System#nanoTime()} so their time-dependent behaviour can be driven by a virtual
+     * clock in {@link SchedulerHarness}-based tests.
+     */
+    protected final long nanoTime() { return nanoClock.getAsLong(); }
+
     /** Package-private: drive one batch from {@link #offlineFeed} with no BPF handle. */
     void runBatchOffline() {
         if (offlineFeed == null) return;

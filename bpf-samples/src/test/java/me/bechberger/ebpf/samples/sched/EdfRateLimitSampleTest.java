@@ -54,4 +54,36 @@ class EdfRateLimitSampleTest {
                 .filter(d -> d.pid() == 7).count();
         assertEquals(1, sevens, "a pid appearing twice in one batch dispatches exactly once");
     }
+
+    @Test
+    void rateLimitHoldsThenReleasesWithVirtualClock() {
+        var sched = new EdfRateLimitSample();
+        // Virtual clock: time only moves when we advance it, so the ms-scale rate-limit
+        // gap is now deterministically observable across batches.
+        var harness = SchedulerHarness.forScheduler(sched).withCpus(8).withVirtualClock(0);
+
+        // t=0: first appearance dispatches immediately.
+        harness.feed(task(1, 100)).runBatch();
+        assertEquals(1, harness.dispatches().size(), "first dispatch at t=0");
+
+        // Same instant: the pid ran <gap ago, so it is held, not dispatched again.
+        harness.clear();
+        harness.feed(task(1, 100)).runBatch();
+        assertEquals(0, harness.dispatches().size(),
+                "rate limit holds a pid that just ran (gap not elapsed)");
+
+        // Advance just short of the 4 ms gap (weight 100 → 4 ms): still held.
+        harness.clear();
+        harness.advanceMillis(3).feed(task(1, 100)).runBatch();
+        assertEquals(0, harness.dispatches().size(),
+                "still held 3 ms after dispatch (< 4 ms gap)");
+
+        // Cross the gap: the held task becomes eligible and dispatches. Feed an empty
+        // batch so schedule() runs (runBatch with no feed is a no-op) and drains the queue.
+        harness.clear();
+        harness.advanceMillis(2).feed().runBatch();  // now at t=5 ms > 4 ms gap
+        assertEquals(1, harness.dispatches().size(),
+                "held task drains once the rate-limit gap elapses");
+        assertEquals(1, harness.dispatches().get(0).pid());
+    }
 }

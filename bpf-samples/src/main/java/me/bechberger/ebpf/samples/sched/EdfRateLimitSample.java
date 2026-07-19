@@ -60,7 +60,7 @@ public final class EdfRateLimitSample extends UserspaceScheduler {
 
     @Override
     protected void schedule(QueuedTask[] tasks, int count) {
-        long nowNs = System.nanoTime();
+        long nowNs = nanoTime();
 
         // Merge newly-arrived tasks into the deferred queue.
         for (int i = 0; i < count; i++) {
@@ -99,7 +99,7 @@ public final class EdfRateLimitSample extends UserspaceScheduler {
     protected void tick() {
         // Bound both maps against pid churn: forget rate-limit history for pids we
         // haven't dispatched in a long time. Held pids are cleaned as they drain.
-        long horizon = System.nanoTime() - DEADLINE_NS * 1_000L;
+        long horizon = nanoTime() - DEADLINE_NS * 1_000L;
         lastDispatchNs.entrySet().removeIf(e -> e.getValue() < horizon);
         // Drop stale deferred entries whose notBefore is far in the past but which
         // (defensively) never drained; keeps the heap from leaking on edge cases.

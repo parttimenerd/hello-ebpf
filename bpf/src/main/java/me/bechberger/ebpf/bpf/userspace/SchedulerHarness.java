@@ -18,6 +18,16 @@ import java.util.List;
  * harness.runBatch();
  * assertThat(harness.dispatches()).extracting(Dispatch::pid).containsExactly(100, 101);
  * }</pre>
+ *
+ * <p>For time-based policies (rate limiting, EDF, {@code deferUntil}), install a virtual
+ * clock so batches don't all run at "now":
+ * <pre>{@code
+ * var h = SchedulerHarness.forScheduler(new RateLimitedScheduler())
+ *         .withVirtualClock(0);
+ * h.feed(task(1)).runBatch();          // dispatches at t=0
+ * h.feed(task(1)).runBatch();          // still rate-limited, held
+ * h.advanceMillis(10).feed(task(1)).runBatch();  // gap elapsed → dispatches
+ * }</pre>
  */
 public final class SchedulerHarness {
 
@@ -27,6 +37,9 @@ public final class SchedulerHarness {
     private final UserspaceScheduler sched;
     private final List<Dispatch> dispatches = new ArrayList<>();
     private int cpus = Runtime.getRuntime().availableProcessors();
+
+    /** Virtual clock value in ns; null until {@link #withVirtualClock} is called. */
+    private long[] virtualNowNs = null;
 
     private SchedulerHarness(UserspaceScheduler sched) {
         this.sched = sched;
@@ -38,6 +51,45 @@ public final class SchedulerHarness {
     }
 
     public SchedulerHarness withCpus(int n) { this.cpus = n; return this; }
+
+    /**
+     * Install a virtual clock starting at {@code startNs}, replacing the scheduler's
+     * {@code System.nanoTime()} reads (via {@link UserspaceScheduler#nanoTime()}). Time only
+     * moves when you call {@link #advanceNanos} / {@link #advanceMillis}, making time-based
+     * policies (rate limiting, EDF deadlines, {@code deferUntil}) deterministically testable.
+     */
+    public SchedulerHarness withVirtualClock(long startNs) {
+        long[] now = { startNs };
+        this.virtualNowNs = now;
+        sched.nanoClock = () -> now[0];
+        return this;
+    }
+
+    /** Advance the virtual clock by {@code deltaNs}. Requires {@link #withVirtualClock}. */
+    public SchedulerHarness advanceNanos(long deltaNs) {
+        if (virtualNowNs == null) {
+            throw new IllegalStateException(
+                    "advanceNanos requires withVirtualClock(startNs) to have been called first");
+        }
+        if (deltaNs < 0) {
+            throw new IllegalArgumentException("cannot move a monotonic clock backwards: " + deltaNs);
+        }
+        virtualNowNs[0] += deltaNs;
+        return this;
+    }
+
+    /** Advance the virtual clock by {@code deltaMs} milliseconds. Requires {@link #withVirtualClock}. */
+    public SchedulerHarness advanceMillis(long deltaMs) {
+        return advanceNanos(deltaMs * 1_000_000L);
+    }
+
+    /** Current virtual-clock value in ns. Requires {@link #withVirtualClock}. */
+    public long nowNs() {
+        if (virtualNowNs == null) {
+            throw new IllegalStateException("nowNs requires withVirtualClock(startNs)");
+        }
+        return virtualNowNs[0];
+    }
 
     /** Queue tasks for the next {@link #runBatch}. */
     public SchedulerHarness feed(QueuedTask... tasks) {
