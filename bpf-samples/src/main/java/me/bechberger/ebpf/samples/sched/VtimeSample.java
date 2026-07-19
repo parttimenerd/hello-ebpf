@@ -2,15 +2,10 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
-import me.bechberger.ebpf.bpf.userspace.Opts;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
-import me.bechberger.femtocli.FemtoCli;
-import me.bechberger.femtocli.annotations.Command;
-import me.bechberger.femtocli.annotations.Option;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * <b>Experimental</b> — API may change without notice.
@@ -53,31 +48,23 @@ public final class VtimeSample extends UserspaceScheduler {
 
     @Override
     protected void schedule(QueuedTask[] tasks, int count) {
-        // Build a vtime-ordered map for this batch.
-        // TreeMap gives O(n log n) sort; a typical batch is 16–256 tasks.
-        TreeMap<Long, QueuedTask> byVtime = new TreeMap<>();
+        var ordered = new me.bechberger.ebpf.bpf.userspace.DeferredQueue();
         for (int i = 0; i < count; i++) {
             QueuedTask t = tasks[i];
             long vt = vtimes.computeIfAbsent(t.pid, p -> minVtime);
-            // Break ties by pid to keep the map key unique.
-            byVtime.put(vt << 20 | (t.pid & 0xFFFFF), t);
+            ordered.deferOrdered(t, vt);
         }
-
-        // Dispatch in vtime order and advance each task's vtime.
-        long newMin = Long.MAX_VALUE;
-        for (var entry : byVtime.entrySet()) {
-            QueuedTask t = entry.getValue();
+        long[] newMin = { Long.MAX_VALUE };
+        ordered.drainEligible(0, Integer.MAX_VALUE, t -> {
             long vt = vtimes.getOrDefault(t.pid, minVtime);
             long weight = Math.max(1, t.weight);
-            // Advance vtime inversely proportional to weight:
-            // high-weight tasks step less → they stay near the front.
             long step = SLICE_NS * 100 / weight;
             long nextVt = vt + step;
             vtimes.put(t.pid, nextVt);
-            if (nextVt < newMin) newMin = nextVt;
+            if (nextVt < newMin[0]) newMin[0] = nextVt;
             dispatchTask(t, ANY_CPU);
-        }
-        if (newMin != Long.MAX_VALUE) minVtime = newMin;
+        });
+        if (newMin[0] != Long.MAX_VALUE) minVtime = newMin[0];
     }
 
     /** Evict vtimes for tasks not seen for a while to keep the map bounded. */
@@ -90,56 +77,7 @@ public final class VtimeSample extends UserspaceScheduler {
         vtimes.values().removeIf(vt -> vt > horizon);
     }
 
-    @Command(name = "VtimeSample",
-            description = {
-                "Weight-proportional vtime fair-share scheduler.",
-                "Uses schedule() to sort the whole batch by vtime before dispatching.",
-                "Higher-weight tasks (lower nice) advance vtime more slowly and run more."
-            },
-            mixinStandardHelpOptions = true)
-    static final class Cli implements Runnable {
-
-        @Option(names = {"--stats-interval"}, defaultValue = "5")
-        int statsInterval;
-
-        @Override
-        public void run() {
-            var sched = new VtimeSample();
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                sched.requestExit();
-                while (!sched.exited()) {
-                    try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-                }
-                System.err.println();
-                System.err.println("==== Final stats ====");
-                System.err.println(sched.formatStats());
-                System.err.println("==== Histograms ====");
-                sched.printHistograms(System.err);
-            }));
-            if (statsInterval > 0) {
-                long intervalNs = (long) statsInterval * 1_000_000_000L;
-                var t = new Thread(() -> {
-                    long deadline = System.nanoTime() + intervalNs;
-                    try {
-                        while (!sched.exited()) {
-                            Thread.sleep(200);
-                            if (System.nanoTime() >= deadline) {
-                                System.err.printf("[stats] %s  tracked=%d%n",
-                                        sched.formatStats(), sched.vtimes.size());
-                                deadline += intervalNs;
-                            }
-                        }
-                    } catch (InterruptedException ignored) {}
-                }, "vtime-stats");
-                t.setDaemon(true);
-                t.start();
-            }
-            System.err.println("VtimeSample: attaching vtime fair-share scheduler (Ctrl-C to detach)...");
-            sched.runUntilExit(Opts.defaults());
-        }
-    }
-
     public static void main(String[] args) {
-        FemtoCli.run(new Cli(), args);
+        me.bechberger.ebpf.bpf.userspace.SchedulerRunner.run(new VtimeSample(), args);
     }
 }
