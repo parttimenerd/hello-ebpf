@@ -2,7 +2,9 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
+import me.bechberger.ebpf.bpf.userspace.ClassMetrics;
 import me.bechberger.ebpf.bpf.userspace.Opts;
+import me.bechberger.ebpf.bpf.userspace.TaskClassifier;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -134,6 +136,16 @@ public final class ShowcaseScheduler extends UserspaceScheduler {
         for (int i = 0; i < dispatchesByTier.length; i++) {
             dispatchesByTier[i] = new AtomicLong();
         }
+
+        // Per-class metrics: key the framework's per-class histograms by the tier we
+        // cached during classify(). Placement stays in schedule() — the classifier's
+        // policies are unused by the metrics path, so we only supply classify(...).
+        setClassMetrics(TaskClassifier.<Tier>builder()
+                .classify(t -> {
+                    PidInfo info = pids.get(t.pid);
+                    return info == null ? Tier.OTHER : info.tier;
+                })
+                .build());
     }
 
     // ── Core scheduling ───────────────────────────────────────────────────────
@@ -350,7 +362,21 @@ public final class ShowcaseScheduler extends UserspaceScheduler {
             sb.append(tiers[i].name().toLowerCase(Locale.ROOT))
               .append('=').append(dispatchesByTier[i].get());
         }
-        return sb.append(']').toString();
+        sb.append(']');
+
+        // Per-class dispatch-count metrics from the framework (keyed by tier via
+        // setClassMetrics). Only append tiers that have been dispatched at least once.
+        StringBuilder perClass = new StringBuilder();
+        for (Tier tier : tiers) {
+            ClassMetrics m = perClass(tier);
+            if (m == null || m.count() == 0) continue;
+            if (perClass.length() > 0) perClass.append(' ');
+            perClass.append(tier.name().toLowerCase(Locale.ROOT)).append('=').append(m.count());
+        }
+        if (perClass.length() > 0) {
+            sb.append(" metrics=[").append(perClass).append(']');
+        }
+        return sb.toString();
     }
 
     // ── CLI ───────────────────────────────────────────────────────────────────
