@@ -852,15 +852,24 @@ public class TypeProcessor {
         // program extends another, the base's `static final` constants (e.g. a shared
         // DSQ id) must be re-emitted into the subclass's C or its inherited @BPFFunction
         // bodies reference undeclared identifiers (e.g. FRAMEWORK_DSQ).
+        //
+        // Only harvest the program itself and its @BPF-annotated superclasses. Framework
+        // base classes (e.g. BPFProgram) are not @BPF programs; their `static final`
+        // constants (BPF_FS_ROOT, PRODUCER_LOCK_DIR, …) are pure Java internals and must
+        // not leak into the generated C as #defines.
         TypeElement current = typeElement;
         while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
-            current.getEnclosedElements().stream()
-                    .filter(e -> e.getKind() == ElementKind.FIELD)
-                    .map(e -> (VariableElement) e)
-                    .map(this::processField)
-                    .filter(Objects::nonNull)
-                    .filter(d -> seen.add(d.name()))
-                    .forEach(result::add);
+            boolean harvest = current == typeElement
+                    || getAnnotationMirror(current, BPF.class.getName()).isPresent();
+            if (harvest) {
+                current.getEnclosedElements().stream()
+                        .filter(e -> e.getKind() == ElementKind.FIELD)
+                        .map(e -> (VariableElement) e)
+                        .map(this::processField)
+                        .filter(Objects::nonNull)
+                        .filter(d -> seen.add(d.name()))
+                        .forEach(result::add);
+            }
             var superMirror = current.getSuperclass();
             var superElem = (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE)
                     ? processingEnv.getTypeUtils().asElement(superMirror) : null;
