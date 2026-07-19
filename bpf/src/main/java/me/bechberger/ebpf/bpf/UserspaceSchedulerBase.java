@@ -715,7 +715,10 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         // 1. Framework DSQ first — unbounded priority
         if (framework.moveToLocal()) return;
 
-        // 2. Drain Java decisions — pass null ctx; dispatchOne checks
+        // 2. Drain control ring first — preemption/kicks are latency-prioritized.
+        control.drain((Ptr<ControlCtx> c, Ptr<Integer> ctx) -> drainControlOne(c), null);
+
+        // 3. Drain Java decisions — pass null ctx; dispatchOne checks
         // scx_bpf_dispatch_nr_slots() internally per iteration (mirrors rustland).
         // Explicit lambda param types force Ctx=Integer so javac does not infer Object.
         int drained = dispatched.drain(
@@ -767,6 +770,52 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         bpf_task_release(p);
         incStat(STAT_USER_DISPATCHES, 1);
         return scx_bpf_dispatch_nr_slots() == 0 ? 1 : 0;
+    }
+
+    /**
+     * Drain callback: act on one control record from the user→kernel control ring.
+     *
+     * <p>KICK records kick the named cpu with the caller-supplied SCX_KICK_* flags.
+     * PREEMPT records resolve the subject pid to its current cpu and preempt it.
+     * The acquired task reference is released on <em>both</em> the null-lookup path
+     * and the success path, before the kick, to keep the verifier's reference
+     * accounting balanced. Always returns 0 to drain the whole ring.
+     */
+    @BPFFunction
+    int drainControlOne(Ptr<ControlCtx> c) {
+        int kind = c.val().kind;
+        if (kind == 2 /* ControlKind.KICK */) {
+            scx_bpf_kick_cpu(c.val().cpu, c.val().flags);
+            incStat(Stats.KICKS_ISSUED, 1);
+            return 0;
+        }
+        // PREEMPT: resolve pid → its current cpu, then kick that cpu with SCX_KICK_PREEMPT.
+        Ptr<task_struct> p = bpf_task_from_pid(c.val().pid);
+        if (p == null) {
+            incStat(Stats.PREEMPT_UNRESOLVED, 1);
+            return 0;
+        }
+        int cpu = scx_bpf_task_cpu(p);
+        bpf_task_release(p);              // release BEFORE the kick — ref no longer needed
+        scx_bpf_kick_cpu(cpu, KickFlags.preempt().value());
+        incStat(Stats.PREEMPTS_ISSUED, 1);
+        return 0;
+    }
+
+    /**
+     * Emit a typed signal to the Java scheduler. Best-effort: drops under ring
+     * overflow are counted in {@link Stats#SIGNALS_DROPPED}. Callable from any
+     * BPF callback.
+     */
+    @BPFFunction
+    public void emitSignal(int kind, int pid, long payload) {
+        Ptr<SignalCtx> s = signals.reserve();
+        if (s == null) { incStat(Stats.SIGNALS_DROPPED, 1); return; }
+        s.val().kind    = kind;
+        s.val().pid     = pid;
+        s.val().payload = payload;
+        s.val().ts      = currentNs();
+        signals.submit(s);
     }
 
     /**
