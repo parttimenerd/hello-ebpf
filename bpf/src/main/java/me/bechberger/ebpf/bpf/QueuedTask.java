@@ -39,6 +39,22 @@ public final class QueuedTask {
     private static final long QT_ENQ_CNT       = 64;
     private static final long QT_COMM          = 72;
 
+    /** Size of the stable rustland-compatible prefix. Never changes. */
+    public static final long QT_SIZEOF = 88;
+
+    /**
+     * Fixed size of the per-task extension tail appended after the 88-byte prefix.
+     * MUST equal {@code UserspaceSchedulerBase.QueuedTaskCtx.EXT_CAP}. Asserted by
+     * {@code QueuedTaskDispatchedTaskMarshallingTest} and {@code TaskExtensionTest}.
+     */
+    public static final int EXT_CAP = 64;
+
+    /** Zero-copy view over the EXT_CAP tail of the current record; never null after fill. */
+    private final byte[] extBytes = new byte[EXT_CAP];
+
+    private Object cachedExt;
+    private Class<?> cachedExtType;
+
     public QueuedTask() {}
 
     public QueuedTask(QueuedTask src) {
@@ -49,6 +65,7 @@ public final class QueuedTask {
         this.execRuntime = src.execRuntime; this.weight = src.weight;
         this.vtime = src.vtime; this.enqCnt = src.enqCnt;
         System.arraycopy(src.comm, 0, this.comm, 0, 16);
+        System.arraycopy(src.extBytes, 0, this.extBytes, 0, EXT_CAP);
     }
 
     /**
@@ -61,6 +78,7 @@ public final class QueuedTask {
      * @param out mutable target to fill; existing contents are overwritten
      */
     public static void fillFromSegment(MemorySegment seg, QueuedTask out) {
+        out.cachedExt     = null;
         out.pid           = seg.get(ValueLayout.JAVA_INT,  QT_PID);
         out.prevCpu       = seg.get(ValueLayout.JAVA_INT,  QT_PREV_CPU);
         out.nrCpusAllowed = seg.get(ValueLayout.JAVA_LONG, QT_NR_CPUS_ALLOW);
@@ -72,6 +90,11 @@ public final class QueuedTask {
         out.vtime         = seg.get(ValueLayout.JAVA_LONG, QT_VTIME);
         out.enqCnt        = seg.get(ValueLayout.JAVA_LONG, QT_ENQ_CNT);
         MemorySegment.copy(seg, ValueLayout.JAVA_BYTE, QT_COMM, out.comm, 0, 16);
+        if (seg.byteSize() >= QT_SIZEOF + EXT_CAP) {
+            MemorySegment.copy(seg, ValueLayout.JAVA_BYTE, QT_SIZEOF, out.extBytes, 0, EXT_CAP);
+        } else {
+            java.util.Arrays.fill(out.extBytes, (byte) 0);
+        }
     }
 
     /**
@@ -99,5 +122,81 @@ public final class QueuedTask {
             if ((comm[i] & 0xFF) != (other.charAt(i) & 0xFF)) return false;
         }
         return comm[len] == 0;
+    }
+
+    /** Read a signed 64-bit value from the extension tail at {@code offset} (0-based within the tail). */
+    public long extLong(int offset) {
+        return (extBytes[offset] & 0xFFL)
+             | (extBytes[offset + 1] & 0xFFL) << 8
+             | (extBytes[offset + 2] & 0xFFL) << 16
+             | (extBytes[offset + 3] & 0xFFL) << 24
+             | (extBytes[offset + 4] & 0xFFL) << 32
+             | (extBytes[offset + 5] & 0xFFL) << 40
+             | (extBytes[offset + 6] & 0xFFL) << 48
+             | (extBytes[offset + 7] & 0xFFL) << 56;
+    }
+
+    /** Read a signed 32-bit value from the extension tail at {@code offset}. */
+    public int extInt(int offset) {
+        return (extBytes[offset] & 0xFF)
+             | (extBytes[offset + 1] & 0xFF) << 8
+             | (extBytes[offset + 2] & 0xFF) << 16
+             | (extBytes[offset + 3] & 0xFF) << 24;
+    }
+
+    /** Read a single byte from the extension tail at {@code offset}. */
+    public byte extByte(int offset) {
+        return extBytes[offset];
+    }
+
+    /**
+     * Build a typed view of the extension tail as a record instance. The record's
+     * components must be {@code long}/{@code int} in declaration order; they are read
+     * from the tail with natural alignment (long on 8-byte boundaries, int on 4-byte).
+     *
+     * <p>Cached per flyweight until the next {@code fillFromSegment} refill.
+     */
+    @SuppressWarnings("unchecked")
+    public <E extends Record> E ext(Class<E> type) {
+        if (cachedExtType == type && cachedExt != null) {
+            return (E) cachedExt;
+        }
+        E view = buildExtView(type);
+        cachedExt = view;
+        cachedExtType = type;
+        return view;
+    }
+
+    private <E extends Record> E buildExtView(Class<E> type) {
+        var comps = type.getRecordComponents();
+        Object[] args = new Object[comps.length];
+        Class<?>[] paramTypes = new Class<?>[comps.length];
+        int off = 0;
+        for (int i = 0; i < comps.length; i++) {
+            Class<?> ct = comps[i].getType();
+            paramTypes[i] = ct;
+            if (ct == long.class) {
+                off = align(off, 8);
+                args[i] = extLong(off);
+                off += 8;
+            } else if (ct == int.class) {
+                off = align(off, 4);
+                args[i] = extInt(off);
+                off += 4;
+            } else {
+                throw new IllegalArgumentException(
+                    "@TaskExtension record components must be long or int, got " + ct + " in " + type);
+            }
+        }
+        try {
+            return type.getDeclaredConstructor(paramTypes).newInstance(args);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("cannot build extension view for " + type, e);
+        }
+    }
+
+    private static int align(int off, int to) {
+        int rem = off % to;
+        return rem == 0 ? off : off + (to - rem);
     }
 }
