@@ -10,7 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class FeaturesAttachTypeTest {
 
     @BeforeEach
-    void reset() { Features.resetCacheForTest(); }
+    void reset() {
+        Features.setDispatcherForTest(null);
+        Features.resetCacheForTest();
+    }
 
     @Test
     void kprobeMultiIsSupportedOn6_14() {

@@ -8,7 +8,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @EnabledOnOs(OS.LINUX)
 class FeaturesStructOpsTest {
-    @BeforeEach void reset() { Features.resetCacheForTest(); }
+    @BeforeEach void reset() {
+        Features.setDispatcherForTest(null);
+        Features.resetCacheForTest();
+    }
 
     @Test
     void schedExtOpsIsSupported() {

@@ -113,10 +113,7 @@ public final class BtfLoader {
             // Some libbpf builds on certain kernels return a stale positive id
             // for a name that is not actually present. Verify by reading the
             // matched type's name back and confirming it equals the query.
-            String resolved = nameOfType(arena, id);
-            System.err.println("[btf-diag] query=" + name + " kind=" + kind
-                    + " id=" + id + " err=" + r.err() + " resolved=[" + resolved + "]");
-            return resolved.equals(name);
+            return nameOfType(arena, id).equals(name);
         } catch (Throwable t) {
             return false;
         }

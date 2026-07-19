@@ -1,6 +1,7 @@
 package me.bechberger.ebpf.bpf.features;
 
 import me.bechberger.ebpf.bpf.BPFProgram;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,6 +21,12 @@ class FeatureRequirementsTest {
             }
             return new ProbeResult.Supported();
         });
+    }
+
+    @AfterEach
+    void restore() {
+        Features.setDispatcherForTest(null);
+        Features.resetCacheForTest();
     }
 
     @Test

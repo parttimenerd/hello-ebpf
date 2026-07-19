@@ -11,7 +11,10 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 class FeaturesHelperTest {
 
     @BeforeEach
-    void reset() { Features.resetCacheForTest(); }
+    void reset() {
+        Features.setDispatcherForTest(null);
+        Features.resetCacheForTest();
+    }
 
     @Test
     void ktimeGetNsIsSupported() {

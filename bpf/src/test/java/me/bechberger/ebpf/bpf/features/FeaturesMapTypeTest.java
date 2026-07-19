@@ -11,7 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class FeaturesMapTypeTest {
 
     @BeforeEach
-    void reset() { Features.resetCacheForTest(); }
+    void reset() {
+        Features.setDispatcherForTest(null);
+        Features.resetCacheForTest();
+    }
 
     @Test
     void hashIsSupported() {
