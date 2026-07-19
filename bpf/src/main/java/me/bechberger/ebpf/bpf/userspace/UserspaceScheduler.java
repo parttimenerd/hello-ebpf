@@ -261,6 +261,18 @@ public abstract class UserspaceScheduler {
     // ── hooks (overridable for testing) ──────────────────────────────────────
 
     /**
+     * The concrete {@code @BPF}-annotated BPF transport class to load. Defaults to
+     * {@link UserspaceSchedulerBase}. Override to return a subclass of
+     * {@code UserspaceSchedulerBase} that contributes additional BPF-side code
+     * (for example, an overridden {@code fillExtension} hook that populates the
+     * per-task extension tail). The returned class MUST extend
+     * {@code UserspaceSchedulerBase} and carry its own {@code @BPF} annotation.
+     */
+    protected Class<? extends UserspaceSchedulerBase> bpfProgramClass() {
+        return UserspaceSchedulerBase.class;
+    }
+
+    /**
      * Load the BPF program and attach it as a struct_ops scheduler.
      *
      * <p>The default implementation calls {@link BPFProgram#load} on
@@ -273,7 +285,7 @@ public abstract class UserspaceScheduler {
     protected void loadAndAttachBpf() {
         UserspaceSchedulerBase bpf;
         try {
-            bpf = BPFProgram.load(UserspaceSchedulerBase.class);
+            bpf = BPFProgram.load(bpfProgramClass());
         } catch (Exception e) {
             throw new UserspaceSchedulerStartupException("BPF load failed", e);
         }
