@@ -1153,14 +1153,31 @@ public class CompilerPlugin implements Plugin {
                 .map(Object::toString)
                 .collect(Collectors.toSet());
 
-        var defaultCode = defaultCodeForMethod.entrySet().stream()
+        var defaultCodeBodies = defaultCodeForMethod.entrySet().stream()
                 .filter(e -> !implementedMethodStrings.contains(e.getKey().toString()))
                 .sorted(Map.Entry.comparingByKey(Comparator.comparing(MethodSymbol::toString)))
                 .map(Map.Entry::getValue)
-                .collect(Collectors.joining("\n\n"));
+                .toList();
+
+        // The inherited bodies above are raw C strings that never pass through `decls`,
+        // so they get no forward declarations. When one inherited body calls another
+        // whose definition sorts LATER alphabetically (e.g. fillQueuedCtx -> incStat),
+        // clang fails with "use of undeclared identifier". Synthesise a C prototype for
+        // each inherited function definition and emit the block of prototypes BEFORE the
+        // bodies so inter-body calls resolve regardless of ordering.
+        var prototypes = defaultCodeBodies.stream()
+                .map(this::extractFunctionPrototype)
+                .filter(p -> p != null && !p.isBlank())
+                .distinct()
+                .collect(Collectors.joining("\n"));
+
+        var defaultCode = defaultCodeBodies.stream().collect(Collectors.joining("\n\n"));
+        if (!prototypes.isBlank()) {
+            defaultCode = defaultCode.isBlank() ? prototypes : prototypes + "\n\n" + defaultCode;
+        }
 
         if (!defaultCode.isBlank()) {
-            if (!code.isBlank()) {
+            if (!interfaceCode.isBlank()) {
                 interfaceCode = interfaceCode + "\n\n";
             }
             interfaceCode = interfaceCode + defaultCode;
@@ -1549,6 +1566,58 @@ public class CompilerPlugin implements Plugin {
 
     boolean canEmitDeclaratorFor(FuncDecl decl) {
         return decl.addDefine && !decl.decl.declarator().toPrettyString().matches(".* [A-Z0-9_]+\\([a-z0-9A-Z_]+,.*\\).*");
+    }
+
+    /**
+     * Synthesise a C forward-declaration (prototype) from a stored inherited
+     * {@code @BPFFunction} body string. These bodies are injected verbatim for
+     * {@code @BPF} subclasses (via {@code @InternalMethodDefinition}); without a
+     * prototype an inherited body that calls another inherited function defined
+     * later in the emitted text fails to compile ("use of undeclared identifier").
+     *
+     * <p>The signature is everything from the function's return type/attributes up
+     * to the first {@code {} that opens the body; we return that substring trimmed
+     * with a trailing {@code ;}. A stored string may be prefixed with one or more
+     * {@code #define} lines (each on its own line) — those are skipped for the
+     * prototype (they stay with the body block). Entries that are not plain function
+     * definitions (no {@code {}, or a macro-style ALL_CAPS(a,...) call signature
+     * mirroring {@link #canEmitDeclaratorFor}'s guard) get no prototype.
+     *
+     * @return the prototype string (without the {@code #define} prefix), or
+     *         {@code null} if no safe prototype can be synthesised
+     */
+    @Nullable
+    String extractFunctionPrototype(String body) {
+        if (body == null) return null;
+        // Strip any leading #define lines; the actual signature starts at the first
+        // non-#define, non-blank line.
+        var lines = body.lines().toList();
+        int start = 0;
+        while (start < lines.size()) {
+            var t = lines.get(start).strip();
+            if (t.startsWith("#define") || t.isEmpty()) {
+                start++;
+            } else {
+                break;
+            }
+        }
+        if (start >= lines.size()) return null;
+        var funcText = String.join("\n", lines.subList(start, lines.size()));
+        int brace = funcText.indexOf('{');
+        if (brace < 0) return null;                     // not a function definition
+        var signature = funcText.substring(0, brace).stripTrailing();
+        if (signature.isBlank()) return null;
+        // Skip kernel entry-points wrapped in SEC(...)/BPF_PROG(...)/BPF_STRUCT_OPS(...):
+        // these macros themselves expand into a full declaration, so emitting a separate
+        // prototype collides ("redefinition of 'sched_init'"). Such entry-points are called
+        // by the kernel, never by other inherited bodies, so a prototype is never needed.
+        if (signature.contains("SEC(") || signature.matches("(?s).*\\bBPF_(PROG|STRUCT_OPS|KPROBE|KRETPROBE|KSYSCALL)\\s*\\(.*")) {
+            return null;
+        }
+        // Mirror canEmitDeclaratorFor: skip macro-expanded entries whose signature
+        // looks like an ALL_CAPS(name,...) call rather than a normal declarator.
+        if (signature.matches("(?s).* [A-Z0-9_]+\\([a-z0-9A-Z_]+,.*\\).*")) return null;
+        return signature + ";";
     }
 
     String combineCode(String code, List<FuncDecl> decls, Set<Define> defines) {

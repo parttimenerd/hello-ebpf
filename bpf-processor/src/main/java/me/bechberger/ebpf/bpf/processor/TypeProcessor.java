@@ -102,13 +102,41 @@ public class TypeProcessor {
         // processBPFInterface() was never run in this compilation round — the struct/enum
         // definitions would be absent from the generated C without this extra walk.
         var fromInterfaces = getBPFInterfaceTypeElements(typeElement.asType());
-        if (fromInterfaces.isEmpty()) {
+        // Also collect @Type inner types declared by any @BPF superclass (transitively).
+        // When one @BPF program extends another (e.g. a scheduler sample extends a
+        // pre-compiled @BPF base that owns the shared record structs), the base's
+        // struct definitions must be re-emitted into the subclass's generated C, or its
+        // inherited @BPFFunction bodies reference incomplete/undeclared struct types.
+        var fromSuperclasses = getBPFSuperclassTypeElements(typeElement);
+        if (fromInterfaces.isEmpty() && fromSuperclasses.isEmpty()) {
             return direct;
         }
-        // Deduplicate: class-level declarations take precedence; interface types fill gaps.
+        // Deduplicate: class-level declarations take precedence; inherited types fill gaps.
         var seen = new java.util.LinkedHashSet<TypeElement>(direct);
         fromInterfaces.stream().filter(e -> !seen.contains(e)).forEach(seen::add);
+        fromSuperclasses.stream().filter(e -> !seen.contains(e)).forEach(seen::add);
         return List.copyOf(seen);
+    }
+
+    /**
+     * Collect {@code @Type} inner records declared by every superclass of {@code typeElement}
+     * (transitively, up to but excluding {@code java.lang.Object}). Mirrors
+     * {@link #getBPFInterfaceTypeElements}: inherited structs from a pre-compiled {@code @BPF}
+     * base would otherwise be missing from the subclass's generated C.
+     */
+    private List<TypeElement> getBPFSuperclassTypeElements(TypeElement typeElement) {
+        var result = new ArrayList<TypeElement>();
+        var superMirror = typeElement.getSuperclass();
+        while (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE) {
+            var superElem = processingEnv.getTypeUtils().asElement(superMirror);
+            if (!(superElem instanceof TypeElement superType)
+                    || superType.getQualifiedName().toString().equals("java.lang.Object")) {
+                break;
+            }
+            result.addAll(getInnerBPFTypeElements(superType));
+            superMirror = superType.getSuperclass();
+        }
+        return result;
     }
 
     private List<TypeElement> getBPFInterfaceTypeElements(TypeMirror type) {
@@ -403,29 +431,40 @@ public class TypeProcessor {
      * has already added) so clang can resolve the pointed-to type.
      */
     private void processInArenaFields(TypeElement outerTypeElement, List<CAST.Statement> definingStatements) {
-        for (var enclosed : outerTypeElement.getEnclosedElements()) {
-            if (enclosed.getKind() != ElementKind.FIELD) continue;
-            var field = (VariableElement) enclosed;
-            // Check @InArena annotation (SOURCE retention — visible to processors)
-            if (!hasAnnotation(field, IN_ARENA_ANNOTATION)) continue;
-            var fieldType = field.asType();
-            if (!(fieldType instanceof DeclaredType declaredType)) continue;
-            // Must be Ptr<T>
-            var erasure = processingEnv.getTypeUtils().erasure(fieldType);
-            if (!erasure.toString().equals(PTR_CLASS)) continue;
-            var typeArgs = declaredType.getTypeArguments();
-            if (typeArgs.isEmpty()) continue;
-            var pointedTo = typeArgs.get(0);
-            // Resolve the pointed-to type's BPF/C name
-            String cTypeName = resolveCNameForArenaPointee(pointedTo);
-            if (cTypeName == null) {
-                processingEnv.getMessager().printWarning(
-                        "@InArena field '" + field.getSimpleName() + "': could not resolve C type for "
-                                + pointedTo + "; skipping global declaration", field);
-                continue;
+        // Walk the superclass chain so @InArena globals declared by a @BPF base class are
+        // re-emitted into a @BPF subclass's C (mirrors the map / global-variable walks).
+        var seenArenaNames = new java.util.HashSet<String>();
+        TypeElement current = outerTypeElement;
+        while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
+            for (var enclosed : current.getEnclosedElements()) {
+                if (enclosed.getKind() != ElementKind.FIELD) continue;
+                var field = (VariableElement) enclosed;
+                // Check @InArena annotation (SOURCE retention — visible to processors)
+                if (!hasAnnotation(field, IN_ARENA_ANNOTATION)) continue;
+                var fieldType = field.asType();
+                if (!(fieldType instanceof DeclaredType declaredType)) continue;
+                // Must be Ptr<T>
+                var erasure = processingEnv.getTypeUtils().erasure(fieldType);
+                if (!erasure.toString().equals(PTR_CLASS)) continue;
+                var typeArgs = declaredType.getTypeArguments();
+                if (typeArgs.isEmpty()) continue;
+                var pointedTo = typeArgs.get(0);
+                // Resolve the pointed-to type's BPF/C name
+                String cTypeName = resolveCNameForArenaPointee(pointedTo);
+                if (cTypeName == null) {
+                    processingEnv.getMessager().printWarning(
+                            "@InArena field '" + field.getSimpleName() + "': could not resolve C type for "
+                                    + pointedTo + "; skipping global declaration", field);
+                    continue;
+                }
+                var fieldName = field.getSimpleName().toString();
+                if (!seenArenaNames.add(fieldName)) continue;
+                definingStatements.add(CAST.Statement.verbatim("__arena " + cTypeName + " *" + fieldName + ";"));
             }
-            var fieldName = field.getSimpleName().toString();
-            definingStatements.add(CAST.Statement.verbatim("__arena " + cTypeName + " *" + fieldName + ";"));
+            var superMirror = current.getSuperclass();
+            var superElem = (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE)
+                    ? processingEnv.getTypeUtils().asElement(superMirror) : null;
+            current = (superElem instanceof TypeElement te) ? te : null;
         }
     }
 
@@ -1567,10 +1606,25 @@ public class TypeProcessor {
                 }
             }
         }
-        // take all @BPFMapDefinition annotated fields
-        return outerElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
-                .filter(e -> getAnnotationMirror(e.asType(), BPF_MAP_DEFINITION).isPresent())
-                .map(f -> processMapDefiningField(f, fieldToType, typeToSpecFieldName)).filter(Objects::nonNull).toList();
+        // take all @BPFMapDefinition annotated fields, including those inherited from a
+        // @BPF superclass (mirrors createGlobalVariableDefinitions' superclass walk). When
+        // one @BPF program extends another, the base's map fields must be re-emitted into
+        // the subclass's C or its inherited @BPFFunction bodies reference undeclared maps.
+        var result = new ArrayList<MapDefinition>();
+        var seenMapNames = new java.util.HashSet<String>();
+        TypeElement current = outerElement;
+        while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
+            current.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
+                    .filter(e -> getAnnotationMirror(e.asType(), BPF_MAP_DEFINITION).isPresent())
+                    .filter(e -> seenMapNames.add(e.getSimpleName().toString()))
+                    .map(f -> processMapDefiningField(f, fieldToType, typeToSpecFieldName)).filter(Objects::nonNull)
+                    .forEach(result::add);
+            var superMirror = current.getSuperclass();
+            var superElem = (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE)
+                    ? processingEnv.getTypeUtils().asElement(superMirror) : null;
+            current = (superElem instanceof TypeElement te) ? te : null;
+        }
+        return result;
     }
 
     /**

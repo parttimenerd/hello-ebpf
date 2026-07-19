@@ -150,7 +150,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * mutate individual fields via {@code ptr.val().field = x}.
      */
     @Type
-    static class TaskCtx {
+    public static class TaskCtx {
         @Unsigned long enqCnt;
         @Unsigned long startTs;
         @Unsigned long stopTs;
@@ -171,7 +171,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     public static final int EXT_CAP = 64;
 
     @Type
-    static class QueuedTaskCtx {
+    public static class QueuedTaskCtx {
         int pid;
         int prevCpu;
         @Unsigned long nrCpusAllowed;
@@ -183,7 +183,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         @Unsigned long vtime;
         @Unsigned long enqCnt;
         @Size(16) byte[] comm;
-        @Size(EXT_CAP) byte[] ext;   // per-task extension tail; zeroed unless fillExtension writes it
+        @Size(EXT_CAP) public byte[] ext;   // per-task extension tail; zeroed unless fillExtension writes it
     }
 
     /**
@@ -197,7 +197,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * @see QueuedTaskDispatchedTaskMarshallingTest for the bit-for-bit wire-format contract
      */
     @Type
-    static class DispatchedTaskCtx {
+    public static class DispatchedTaskCtx {
         public int pid;
         public int targetCpu;
         public @Unsigned long flags;
@@ -222,7 +222,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@code __sync_fetch_and_add}; Java reads via {@code VarHandle.getOpaque()}.
      */
     @Type
-    record SchedStats(
+    public record SchedStats(
         @Unsigned long onlineCpus,
         @Unsigned long runningTasks,
         @Unsigned long nrQueued,
@@ -844,7 +844,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * as {@code int} so the struct layout matches.
      */
     @Type
-    record TracepointSchedProcessFork(
+    public record TracepointSchedProcessFork(
             @Unsigned short common_type,
             byte common_flags,
             byte common_preempt_count,
