@@ -847,29 +847,26 @@ public class TypeProcessor {
     private List<Define> createDefineStatements(TypeElement typeElement) {
         var seen = new java.util.LinkedHashSet<String>();
         var result = new ArrayList<Define>();
-        // Own fields first, then constants inherited from every @BPF superclass
-        // (mirrors the map / @Type / global-variable superclass walks). When one @BPF
-        // program extends another, the base's `static final` constants (e.g. a shared
-        // DSQ id) must be re-emitted into the subclass's C or its inherited @BPFFunction
-        // bodies reference undeclared identifiers (e.g. FRAMEWORK_DSQ).
+        // Own fields first, then constants inherited from every superclass up to (but not
+        // including) BPFProgram (mirrors the map / @Type / global-variable superclass walks).
+        // When one program extends another, the base's `static final` constants (e.g. a
+        // shared DSQ id like SchedulerBase.SHARED_DSQ_ID) must be re-emitted into the
+        // subclass's C or its inherited @BPFFunction bodies reference undeclared identifiers.
         //
-        // Only harvest the program itself and its @BPF-annotated superclasses. Framework
-        // base classes (e.g. BPFProgram) are not @BPF programs; their `static final`
-        // constants (BPF_FS_ROOT, PRODUCER_LOCK_DIR, …) are pure Java internals and must
-        // not leak into the generated C as #defines.
+        // Stop at BPFProgram: it is the framework root, not a user program. Its own
+        // `static final` constants (BPF_FS_ROOT, PRODUCER_LOCK_DIR, …) are pure Java
+        // internals and must not leak into the generated C as #defines.
         TypeElement current = typeElement;
-        while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
-            boolean harvest = current == typeElement
-                    || getAnnotationMirror(current, BPF.class.getName()).isPresent();
-            if (harvest) {
-                current.getEnclosedElements().stream()
-                        .filter(e -> e.getKind() == ElementKind.FIELD)
-                        .map(e -> (VariableElement) e)
-                        .map(this::processField)
-                        .filter(Objects::nonNull)
-                        .filter(d -> seen.add(d.name()))
-                        .forEach(result::add);
-            }
+        while (current != null
+                && !current.getQualifiedName().toString().equals("java.lang.Object")
+                && !current.getQualifiedName().toString().equals("me.bechberger.ebpf.bpf.BPFProgram")) {
+            current.getEnclosedElements().stream()
+                    .filter(e -> e.getKind() == ElementKind.FIELD)
+                    .map(e -> (VariableElement) e)
+                    .map(this::processField)
+                    .filter(Objects::nonNull)
+                    .filter(d -> seen.add(d.name()))
+                    .forEach(result::add);
             var superMirror = current.getSuperclass();
             var superElem = (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE)
                     ? processingEnv.getTypeUtils().asElement(superMirror) : null;

@@ -71,8 +71,6 @@ __always_inline int vtimeCharge(struct task_struct *p);
 
 
 #define SHARED_DSQ_ID 0L
-#define BPF_FS_ROOT "/sys/fs/bpf"
-#define PRODUCER_LOCK_DIR "/tmp/hello-ebpf-locks"
 
 
 
