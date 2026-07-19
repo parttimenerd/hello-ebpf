@@ -28,6 +28,21 @@ import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 @BPFAbstraction(constructorPrependTo = "")
 public final class KickFlags {
 
+    // ─── Plain-Java numeric SCX_KICK_* bitmask constants ───────────────
+    // A KickFlags *instance* has no runtime representation (every factory /
+    // instance method is @NotUsableInJava and throws), so plain-Java callers
+    // such as UserspaceSchedulerBase.submitControl cannot read a value off an
+    // instance. The @BPFAbstraction authoring contract permits `static final`
+    // constants on the class, so we expose the raw numeric bitmask here.
+    // Values mirror scx_kick_flags (kernel): SCX_KICK_IDLE=1, PREEMPT=2, WAIT=4.
+
+    /** Numeric {@code SCX_KICK_IDLE} — kick only if the target CPU is idle. */
+    public static final long IDLE_VALUE    = 1L;
+    /** Numeric {@code SCX_KICK_PREEMPT} — preempt whatever runs on the target CPU. */
+    public static final long PREEMPT_VALUE = 2L;
+    /** Numeric {@code SCX_KICK_WAIT} — wait for the kick to be processed. */
+    public static final long WAIT_VALUE    = 4L;
+
     /** No flags — same as passing {@code 0}. */
     @BuiltinBPFFunction(value = "", carrier = "0")
     @NotUsableInJava

@@ -1114,6 +1114,31 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         return 0;
     }
 
+    /**
+     * Write one control record into the user&rarr;kernel control ring.
+     *
+     * <p>Mirrors {@link #submitDispatchDecision}: reserve a slot, populate the
+     * {@code ControlCtx} wire layout ({@code {int kind; int cpu; int pid; int _pad; long flags;}}),
+     * then submit. The BPF side drains this ring in {@code drainControlOne}.
+     *
+     * @param kind  {@code ControlKind.PREEMPT} (1) or {@code ControlKind.KICK} (2)
+     * @param pid   task PID for PREEMPT, or {@code -1} when unused
+     * @param cpu   target CPU for KICK, or {@code -1} when unused
+     * @param flags SCX_KICK_* bitmask for KICK, 0 otherwise
+     * @return 0 on success, {@code -1} if the ring buffer is full (reserve returned null)
+     */
+    public int submitControl(int kind, int pid, int cpu, long flags) {
+        MemorySegment slot = control.reserve();
+        if (slot == null) return -1;
+        slot.set(ValueLayout.JAVA_INT,  CTL_KIND,  kind);
+        slot.set(ValueLayout.JAVA_INT,  CTL_CPU,   cpu);
+        slot.set(ValueLayout.JAVA_INT,  CTL_PID,   pid);
+        slot.set(ValueLayout.JAVA_INT,  12,        0);   // _pad at offset 12
+        slot.set(ValueLayout.JAVA_LONG, CTL_FLAGS, flags);
+        control.submit(slot);
+        return 0;
+    }
+
     // ─── Java-side stat readers ───────────────────────────────────
 
     /**

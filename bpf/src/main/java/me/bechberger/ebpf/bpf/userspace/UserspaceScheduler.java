@@ -693,6 +693,45 @@ public abstract class UserspaceScheduler {
     }
 
     /**
+     * Preempt whatever is currently running so {@code pid} can run ASAP. Best-effort:
+     * writes a {@code PREEMPT} record to the control ring; the BPF side acts on it.
+     *
+     * @param pid task PID that should be scheduled promptly
+     */
+    public final void preempt(int pid) {
+        submitControl(me.bechberger.ebpf.bpf.userspace.ControlKind.PREEMPT, pid, ANY_CPU, 0L);
+    }
+
+    /**
+     * Kick a CPU (wake it / force a reschedule).
+     *
+     * <p>{@code flags} is a numeric {@code SCX_KICK_*} bitmask; compose it from the
+     * constants on {@link me.bechberger.ebpf.bpf.sched.KickFlags}
+     * ({@code IDLE_VALUE}, {@code PREEMPT_VALUE}, {@code WAIT_VALUE}). A {@code KickFlags}
+     * <em>instance</em> has no plain-Java runtime representation, so the numeric bitmask
+     * is passed directly here.
+     *
+     * @param cpu   target CPU to kick
+     * @param flags SCX_KICK_* bitmask (see {@link me.bechberger.ebpf.bpf.sched.KickFlags})
+     */
+    public final void kick(int cpu, long flags) {
+        submitControl(me.bechberger.ebpf.bpf.userspace.ControlKind.KICK, ANY_CPU, cpu, flags);
+    }
+
+    /**
+     * Test seam: submit one control record to the BPF control ring.
+     *
+     * <p>Delegates to {@link UserspaceSchedulerBase#submitControl}. The offline harness
+     * overrides this to capture control records without a real BPF handle.
+     *
+     * @return 0 on success, {@code -1} if there is no BPF handle or the ring is full
+     */
+    protected int submitControl(int kind, int pid, int cpu, long flags) {
+        if (bpfHandle == null) return -1;
+        return bpfHandle.submitControl(kind, pid, cpu, flags);
+    }
+
+    /**
      * Round-robin scan of the idle-CPU bitmap.
      *
      * <p>Advances an {@link AtomicInteger} cursor so successive calls spread
