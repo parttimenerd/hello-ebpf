@@ -119,6 +119,12 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         /** Slot 13: heartbeat timer ticks (incremented in {@code heartbeatTick}). */
         public static final int HEARTBEAT_KICKS      = 13;
 
+        public static final int SIGNALS_DROPPED    = 14;
+        public static final int SIGNALS_DELIVERED  = 15;
+        public static final int PREEMPTS_ISSUED    = 16;
+        public static final int KICKS_ISSUED       = 17;
+        public static final int PREEMPT_UNRESOLVED = 18;  // pid→task lookup failed
+
         private Stats() {}
     }
 
@@ -206,6 +212,39 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         public @Unsigned long enqCnt;
     }
 
+    /** User→kernel control record: Java submits preempt/kick; BPF drains and acts. */
+    @Type
+    static class ControlCtx {
+        int kind;                 // ControlKind.PREEMPT | ControlKind.KICK
+        int cpu;                  // target cpu for KICK; ignored for PREEMPT (resolved from pid)
+        int pid;                  // subject task for PREEMPT; ignored for KICK
+        int _pad;                 // explicit pad so flags is 8-byte aligned at offset 16
+        @Unsigned long flags;     // SCX_KICK_* for KICK; 0 for PREEMPT
+    }
+
+    /** Kernel→user signal record: BPF emits typed events; Java drains in the run loop. */
+    @Type
+    static class SignalCtx {
+        int kind;                 // SignalKind.* or an author kind
+        int pid;                  // subject pid or -1
+        @Unsigned long payload;   // author-defined
+        @Unsigned long ts;        // bpf_ktime_get_ns at emit
+    }
+
+    // ControlCtx wire offsets — pinned by ControlDispatchedMarshallingTest.
+    public static final long CTL_KIND   = 0;
+    public static final long CTL_CPU    = 4;
+    public static final long CTL_PID    = 8;
+    public static final long CTL_FLAGS  = 16;
+    public static final long CTL_SIZEOF = 24;
+
+    // SignalCtx wire offsets — pinned by ControlDispatchedMarshallingTest.
+    public static final long SIG_KIND    = 0;
+    public static final long SIG_PID     = 4;
+    public static final long SIG_PAYLOAD = 8;
+    public static final long SIG_TS      = 16;
+    public static final long SIG_SIZEOF  = 24;
+
     /**
      * Map-value wrapper for the heartbeat {@code bpf_timer}. The kernel requires
      * {@code bpf_timer} to be a <em>field</em> inside the map-value struct; it
@@ -258,6 +297,14 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     /** User→kernel ring buffer: Java submits dispatch decisions; BPF drains. */
     @BPFMapDefinition(maxEntries = 4 * 1024 * 1024)
     public BPFUserRingBuffer<DispatchedTaskCtx> dispatched;
+
+    /** User→kernel control ring: preempt/kick decisions. Separate from dispatch to keep it latency-isolated. */
+    @BPFMapDefinition(maxEntries = 1024 * 1024)
+    public BPFUserRingBuffer<ControlCtx> control;
+
+    /** Kernel→user signals ring: typed BPF-emitted events for onSignal(). */
+    @BPFMapDefinition(maxEntries = 1024 * 1024)
+    public BPFRingBuffer<SignalCtx> signals;
 
     // ─── Arena maps ───────────────────────────────────────────────
     /**
