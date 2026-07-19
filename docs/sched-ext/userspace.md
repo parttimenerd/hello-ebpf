@@ -186,6 +186,64 @@ batch. The `enqCnt` stale-dispatch guard still applies — if the copied task wa
 re-enqueued before you dispatch it, the dispatch is silently cancelled by the BPF
 transport and `ringCanceled` is incremented.
 
+### Helper classes (**Experimental**)
+
+Three helpers in `me.bechberger.ebpf.bpf.userspace` remove the boilerplate that
+every non-trivial policy re-implements. They are plain Java — no BPF, no kernel.
+
+- **[`DeferredQueue`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/DeferredQueue.java)** —
+  a copy-storing heap for sorted or time-gated scheduling. `deferOrdered(t, key)`
+  orders by a key (vtime, deadline); `deferUntil(t, notBeforeNs)` holds a task until
+  a wall-clock time; `drainEligible(nowNs, max, sink)` pops the eligible front in key
+  order. It stores `copy()`s, so entries survive across batches.
+- **[`TaskClassifier`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/TaskClassifier.java)** —
+  turns "classify a task into a band, then route the band" into a table:
+  `builder().classify(fn).policy(BAND, placement).build()`. `classOf(t)` returns the
+  band; `decide(t)` classifies and applies that band's placement in one call.
+- **[`SchedulerRunner`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/SchedulerRunner.java)** —
+  a one-line `main`: `SchedulerRunner.run(new MyScheduler(), args)` wires the
+  shutdown hook and the periodic `--stats-interval` printer, then calls `runUntilExit`.
+
+`LatencyTierEdfSample` shows the canonical shape combining a `TaskClassifier` (tier
+lookup) with a `DeferredQueue` (earliest-deadline-first order across the batch).
+
+### Offline testing with `SchedulerHarness` (**Experimental**)
+
+[`SchedulerHarness`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/SchedulerHarness.java)
+runs your `schedule`/`tick` against fabricated tasks in a plain JVM test — no root,
+no kernel — and records what was dispatched:
+
+```java
+var h = SchedulerHarness.forScheduler(new MyScheduler()).withCpus(8);
+h.feed(task(1, 100), task(2, 50)).runBatch();
+assertEquals(List.of(1, 2),
+        h.dispatches().stream().map(SchedulerHarness.Dispatch::pid).toList());
+```
+
+`withCpus(n)` models a machine of any size — the scheduler's dispatch-range
+validation and `cpuCount()` follow it, so a CPU-targeting policy can be tested for a
+machine larger than the CI host. **Read `cpuCount()`, not
+`Runtime.getRuntime().availableProcessors()`,** when computing concrete CPU targets so
+placement honours `withCpus`.
+
+For time-dependent policies (rate limiting, EDF deadlines, `deferUntil`) install a
+**virtual clock** so tests are deterministic and instant:
+
+```java
+var h = SchedulerHarness.forScheduler(sched).withCpus(8).withVirtualClock(0);
+h.feed(task(1, 100)).runBatch();       // dispatches at t=0
+h.clear();
+h.advanceMillis(5).feed().runBatch();  // the gate has now elapsed
+```
+
+The virtual clock replaces the scheduler's time source, so this only works if your
+scheduler reads time through `nanoTime()` — **never call `System.nanoTime()`
+directly** in a scheduler you want to test. (`.feed()` with no arguments runs an empty
+batch, which advances time and triggers `schedule` without new arrivals.)
+
+The package-level Javadoc on `me.bechberger.ebpf.bpf.userspace` is the authoring
+guide that ties these pieces together.
+
 ---
 
 ## Example: Interactive-vs-batch partitioner
@@ -312,6 +370,9 @@ Full source with CLI, stats, and shutdown hook:
 | [`TwoQueueFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TwoQueueFifoSample.java) | Two-tier FIFO: interactive (< 10 ms exec) vs batch (**Experimental**) |
 | [`CmdlineBoostSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java) | `/proc` reads, cmdline classification, CPU partitioning |
 | [`ShowcaseScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/ShowcaseScheduler.java) | Six-tier /proc-powered scheduler: cmdline + cgroup detection + I/O bytes/s + container CPU partition (**Experimental**) |
+| [`LatencyTierEdfSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LatencyTierEdfSample.java) | `TaskClassifier` tiers + `DeferredQueue` earliest-deadline-first ordering across the batch (**Experimental**) |
+| [`EdfRateLimitSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/EdfRateLimitSample.java) | Time-gated `DeferredQueue.deferUntil` — per-pid rate limiting with a weight-scaled gap (**Experimental**) |
+| [`CorePartitionSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CorePartitionSample.java) | `TaskClassifier` *placement* policies routing interactive vs batch work to disjoint core pools (**Experimental**) |
 
 ## 4. Running
 
@@ -408,6 +469,18 @@ Three thresholded events under category `hello-ebpf / userspace-scheduler`:
 These are off by default in `default.jfc` — enable them in your `.jfc` if you
 want them in long-running recordings.
 
+### Decision trace & per-class metrics (**Experimental**)
+
+Two opt-in aids for understanding *why* the scheduler did what it did:
+
+- **Decision trace** — set `Opts.decisionTraceCapacity > 0` to keep a bounded ring
+  of the most recent decisions (`DISPATCH`, `PREEMPT`, `KICK`, `DROP`), readable via
+  `scheduler.recentDecisions()`. Off (capacity 0) by default so it costs nothing.
+- **Per-class metrics** — call `scheduler.setClassMetrics(classifier)` once with a
+  `TaskClassifier`; then `scheduler.perClass(band)` returns a `ClassMetrics`
+  (count, p50, p99 dispatch latency) per band. `ShowcaseScheduler` uses this to print
+  a per-tier breakdown from `formatStats()`.
+
 ### Where to look when something is wrong
 
 | Symptom | First place to check |
@@ -455,9 +528,12 @@ typically because:
 - **Not a replacement for in-kernel schedulers.** Even with ZGC the userspace
   round-trip adds 1–10 µs at p50 and significantly more at p99 under GC pressure.
   Use it where flexibility > microbenchmark latency.
-- **`policy()` runs on a single thread.** No concurrency, no shared mutable state
-  to worry about — but also no parallelism. Decisions must be cheap (target: < 1 µs
-  per call).
+- **`policy()` runs on a single thread by default.** Decisions must be cheap
+  (target: < 1 µs per call). For CPU-bound policies you can opt into sharded parallel
+  dispatch by setting `Opts.workerThreads > 1`, which partitions tasks across worker
+  threads by pid affinity (a given pid is always handled by the same worker, so per-pid
+  state stays single-writer). Leave it at the default `1` unless you have measured that
+  `policy()` is the bottleneck.
 
 ---
 

@@ -64,6 +64,9 @@ includes.
 | [sched/PerCpuSchedulerSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/PerCpuSchedulerSample.java) | sched_ext (PerCpuSchedulerBase) | Minimal PerCpuSchedulerBase demo with per-CPU and shared fallback DSQs | |
 | [sched/TaskStorageScheduler](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TaskStorageScheduler.java) | sched_ext (SchedulerBase), BPFTaskStorage | FIFO scheduler tracking per-task wakeup counts with BPFTaskStorage | |
 | [sched/RustlandFifoSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java) | UserspaceScheduler | Minimal FIFO userspace scheduler baseline | |
+| [sched/LatencyTierEdfSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LatencyTierEdfSample.java) | UserspaceScheduler, TaskClassifier, DeferredQueue | Latency-tier classifier feeding an EDF DeferredQueue | |
+| [sched/EdfRateLimitSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/EdfRateLimitSample.java) | UserspaceScheduler, DeferredQueue | Per-task rate limiting via deferUntil time gates | |
+| [sched/CorePartitionSample](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CorePartitionSample.java) | UserspaceScheduler, TaskClassifier | Splits interactive/batch work onto disjoint core pools | |
 | [HttpUtil](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HttpUtil.java) | none (pure Java utility) | URL query-string parser used by FirewallSpring controller | |
 
 ## All samples
@@ -165,6 +168,9 @@ includes.
 | sched/RustlandFifoSample | Minimal FIFO userspace scheduler baseline |
 | sched/WeightedRRSample | Weighted round-robin with per-pid debt tracking |
 | sched/LotterySample | Lottery scheduler with weight-proportional CPU placement |
+| sched/LatencyTierEdfSample | Latency-tier classifier feeding an EDF DeferredQueue |
+| sched/EdfRateLimitSample | Per-task rate limiting via deferUntil time gates |
+| sched/CorePartitionSample | Splits interactive/batch work onto disjoint core pools |
 
 ### Diagnostics / utilities
 
