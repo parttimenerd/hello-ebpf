@@ -61,6 +61,8 @@ public abstract class UserspaceScheduler {
     private long sRingDrained;     // tasks successfully consumed from kernel→user ringbuf
     private long sDispatched;
     private long sDispatchFailed;
+    private volatile long sControlSubmitted;    // successful submitControl() returns (producer side)
+    private volatile long sControlSubmitFailed; // submitControl() returns != 0 (ring full / no handle)
 
     // Cached BPF-side counters, populated by cleanupBpf() before close so that
     // stats() returns meaningful values after runUntilExit() has returned.
@@ -69,6 +71,11 @@ public abstract class UserspaceScheduler {
     private long cachedRingCanceled;
     private long cachedStallFallbacks;
     private long cachedHeartbeatKicks;
+    private long cachedSignalsDropped;
+    private long cachedSignalsDelivered;
+    private long cachedPreemptsIssued;
+    private long cachedKicksIssued;
+    private long cachedPreemptUnresolved;
 
     /** Task pool — package-private so test subclasses can seed fake tasks via {@link #drainRaw()}. */
     QueuedTask[] taskPool;
@@ -327,6 +334,11 @@ public abstract class UserspaceScheduler {
                 cachedRingCanceled   = bpfHandle.readRingCanceled();
                 cachedStallFallbacks = bpfHandle.readStallFallbacks();
                 cachedHeartbeatKicks = bpfHandle.readHeartbeatKicks();
+                cachedSignalsDropped    = bpfHandle.readSignalsDropped();
+                cachedSignalsDelivered  = bpfHandle.readSignalsDelivered();
+                cachedPreemptsIssued    = bpfHandle.readPreemptsIssued();
+                cachedKicksIssued       = bpfHandle.readKicksIssued();
+                cachedPreemptUnresolved = bpfHandle.readPreemptUnresolved();
             } catch (Exception ignored) {}
             try { bpfHandle.close(); } catch (Exception ignored) {}
             bpfHandle = null;
@@ -433,6 +445,46 @@ public abstract class UserspaceScheduler {
             s.ringDrained(), s.ringDropped(),
             s.dispatched(), s.dispatchFailed(),
             s.ringCanceled(), s.stallFallbacks(), s.heartbeatKicks());
+    }
+
+    /**
+     * Cumulative in-kernel {@code SCX_KICK_PREEMPT} kicks issued by {@link #preempt(int)}.
+     * Zero if no BPF handle is attached.
+     */
+    public long preemptsIssued() {
+        return bpfHandle != null ? bpfHandle.readPreemptsIssued() : cachedPreemptsIssued;
+    }
+
+    /**
+     * Cumulative in-kernel kicks issued by {@link #kick(int, long)}.
+     * Zero if no BPF handle is attached.
+     */
+    public long kicksIssued() {
+        return bpfHandle != null ? bpfHandle.readKicksIssued() : cachedKicksIssued;
+    }
+
+    /**
+     * Cumulative {@link #preempt(int)} records whose pid could not be resolved
+     * to a live task on the BPF side. Zero if no BPF handle is attached.
+     */
+    public long preemptUnresolved() {
+        return bpfHandle != null ? bpfHandle.readPreemptUnresolved() : cachedPreemptUnresolved;
+    }
+
+    /**
+     * Cumulative signal records delivered to {@link #onSignal(Signal)}.
+     * Zero if no BPF handle is attached.
+     */
+    public long signalsDelivered() {
+        return bpfHandle != null ? bpfHandle.readSignalsDelivered() : cachedSignalsDelivered;
+    }
+
+    /**
+     * Cumulative signal records dropped because the signals ring was full.
+     * Zero if no BPF handle is attached.
+     */
+    public long signalsDropped() {
+        return bpfHandle != null ? bpfHandle.readSignalsDropped() : cachedSignalsDropped;
     }
 
     private void runLoop() {
@@ -816,8 +868,17 @@ public abstract class UserspaceScheduler {
      */
     protected int submitControl(int kind, int pid, int cpu, long flags) {
         if (bpfHandle == null) return -1;
-        return bpfHandle.submitControl(kind, pid, cpu, flags);
+        int rc = bpfHandle.submitControl(kind, pid, cpu, flags);
+        if (rc == 0) sControlSubmitted++;
+        else         sControlSubmitFailed++;
+        return rc;
     }
+
+    /** Count of successful {@link #submitControl} calls (control record accepted by the ring). */
+    public long controlSubmitted() { return sControlSubmitted; }
+
+    /** Count of failed {@link #submitControl} calls (ring full, or no BPF handle attached). */
+    public long controlSubmitFailed() { return sControlSubmitFailed; }
 
     /**
      * Round-robin scan of the idle-CPU bitmap.

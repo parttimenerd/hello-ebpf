@@ -214,21 +214,21 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
 
     /** User→kernel control record: Java submits preempt/kick; BPF drains and acts. */
     @Type
-    static class ControlCtx {
-        int kind;                 // ControlKind.PREEMPT | ControlKind.KICK
-        int cpu;                  // target cpu for KICK; ignored for PREEMPT (resolved from pid)
-        int pid;                  // subject task for PREEMPT; ignored for KICK
-        int _pad;                 // explicit pad so flags is 8-byte aligned at offset 16
-        @Unsigned long flags;     // SCX_KICK_* for KICK; 0 for PREEMPT
+    public static class ControlCtx {
+        public int kind;                 // ControlKind.PREEMPT | ControlKind.KICK
+        public int cpu;                  // target cpu for KICK; ignored for PREEMPT (resolved from pid)
+        public int pid;                  // subject task for PREEMPT; ignored for KICK
+        public int _pad;                 // explicit pad so flags is 8-byte aligned at offset 16
+        public @Unsigned long flags;     // SCX_KICK_* for KICK; 0 for PREEMPT
     }
 
     /** Kernel→user signal record: BPF emits typed events; Java drains in the run loop. */
     @Type
-    static class SignalCtx {
-        int kind;                 // SignalKind.* or an author kind
-        int pid;                  // subject pid or -1
-        @Unsigned long payload;   // author-defined
-        @Unsigned long ts;        // bpf_ktime_get_ns at emit
+    public static class SignalCtx {
+        public int kind;                 // SignalKind.* or an author kind
+        public int pid;                  // subject pid or -1
+        public @Unsigned long payload;   // author-defined
+        public @Unsigned long ts;        // bpf_ktime_get_ns at emit
     }
 
     // ControlCtx wire offsets — pinned by ControlDispatchedMarshallingTest.
@@ -256,7 +256,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     /**
-     * Shared stats arena, mmap'd from Java. 13 counters; slot numbering is
+     * Shared stats arena, mmap'd from Java. 18 counters; slot numbering is
      * part of the BPF↔Java ABI — see {@link Stats}. BPF increments via
      * {@code __sync_fetch_and_add}; Java reads via {@code VarHandle.getOpaque()}.
      */
@@ -274,7 +274,12 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         @Unsigned long frameworkEnqueues,
         @Unsigned long policyExceptions,
         @Unsigned long idleFastPath,
-        @Unsigned long heartbeatKicks
+        @Unsigned long heartbeatKicks,
+        @Unsigned long signalsDropped,
+        @Unsigned long signalsDelivered,
+        @Unsigned long preemptsIssued,
+        @Unsigned long kicksIssued,
+        @Unsigned long preemptUnresolved
     ) {}
 
     // ─── Per-task storage ─────────────────────────────────────────
@@ -1165,6 +1170,11 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
             case Stats.POLICY_EXCEPTIONS    -> s.policyExceptions();
             case Stats.IDLE_FAST_PATH       -> s.idleFastPath();
             case Stats.HEARTBEAT_KICKS      -> s.heartbeatKicks();
+            case Stats.SIGNALS_DROPPED      -> s.signalsDropped();
+            case Stats.SIGNALS_DELIVERED    -> s.signalsDelivered();
+            case Stats.PREEMPTS_ISSUED      -> s.preemptsIssued();
+            case Stats.KICKS_ISSUED         -> s.kicksIssued();
+            case Stats.PREEMPT_UNRESOLVED   -> s.preemptUnresolved();
             default -> 0L;
         };
     }
@@ -1179,6 +1189,16 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     public long readStallFallbacks() { return readStat(Stats.KERNEL_DISPATCHES); }
     /** Cumulative heartbeat timer ticks that issued a CPU kick. */
     public long readHeartbeatKicks() { return readStat(Stats.HEARTBEAT_KICKS); }
+    /** Cumulative kernel→user signal records dropped because the signals ring was full. */
+    public long readSignalsDropped() { return readStat(Stats.SIGNALS_DROPPED); }
+    /** Cumulative kernel→user signal records delivered to {@code onSignal}. */
+    public long readSignalsDelivered() { return readStat(Stats.SIGNALS_DELIVERED); }
+    /** Cumulative in-kernel {@code SCX_KICK_PREEMPT} kicks issued via {@code preempt()}. */
+    public long readPreemptsIssued() { return readStat(Stats.PREEMPTS_ISSUED); }
+    /** Cumulative in-kernel kicks issued via {@code kick()}. */
+    public long readKicksIssued() { return readStat(Stats.KICKS_ISSUED); }
+    /** Cumulative {@code preempt()} records whose pid could not be resolved to a task. */
+    public long readPreemptUnresolved() { return readStat(Stats.PREEMPT_UNRESOLVED); }
 
     /**
      * Return a read-only view of the idle-CPU bitmap mmap'd from the {@link #idleMask} arena.
