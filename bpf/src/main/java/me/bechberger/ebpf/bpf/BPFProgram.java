@@ -2654,7 +2654,16 @@ public abstract class BPFProgram implements AutoCloseable {
             if (prop != null && prop.name().equals(name)) {
                 return prop.defaultValue();
             }
-            queue.addAll(Arrays.asList(clazz.getSuperclass().getInterfaces()));
+            // Walk the FULL hierarchy — both implemented interfaces and the superclass chain.
+            // A @PropertyDefinition (e.g. Scheduler's sched_name) lives on an interface that is
+            // only reachable transitively for a cross-module @BPF subclass
+            // (CgroupAwareSchedBpfImpl -> CgroupAwareSchedBpf -> UserspaceSchedulerBase ->
+            // ... -> Scheduler). The previous `getSuperclass().getInterfaces()` only inspected
+            // the DIRECT superclass's interfaces and missed it, yielding a null sched_name.
+            queue.addAll(Arrays.asList(clazz.getInterfaces()));
+            if (clazz.getSuperclass() != null) {
+                queue.add(clazz.getSuperclass());
+            }
         }
         return null;
     }

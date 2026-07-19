@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
@@ -103,6 +104,23 @@ public class CompilerPlugin implements Plugin {
      * Collected by {@link Translator}; consumed by {@code ArenaAssociationPass} in Task B.
      */
     final Map<MethodSymbol, Set<MethodSymbol>> callGraph = new HashMap<>();
+
+    /**
+     * Per-owner-class registry of every {@link MethodSymbol} whose body has been persisted via
+     * {@link #storeInternalMethodDefinition} in {@link #processBPFFunction}, together with the
+     * persisted C body. Used to re-persist the {@code @InternalMethodDefinition.arenas()} set for
+     * <em>all</em> of a class's methods once its last {@code @BPFFunction} has been translated.
+     * <p>
+     * Rationale: transitive arena reachability of an entry (e.g. {@code updateIdle -> setBit ->
+     * deref idleMask}) can only be computed once every callee has been translated and recorded in
+     * {@link #callGraph}/{@link #directArenaRefs}. But these attribute mutations must land in the
+     * SAME annotation-processing round that the base source is compiled in — a mutation made later
+     * (in {@code processBPFProgramImpl}, which runs in a subsequent round after the impl class is
+     * generated) never reaches the already-written {@code .class} file. So we recompute + re-store
+     * arenas for the whole class on every {@code processBPFFunction}; the last call (with the fully
+     * populated graph) is authoritative.
+     */
+    private final Map<Symbol.ClassSymbol, Map<MethodSymbol, String>> persistedBodiesByOwner = new LinkedHashMap<>();
 
     /**
      * Test hook: when non-null, the plugin instance that most recently finished processing
@@ -659,8 +677,22 @@ public class CompilerPlugin implements Plugin {
         // compilations (e.g. bpf-samples compiling a subclass of SchedulerBase) can inject
         // these inherited implementations without needing the source in the current unit.
         var methodSymbol = (MethodSymbol) trees.getElement(path.path());
-        if (methodSymbol != null && !(methodSymbol.owner instanceof Symbol.ClassSymbol ownerClass && ownerClass.isInterface())) {
-            storeInternalMethodDefinition(methodSymbol, buildInternalMethodCode(code, List.of()));
+        if (methodSymbol != null && methodSymbol.owner instanceof Symbol.ClassSymbol ownerClass && !ownerClass.isInterface()) {
+            var body = buildInternalMethodCode(code, List.of());
+            // Register the body under its owner so that we can (re)compute arena reachability for
+            // every method of the class once the whole class has been translated.
+            persistedBodiesByOwner.computeIfAbsent(ownerClass, k -> new LinkedHashMap<>()).put(methodSymbol, body);
+            // Re-store arenas() for ALL of this owner's persisted methods. The transitive set for
+            // an entry is only complete once every callee is translated; recomputing on each
+            // processBPFFunction means the final call (full graph) yields the authoritative set.
+            // These mutations land in the current (source) round's .class file; a later mutation in
+            // processBPFProgramImpl would be lost because the base class file is already sealed.
+            for (var e : persistedBodiesByOwner.get(ownerClass).entrySet()) {
+                var arenas = new ArrayList<>(
+                        ArenaAssociationPass.computeTransitiveArenas(e.getKey(), this, new HashSet<>()));
+                Collections.sort(arenas);
+                storeInternalMethodDefinition(e.getKey(), e.getValue(), arenas);
+            }
         }
         return true;
     }
@@ -706,19 +738,49 @@ public class CompilerPlugin implements Plugin {
     }
 
     private void storeInternalMethodDefinition(MethodSymbol methodSymbol, String codeStr) {
+        storeInternalMethodDefinition(methodSymbol, codeStr, List.of());
+    }
+
+    private void storeInternalMethodDefinition(MethodSymbol methodSymbol, String codeStr, List<String> arenaNames) {
         try {
-            var internalMethodValueSymbol = (Symbol.MethodSymbol) ((Type.ClassType) typeUtils.getTypeMirror(InternalMethodDefinition.class))
-                    .asElement().getEnclosedElements().stream()
+            var internalMethodElement = ((Type.ClassType) typeUtils.getTypeMirror(InternalMethodDefinition.class))
+                    .asElement();
+            var internalMethodValueSymbol = (Symbol.MethodSymbol) internalMethodElement.getEnclosedElements().stream()
                     .filter(e -> e instanceof MethodSymbol m && m.getSimpleName().toString().equals("value"))
                     .findFirst().orElseThrow();
+            var internalMethodArenasSymbol = (Symbol.MethodSymbol) internalMethodElement.getEnclosedElements().stream()
+                    .filter(e -> e instanceof MethodSymbol m && m.getSimpleName().toString().equals("arenas"))
+                    .findFirst().orElseThrow();
+            var stringType = (Type.ClassType) typeUtils.getTypeMirror(String.class);
+            // Build the String[] arenas array attribute (one Attribute.Constant String per name).
+            var arenaConstants = arenaNames.stream()
+                    .map(n -> (Attribute) new Attribute.Constant(stringType, n))
+                    .toList();
+            var arenaArrayAttr = new Attribute.Array(
+                    internalMethodArenasSymbol.getReturnType(),
+                    arenaConstants.toArray(new Attribute[0]));
             var methodMeta = methodSymbol.getMetadata();
             var methodAttributesField = methodMeta.getClass().getDeclaredField("attributes");
             methodAttributesField.setAccessible(true);
             var methodAttributes = (com.sun.tools.javac.util.List<Attribute>) methodAttributesField.get(methodMeta);
-            methodAttributes = methodAttributes.append(new Attribute.Compound(
-                    (Type.ClassType) typeUtils.getTypeMirror(InternalMethodDefinition.class),
-                    com.sun.tools.javac.util.List.of(new Pair<>(internalMethodValueSymbol,
-                            new Attribute.Constant((Type.ClassType) typeUtils.getTypeMirror(String.class), codeStr)))));
+            // Drop any previously-stored @InternalMethodDefinition so that a re-store (GAP 2
+            // #define ride-along + authoritative arena set) REPLACES rather than duplicates the
+            // attribute — otherwise getAnnotation() could pick the stale (empty-arenas) copy.
+            var internalMethodType = (Type.ClassType) typeUtils.getTypeMirror(InternalMethodDefinition.class);
+            var filtered = com.sun.tools.javac.util.List.<Attribute>nil();
+            for (var a : methodAttributes) {
+                if (a instanceof Attribute.Compound c
+                        && task.getTypes().isSameType(c.type, internalMethodType)) {
+                    continue;
+                }
+                filtered = filtered.append(a);
+            }
+            methodAttributes = filtered.append(new Attribute.Compound(
+                    internalMethodType,
+                    com.sun.tools.javac.util.List.of(
+                            new Pair<>(internalMethodValueSymbol,
+                                    new Attribute.Constant(stringType, codeStr)),
+                            new Pair<>(internalMethodArenasSymbol, arenaArrayAttr))));
             methodAttributesField.set(methodMeta, methodAttributes);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -1119,19 +1181,37 @@ public class CompilerPlugin implements Plugin {
         // placeholder, prepending the matching #define so it rides along with the inherited
         // body when a subclass injects it. Without this, a subclass inheriting a body that
         // references FRAMEWORK_DSQ_ID gets no #define and clang fails with an undeclared id.
-        if (!carriers.isEmpty()) {
-            for (int i = 0; i < declMethodSymbols.size(); i++) {
-                var methodSymbol = declMethodSymbols.get(i);
-                var result = declsWithDefines.get(i);
-                var bodyText = buildInternalMethodCode(result, List.of());
-                var extraDefines = carriers.entrySet().stream()
-                        .filter(e -> bodyText.contains(e.getKey() + "_DSQ_ID"))
-                        .map(e -> "#define " + e.getKey() + "_DSQ_ID " + e.getValue())
-                        .distinct()
-                        .toList();
-                if (!extraDefines.isEmpty()) {
-                    storeInternalMethodDefinition(methodSymbol, buildInternalMethodCode(result, extraDefines));
-                }
+        //
+        // Arena reachability is ALSO (re-)persisted here, not in processBPFFunction: at
+        // per-function persist time the callGraph/directArenaRefs of transitively-called
+        // callees (e.g. setBit deref'ing idleMask) may not yet be populated, so the transitive
+        // set would be incomplete. By this point every @BPFFunction of the program has been
+        // processed, so the graph is complete and computeTransitiveArenas is authoritative.
+        for (int i = 0; i < declMethodSymbols.size(); i++) {
+            var methodSymbol = declMethodSymbols.get(i);
+            // Skip interface methods (their bodies are not persisted as concrete defs).
+            if (methodSymbol.owner instanceof Symbol.ClassSymbol ownerClass && ownerClass.isInterface()) {
+                continue;
+            }
+            var result = declsWithDefines.get(i);
+            var bodyText = buildInternalMethodCode(result, List.of());
+            var extraDefines = carriers.isEmpty() ? List.<String>of() : carriers.entrySet().stream()
+                    .filter(e -> bodyText.contains(e.getKey() + "_DSQ_ID"))
+                    .map(e -> "#define " + e.getKey() + "_DSQ_ID " + e.getValue())
+                    .distinct()
+                    .toList();
+            var transitiveArenas = new ArrayList<>(
+                    ArenaAssociationPass.computeTransitiveArenas(methodSymbol, this, new HashSet<>()));
+            Collections.sort(transitiveArenas);
+            // Only re-store when there is something new to carry beyond the initial persist
+            // (extra defines or a non-empty arena set); otherwise the initial persist stands.
+            // NOTE: this round runs AFTER the base source round, so for a base compiled in an
+            // earlier round this mutation may not reach the sealed base .class file — the
+            // authoritative arena persist for a base's own methods happens in processBPFFunction.
+            // Passing transitiveArenas here just preserves them for the same-round case (GAP 2).
+            if (!extraDefines.isEmpty() || !transitiveArenas.isEmpty()) {
+                storeInternalMethodDefinition(methodSymbol,
+                        buildInternalMethodCode(result, extraDefines), transitiveArenas);
             }
         }
         // Emit #define NAME value for any auto-id carriers so field references that were
@@ -1142,18 +1222,15 @@ public class CompilerPlugin implements Plugin {
         // is required for the verifier to set prog->aux->arena.
         var arenaPassResult = new ArenaAssociationPass().apply(this, declMethodSymbols, decls);
         decls = arenaPassResult.updatedDecls();
-        // NOTE (arena-association across module boundaries — KNOWN GAP): the pass above
-        // injects `bpf_arena_associate_<N>();` into this program's OWN struct_ops entries
-        // and emits the per-arena helper, so a @BPF program compiled WITH its arena-using
-        // sources in the current unit loads correctly. A cross-module @BPF SUBCLASS that
-        // inherits an arena-reaching struct_ops entry as a raw-C @InternalMethodDefinition
-        // body does NOT get the association call/helper: this program-impl phase runs in a
-        // LATER annotation-processing round than the base source, so re-storing the
-        // post-pass body onto the base method symbol here cannot reach the already-written
-        // base .class file. Fixing this requires persisting per-entry arena reachability in
-        // the base source round and injecting into the inherited bodies at subclass compile
-        // time. Until then, a subclass that inherits an arena-using struct_ops entry is
-        // rejected by the verifier with "addr_space_cast ... has an associated arena".
+        // NOTE (arena-association across module boundaries): the pass above injects
+        // `bpf_arena_associate_<N>();` into this program's OWN struct_ops entries and emits the
+        // per-arena helper, so a @BPF program compiled WITH its arena-using sources in the
+        // current unit loads correctly. A cross-module @BPF SUBCLASS that inherits an
+        // arena-reaching struct_ops entry as a raw-C @InternalMethodDefinition body BYPASSES
+        // `decls`, so the pass never sees it. That case is handled below in the defaultCodeBodies
+        // shim: per-entry arena reachability is persisted at base-compile time on
+        // @InternalMethodDefinition.arenas(), and the association call + helper are re-injected
+        // into the inherited body at subclass compile time.
         // Synthetic top-level functions (e.g. lambdas lifted for bpf_loop / bpf_for_each_map_elem).
         // These come BEFORE the main function decls in declarator-emission order so that the
         // helper that takes their address has a forward declaration in scope.
@@ -1220,11 +1297,79 @@ public class CompilerPlugin implements Plugin {
                 .map(Object::toString)
                 .collect(Collectors.toSet());
 
+        // Cross-module arena association shim: an inherited struct_ops entry that transitively
+        // dereferences an @InArena pointer arrives here as a raw-C body (via
+        // @InternalMethodDefinition.value()) that BYPASSES `decls`, so ArenaAssociationPass above
+        // never saw it and injected no `bpf_arena_associate_<N>();` call/helper. Its arena
+        // reachability was persisted at base-compile time on @InternalMethodDefinition.arenas().
+        // Re-inject the association call into the body (a leaf statement, so a String-prepend is
+        // safe) and collect the arena names so we can re-emit the per-arena helper below. These
+        // inherited entries are DISJOINT from this program's own entries (which live in `decls` and
+        // were handled by the pass), so no entry gets a double association call for one arena.
+        var inheritedArenaNames = new LinkedHashSet<String>();
+        // Base @BPFAbstraction constructor prologues (e.g. "init" ->
+        // "scx_bpf_create_dsq(FRAMEWORK_DSQ, -1);"). These live on the base's generated impl
+        // ABSTRACTION_PROLOGUES; the subclass's own field scan misses them because the
+        // @BPFAbstraction field (e.g. `framework`) is declared on the base, not the subclass.
+        // Re-inject them into the matching inherited body so the DSQ is actually created.
+        var baseAbstractionPrologues = readBaseAbstractionPrologues(superClassElement);
         var defaultCodeBodies = defaultCodeForMethod.entrySet().stream()
                 .filter(e -> !implementedMethodStrings.contains(e.getKey().toString()))
                 .sorted(Map.Entry.comparingByKey(Comparator.comparing(MethodSymbol::toString)))
-                .map(Map.Entry::getValue)
+                .map(e -> {
+                    var ann = e.getKey().getAnnotation(InternalMethodDefinition.class);
+                    var arenas = (ann == null) ? new String[0] : ann.arenas();
+                    // Prologue statements to prepend inside this body (empty for most methods).
+                    var prologue = baseAbstractionPrologues.getOrDefault(
+                            e.getKey().getSimpleName().toString(), List.of());
+                    if (arenas.length == 0 && prologue.isEmpty()) {
+                        return e.getValue();
+                    }
+                    // Sort + dedup per body for deterministic output.
+                    var sorted = new java.util.TreeSet<String>(Arrays.asList(arenas));
+                    inheritedArenaNames.addAll(sorted);
+                    var lines = new ArrayList<String>();
+                    // Prologue first (matches base source-order: create the DSQ before body logic).
+                    prologue.forEach(s -> lines.add("  " + s));
+                    sorted.forEach(n -> lines.add("  bpf_arena_associate_" + n + "();"));
+                    var calls = String.join("\n", lines);
+                    // Insert the injected statement(s) INSIDE the function body — right after the
+                    // opening brace of the first (only) function definition in the body string.
+                    // Prepending before the signature would emit a bogus file-scope statement.
+                    var body = e.getValue();
+                    int brace = body.indexOf('{');
+                    if (brace < 0) {
+                        // No function body found; fall back to no injection (should not happen for
+                        // a struct_ops entry, which always has a body).
+                        return body;
+                    }
+                    return body.substring(0, brace + 1) + "\n" + calls + body.substring(brace + 1);
+                })
                 .toList();
+
+        // Re-emit the per-arena association helper for every arena reached ONLY by an inherited
+        // entry, deduping against the helpers ArenaAssociationPass already emitted for this
+        // program's OWN entries (so each arena has EXACTLY ONE C function definition).
+        if (!inheritedArenaNames.isEmpty()) {
+            var alreadyEmitted = new HashSet<String>();
+            for (var h : arenaPassResult.helperDecls()) {
+                // Helper names are "bpf_arena_associate_<N>"; recover <N>.
+                var fname = h.toPrettyString();
+                for (var n : inheritedArenaNames) {
+                    if (fname.contains("bpf_arena_associate_" + n + "(")) {
+                        alreadyEmitted.add(n);
+                    }
+                }
+            }
+            var toEmit = inheritedArenaNames.stream()
+                    .filter(n -> !alreadyEmitted.contains(n))
+                    .toList();
+            if (!toEmit.isEmpty()) {
+                for (var helper : new ArenaAssociationPass().emitHelpersFor(toEmit)) {
+                    syntheticDecls.add(new FuncDecl(helper, false));
+                }
+            }
+        }
 
         // The inherited bodies above are raw C strings that never pass through `decls`,
         // so they get no forward declarations. When one inherited body calls another
@@ -1559,6 +1704,61 @@ public class CompilerPlugin implements Plugin {
             var method = line.substring(0, tab);
             var stmt = line.substring(tab + 1);
             result.computeIfAbsent(method, k -> new ArrayList<>()).add(stmt);
+        }
+        return result;
+    }
+
+    /**
+     * Read the {@code ABSTRACTION_PROLOGUES} constant of a base {@code @BPF} class's generated
+     * impl (e.g. {@code UserspaceSchedulerBaseImpl}) so that a cross-module subclass can re-inject
+     * the base's {@code @BPFAbstraction} constructor prologues (e.g.
+     * {@code scx_bpf_create_dsq(FRAMEWORK_DSQ, -1);}) into an inherited method body.
+     *
+     * <p>The subclass inherits e.g. {@code init()} as a raw-C {@code @InternalMethodDefinition}
+     * body that was captured BEFORE prologue injection, and the base's {@code @BPFAbstraction}
+     * fields (like {@code framework}) are not enumerated by the subclass's own field scan (they
+     * are declared on the base, so {@code ABSTRACTION_PROLOGUES} on the subclass impl is empty).
+     * Without this the inherited {@code init()} omits {@code scx_bpf_create_dsq(FRAMEWORK_DSQ,-1)}
+     * and the scheduler aborts at runtime with "invalid DSQ ID" the first time dispatch drains
+     * the framework DSQ.
+     *
+     * @param superClassElement the base {@code @BPF} source class the subclass extends
+     * @return map from Java method name → ordered prologue C statements, or empty if none
+     */
+    private Map<String, List<String>> readBaseAbstractionPrologues(TypeElement superClassElement) {
+        // Walk the superclass chain from superClassElement upward. The @BPFAbstraction field
+        // (e.g. `framework` on UserspaceSchedulerBase) may be declared on an ANCESTOR of the
+        // direct superclass, and each @BPF ancestor has its own generated `<FQN>Impl` carrying
+        // an ABSTRACTION_PROLOGUES constant. Merge them (keyed by Java method name).
+        var result = new java.util.LinkedHashMap<String, List<String>>();
+        TypeElement current = superClassElement;
+        var seen = new java.util.HashSet<String>();
+        while (current != null && !current.getQualifiedName().contentEquals("java.lang.Object")) {
+            if (!seen.add(current.getQualifiedName().toString())) break;
+            var implName = current.getQualifiedName().toString() + "Impl";
+            var implElement = task.getElements().getTypeElement(implName);
+            if (implElement != null) {
+                String raw = null;
+                for (var enclosed : implElement.getEnclosedElements()) {
+                    if (enclosed instanceof VariableElement ve
+                            && ve.getSimpleName().contentEquals("ABSTRACTION_PROLOGUES")) {
+                        var cv = ve.getConstantValue();
+                        if (cv instanceof String s) raw = s;
+                        break;
+                    }
+                }
+                if (raw != null && !raw.isBlank()) {
+                    for (var line : raw.split("\n")) {
+                        int tab = line.indexOf('\t');
+                        if (tab < 0) continue;
+                        var stmt = line.substring(tab + 1);
+                        result.computeIfAbsent(line.substring(0, tab), k -> new ArrayList<>())
+                                .add(stmt);
+                    }
+                }
+            }
+            var sup = current.getSuperclass();
+            current = (sup instanceof DeclaredType dt && dt.asElement() instanceof TypeElement te) ? te : null;
         }
         return result;
     }

@@ -176,7 +176,27 @@ public class ArenaAssociationPass {
      * clang to emit a {@code ldimm64} referencing {@code &arena}, which is all the BPF
      * verifier needs to associate the prog. Pattern from upstream scx ({@code sdt_alloc.bpf.c}).
      */
-    private FunctionDeclarationStatement buildHelperFunction(String arenaName) {
+    /**
+     * Builds the per-arena association helper {@link FunctionDeclarationStatement} objects for
+     * the given set of arena names (sorted for deterministic output).
+     * <p>
+     * Used by the cross-module subclass shim in {@code CompilerPlugin} to re-emit helpers for
+     * arenas reached only by INHERITED raw-C struct_ops entries (whose arena reachability is
+     * carried on the {@code @InternalMethodDefinition.arenas()} member rather than through the
+     * pass's symbol-based call graph). Deduping across the pass output and this shim is the
+     * caller's responsibility.
+     */
+    public List<FunctionDeclarationStatement> emitHelpersFor(Collection<String> arenaNames) {
+        var sorted = new ArrayList<>(new LinkedHashSet<>(arenaNames));
+        Collections.sort(sorted);
+        List<FunctionDeclarationStatement> helpers = new ArrayList<>();
+        for (String arenaName : sorted) {
+            helpers.add(buildHelperFunction(arenaName));
+        }
+        return helpers;
+    }
+
+    FunctionDeclarationStatement buildHelperFunction(String arenaName) {
         var header = new VerbatimFunctionDeclarator(
                 "static __always_inline void bpf_arena_associate_" + arenaName + "(void)");
 
@@ -202,7 +222,7 @@ public class ArenaAssociationPass {
      *
      * <p>Visiting is guarded by {@code visited} to handle mutual recursion.
      */
-    private Set<String> computeTransitiveArenas(
+    public static Set<String> computeTransitiveArenas(
             MethodSymbol method,
             CompilerPlugin plugin,
             Set<MethodSymbol> visited) {
