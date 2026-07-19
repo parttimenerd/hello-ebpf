@@ -161,3 +161,33 @@ bpf-samples/.../sched/CgroupAwareSample          demo                  (new, ~60
 - The fill hook runs in `enqueue` (non-sleepable, hot). A heavy hook regresses
   enqueue latency — document the constraint and keep the demo hook to a few
   field reads.
+
+## Implementation follow-up (2026-07-19, as-shipped)
+
+The spec's "one-method BPF fill hook, overridden in a `UserspaceSchedulerBase`
+subclass" turned out to require making `@BPF` **cross-module subclassable** —
+never supported before. Every prior scheduler sample was a *plain-Java* `final
+extends UserspaceScheduler` sharing the one pre-compiled base BPF program; the
+`fillExtension` override forces the subclass (`CgroupAwareSchedBpf` in
+`bpf-samples`) to become its own real `@BPF` program that re-emits the base's
+complete eBPF run loop. Four base-compile-time contributions were being dropped
+across the module boundary and had to be persisted into
+`@InternalMethodDefinition` and re-injected on the subclass side:
+
+1. **Forward declarations** for inherited `@BPFFunction` bodies + `struct X;`
+   file-scope forward decls for struct tags in synthesised prototypes.
+2. **Promoted lambdas** (`__bpf_lambda_*` lifted from `bpf_user_ringbuf_drain`/
+   `bpf_loop`) persisted ahead of the body.
+3. **Inherited `static final` constants** (e.g. `FRAMEWORK_DSQ`) via a
+   superclass-chain walk in `TypeProcessor.createDefineStatements`.
+4. **`@InArena` retention** flipped `SOURCE`→`CLASS` so inherited arena globals
+   survive the jar; base map/global/arena fields widened package-private →
+   `protected`; **arena association** (`bpf_arena_associate_<N>();`) persisted
+   via a new `@InternalMethodDefinition.arenas()` member; **`@BPFAbstraction`
+   constructor prologues** (`scx_bpf_create_dsq(FRAMEWORK_DSQ,-1)`) re-injected
+   via `readBaseAbstractionPrologues`.
+
+Verified end-to-end: `CgroupAwareSample` attaches in-kernel and reads non-zero
+`cgroupId`. See the memory note `project_bpf_subclass_cross_module.md` for the
+full mechanism. This plumbing is generic — any future custom-`@BPF`-subclass
+scheduler now works.
