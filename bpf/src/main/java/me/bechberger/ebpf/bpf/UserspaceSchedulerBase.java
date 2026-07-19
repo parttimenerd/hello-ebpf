@@ -167,6 +167,9 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      *
      * @see QueuedTaskDispatchedTaskMarshallingTest for the bit-for-bit wire-format contract
      */
+    /** Fixed extension-tail size (bytes) appended after the 88-byte prefix. MUST equal QueuedTask.EXT_CAP. */
+    public static final int EXT_CAP = 64;
+
     @Type
     static class QueuedTaskCtx {
         int pid;
@@ -180,6 +183,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         @Unsigned long vtime;
         @Unsigned long enqCnt;
         @Size(16) byte[] comm;
+        @Size(EXT_CAP) byte[] ext;   // per-task extension tail; zeroed unless fillExtension writes it
     }
 
     /**
@@ -609,6 +613,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
             return;
         }
         fillQueuedCtx(evt, p, enq_flags);     // copies enqCnt from tctx
+        fillExtension(evt, p);
         if (nrUserPending.get() > 0) queued.submitNoWakeup(evt);
         else                         queued.submit(evt);
         incStat(STAT_NR_QUEUED, 1);
@@ -639,6 +644,17 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         evt.val().weight = p.val().scx.weight;
         evt.val().vtime  = p.val().scx.dsq_vtime;
         bpf_probe_read_kernel_str(evt.val().comm, p.val().comm);
+    }
+
+    /**
+     * Fill the per-task extension tail. Default is a no-op (tail stays zeroed).
+     * Override in a scheduler subclass to write custom BPF-computed fields into
+     * {@code evt.val().ext}. Runs in {@code enqueue} context: non-sleepable, hot —
+     * keep it to a few bounded field reads.
+     */
+    @BPFFunction
+    public void fillExtension(Ptr<QueuedTaskCtx> evt, Ptr<task_struct> p) {
+        // default: no extension
     }
 
     /**
