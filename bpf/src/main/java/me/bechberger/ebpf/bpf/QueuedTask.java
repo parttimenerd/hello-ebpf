@@ -49,7 +49,7 @@ public final class QueuedTask {
      */
     public static final int EXT_CAP = 64;
 
-    /** Zero-copy view over the EXT_CAP tail of the current record; never null after fill. */
+    /** Heap copy of the EXT_CAP tail of the current record; refilled by fillFromSegment, never null. */
     private final byte[] extBytes = new byte[EXT_CAP];
 
     private Object cachedExt;

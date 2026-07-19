@@ -30,7 +30,7 @@ public class QueuedTaskDispatchedTaskMarshallingTest {
     private static final long QT_VTIME          = 56;
     private static final long QT_ENQ_CNT        = 64;
     private static final long QT_COMM           = 72;
-    private static final long QT_SIZEOF         = 88;   // 72 + 16
+    private static final long QT_SIZEOF         = QueuedTask.QT_SIZEOF;   // 88 (single source of truth)
 
     @Test
     public void testQueuedTaskRoundTrip() {
@@ -156,6 +156,26 @@ public class QueuedTaskDispatchedTaskMarshallingTest {
             assertEquals(42L,         out.enqCnt,       "enqCnt mismatch");
             assertEquals("sched",     out.commStr(),    "comm string mismatch");
             assertTrue(out.commEquals("sched"),         "commEquals mismatch");
+        }
+    }
+
+    @Test
+    void extensionTailKeepsPrefixStableAndBoundsTotalSize() {
+        // The stable rustland-compatible prefix is exactly 88 bytes and must not move.
+        assertEquals(88L, QueuedTask.QT_SIZEOF, "88-byte prefix is the wire contract");
+        // The extension tail is a fixed 64 bytes -> total record is 152 bytes.
+        assertEquals(64, QueuedTask.EXT_CAP, "EXT_CAP is the agreed tail size");
+        // 4 MiB ring / 152 B ~= 27k records -- still absorbs a fork storm (see design doc).
+        assertEquals(152L, QueuedTask.QT_SIZEOF + QueuedTask.EXT_CAP);
+
+        // An 88-byte (extension-less) segment must still fill cleanly with a zeroed tail.
+        try (var arena = java.lang.foreign.Arena.ofConfined()) {
+            var seg = arena.allocate(QueuedTask.QT_SIZEOF);
+            seg.set(java.lang.foreign.ValueLayout.JAVA_INT, 0, 77);
+            var t = new QueuedTask();
+            QueuedTask.fillFromSegment(seg, t);
+            assertEquals(77, t.pid);
+            assertEquals(0L, t.extLong(0), "extension-less record has a zeroed tail");
         }
     }
 }
