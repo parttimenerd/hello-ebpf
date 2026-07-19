@@ -20,13 +20,13 @@ import java.util.Map;
  * batch at once, so you can sort by vtime and dispatch in order.
  *
  * <p>This is exactly what {@code scx_rustland} does with a {@code BTreeSet}
- * ordered by deadline. Here we do the same with a Java {@code TreeMap}.
+ * ordered by deadline. Here we do the same with a {@link me.bechberger.ebpf.bpf.userspace.DeferredQueue}.
  *
  * <h2>Algorithm</h2>
  * <p>Each task has a virtual time {@code vtimes[pid]} maintained across batches.
  * On each batch:
  * <ol>
- *   <li>Insert all tasks into a {@code TreeMap<Long, QueuedTask>} keyed by vtime.
+ *   <li>Insert all tasks into a {@link me.bechberger.ebpf.bpf.userspace.DeferredQueue} keyed by vtime.
  *   <li>Dispatch them in vtime order (lowest first) to {@link #ANY_CPU}.
  *   <li>Advance each dispatched task's vtime by {@code slice / weight}, where
  *       {@code slice} is a fixed quantum. Higher-weight tasks advance more slowly,

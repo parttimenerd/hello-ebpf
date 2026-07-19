@@ -125,6 +125,7 @@ public class JfrEmissionTest {
         // Filter to only events whose pid is in the expected set — tolerates spurious
         // DispatchEvents from JFR epoch flushing (which would have unrelated pids).
         List<Integer> seenPids = events.stream()
+                .filter(ev -> ev.hasField("pid"))
                 .map(ev -> ev.getInt("pid"))
                 .filter(expectedPids::contains)
                 .sorted()
@@ -135,7 +136,7 @@ public class JfrEmissionTest {
 
         // Verify field values on the matching events.
         for (RecordedEvent ev : events) {
-            if (!expectedPids.contains(ev.getInt("pid"))) continue;
+            if (!ev.hasField("pid") || !expectedPids.contains(ev.getInt("pid"))) continue;
             assertEquals(0, ev.getInt("rc"),
                     "DispatchEvent.rc must be 0 on success (pid=" + ev.getInt("pid") + ")");
             assertEquals(UserspaceScheduler.ANY_CPU, ev.getInt("cpu"),
@@ -166,7 +167,7 @@ public class JfrEmissionTest {
 
         List<RecordedEvent> events = RecordingFile.readAllEvents(dump);
         List<RecordedEvent> matching = events.stream()
-                .filter(ev -> ev.getInt("pid") == 500)
+                .filter(ev -> ev.hasField("pid") && ev.getInt("pid") == 500)
                 .toList();
         assertEquals(1, matching.size(),
                 "Exactly one DispatchEvent for pid=500 must be emitted");
