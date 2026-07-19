@@ -57,35 +57,35 @@ __always_inline bool isSmaller(u64 a, u64 b);
 
 __always_inline int vtimeCharge(struct task_struct *p);
 
-__always_inline s32 selectCpuDfl(struct task_struct *p, s32 prev_cpu, s64 wake_flags) {
-  #line 200 "SchedulerHelpers.java"
-  bool is_idle = 0;
-  #line 201 "SchedulerHelpers.java"
-  return scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &(is_idle));
+struct task_struct;
+
+__always_inline int dsqInsert(struct task_struct *p, s64 enq_flags);
+__always_inline bool hasSchedulingConstraints(struct task_struct *p);
+__always_inline bool isDescendantOf(struct task_struct *p, s32 targetTgid);
+__always_inline bool isMigrationDisabled(struct task_struct *p);
+__always_inline bool isSmaller(u64 a, u64 b);
+__always_inline s64 scaleByTaskWeight(struct task_struct *p, s64 value);
+__always_inline s32 selectCpuDfl(struct task_struct *p, s32 prev_cpu, s64 wake_flags);
+__always_inline s32 selectCpuFifoIdleOrFallback(struct task_struct *p, s32 prev_cpu, s64 wake_flags, u64 dsqId);
+__always_inline int vtimeCharge(struct task_struct *p);
+
+
+#define SHARED_DSQ_ID 0L
+#define BPF_FS_ROOT "/sys/fs/bpf"
+#define PRODUCER_LOCK_DIR "/tmp/hello-ebpf-locks"
+
+
+
+char _license[] SEC("license") = "GPL";
+
+SEC("struct_ops/enqueue") void BPF_PROG(sched_enqueue, struct task_struct *p, __u64 enq_flags) {
+  #line 39 "MinimalScheduler.java"
+  scx_bpf_dsq_insert(p, SHARED_DSQ_ID, scx_bpf_dsq_nr_queued(SHARED_DSQ_ID) > 0   ? SCX_SLICE_DFL / (u64)scx_bpf_dsq_nr_queued(SHARED_DSQ_ID)   : SCX_SLICE_DFL, enq_flags);
 }
 
-__always_inline bool isSmaller(u64 a, u64 b) {
-  #line 230 "SchedulerHelpers.java"
-  return ((s64)(a - b)) < 0;
-}
-
-__always_inline s32 selectCpuFifoIdleOrFallback(struct task_struct *p, s32 prev_cpu, s64 wake_flags, u64 dsqId) {
-  #line 216 "SchedulerHelpers.java"
-  bool is_idle = 0;
-  #line 217 "SchedulerHelpers.java"
-  s32 cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &(is_idle));
-  #line 218 "SchedulerHelpers.java"
-  if ((is_idle)) {
-    #line 219 "SchedulerHelpers.java"
-    scx_bpf_dsq_insert(p, dsqId, (long)(SCX_SLICE_DFL), 0);
-  }
-  #line 221 "SchedulerHelpers.java"
-  return cpu;
-}
-
-__always_inline s64 scaleByTaskWeight(struct task_struct *p, s64 value) {
-  #line 172 "SchedulerHelpers.java"
-  return (value * BPF_CORE_READ(p, scx.weight)) / 100;
+SEC("struct_ops/dispatch") void BPF_PROG(sched_dispatch, s32 cpu, struct task_struct *prev) {
+  #line 44 "MinimalScheduler.java"
+  scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
 }
 
 __always_inline int dsqInsert(struct task_struct *p, s64 enq_flags) {
@@ -96,6 +96,24 @@ __always_inline int dsqInsert(struct task_struct *p, s64 enq_flags) {
   #line 189 "SchedulerHelpers.java"
   scx_bpf_dsq_insert(p, 0L, slice, enq_flags);
   return 0;
+}
+
+SEC("struct_ops/exit") void BPF_PROG(sched_exit, struct scx_exit_info *ei) {
+  #line 82 "SchedulerBase.java"
+  _exitCode = BPF_CORE_READ(ei, exit_code);
+  #line 83 "SchedulerBase.java"
+  _exitKind = (s64)(long)(BPF_CORE_READ(ei, kind));
+}
+
+__always_inline bool hasSchedulingConstraints(struct task_struct *p) {
+  #line 100 "SchedulerHelpers.java"
+  return ((BPF_CORE_READ(p, flags) & PF_KTHREAD) != 0) || (BPF_CORE_READ(p, nr_cpus_allowed) != scx_bpf_nr_cpu_ids());
+}
+
+#define SHARED_DSQ_ID 0L
+SEC("struct_ops.s/init") s32 BPF_PROG(sched_init) {
+  #line 73 "SchedulerBase.java"
+  return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
 }
 
 __always_inline bool isDescendantOf(struct task_struct *p, s32 targetTgid) {
@@ -126,43 +144,41 @@ __always_inline bool isMigrationDisabled(struct task_struct *p) {
   return (BPF_CORE_READ(p, nr_cpus_allowed) == 1) || (BPF_CORE_READ(p, migration_disabled) > 1);
 }
 
-__always_inline bool hasSchedulingConstraints(struct task_struct *p) {
-  #line 100 "SchedulerHelpers.java"
-  return ((BPF_CORE_READ(p, flags) & PF_KTHREAD) != 0) || (BPF_CORE_READ(p, nr_cpus_allowed) != scx_bpf_nr_cpu_ids());
+__always_inline bool isSmaller(u64 a, u64 b) {
+  #line 230 "SchedulerHelpers.java"
+  return ((s64)(a - b)) < 0;
 }
 
-#define SHARED_DSQ_ID 0L
-SEC("struct_ops.s/init") s32 BPF_PROG(sched_init) {
-  #line 73 "SchedulerBase.java"
-  return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+__always_inline s64 scaleByTaskWeight(struct task_struct *p, s64 value) {
+  #line 172 "SchedulerHelpers.java"
+  return (value * BPF_CORE_READ(p, scx.weight)) / 100;
 }
 
-SEC("struct_ops/exit") void BPF_PROG(sched_exit, struct scx_exit_info *ei) {
-  #line 82 "SchedulerBase.java"
-  _exitCode = BPF_CORE_READ(ei, exit_code);
-  #line 83 "SchedulerBase.java"
-  _exitKind = (s64)(long)(BPF_CORE_READ(ei, kind));
+__always_inline s32 selectCpuDfl(struct task_struct *p, s32 prev_cpu, s64 wake_flags) {
+  #line 200 "SchedulerHelpers.java"
+  bool is_idle = 0;
+  #line 201 "SchedulerHelpers.java"
+  return scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &(is_idle));
+}
+
+__always_inline s32 selectCpuFifoIdleOrFallback(struct task_struct *p, s32 prev_cpu, s64 wake_flags, u64 dsqId) {
+  #line 216 "SchedulerHelpers.java"
+  bool is_idle = 0;
+  #line 217 "SchedulerHelpers.java"
+  s32 cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &(is_idle));
+  #line 218 "SchedulerHelpers.java"
+  if ((is_idle)) {
+    #line 219 "SchedulerHelpers.java"
+    scx_bpf_dsq_insert(p, dsqId, (long)(SCX_SLICE_DFL), 0);
+  }
+  #line 221 "SchedulerHelpers.java"
+  return cpu;
 }
 
 __always_inline int vtimeCharge(struct task_struct *p) {
   #line 241 "SchedulerHelpers.java"
   (*(p)).scx.dsq_vtime += (((long)(SCX_SLICE_DFL) - BPF_CORE_READ(p, scx.slice)) * 100) / BPF_CORE_READ(p, scx.weight);
   return 0;
-}
-
-
-
-
-char _license[] SEC("license") = "GPL";
-
-SEC("struct_ops/enqueue") void BPF_PROG(sched_enqueue, struct task_struct *p, __u64 enq_flags) {
-  #line 39 "MinimalScheduler.java"
-  scx_bpf_dsq_insert(p, SHARED_DSQ_ID, scx_bpf_dsq_nr_queued(SHARED_DSQ_ID) > 0   ? SCX_SLICE_DFL / (u64)scx_bpf_dsq_nr_queued(SHARED_DSQ_ID)   : SCX_SLICE_DFL, enq_flags);
-}
-
-SEC("struct_ops/dispatch") void BPF_PROG(sched_dispatch, s32 cpu, struct task_struct *prev) {
-  #line 44 "MinimalScheduler.java"
-  scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
 }
 
 
