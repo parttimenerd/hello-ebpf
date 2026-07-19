@@ -268,7 +268,11 @@ public abstract class UserspaceScheduler {
         this.classMetricsClassifier = classifier;
     }
 
-    /** Per-class latency/count summary; {@code null} if no classifier set or the class is unseen. */
+    /**
+     * Per-class summary keyed by the classifier passed to {@link #setClassMetrics}: dispatch
+     * {@code count} and approximate {@code execRuntime} percentiles (ns). {@code null} if no
+     * classifier is set or the class has not been dispatched yet.
+     */
     public ClassMetrics perClass(Enum<?> cls) {
         var h = perClassHist.get(cls);
         return h == null ? null : ClassMetrics.of(h);
@@ -891,7 +895,9 @@ public abstract class UserspaceScheduler {
         if (classMetricsClassifier != null) {
             TaskClassifier<?> cls = classMetricsClassifier;
             Enum<?> c = ((TaskClassifier) cls).classOf(t);
-            if (c != null) perClassHist.computeIfAbsent(c, k -> new Log2Histogram()).add(1);
+            // Record the task's last measured runtime so p50/p99 describe the per-class
+            // runtime distribution; totalCount() still counts dispatches per class.
+            if (c != null) perClassHist.computeIfAbsent(c, k -> new Log2Histogram()).add(t.execRuntime);
         }
         if (rc == 0) sDispatched++;
         else         sDispatchFailed++;

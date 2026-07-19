@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 package me.bechberger.ebpf.bpf.userspace;
 
-/** A per-class latency/count summary derived from a {@link Log2Histogram}. */
+/**
+ * A per-class summary derived from a {@link Log2Histogram}: {@code count} is the number of
+ * dispatches recorded for the class; {@code p50}/{@code p99} are approximate percentiles of the
+ * per-dispatch {@code execRuntime} (nanoseconds), bucketed to a power of two.
+ */
 public record ClassMetrics(long count, long p50, long p99) {
     /** Derive from a heap histogram. */
     public static ClassMetrics of(Log2Histogram h) {
