@@ -73,6 +73,12 @@ public abstract class UserspaceScheduler {
     /** Task pool — package-private so test subclasses can seed fake tasks via {@link #drainRaw()}. */
     QueuedTask[] taskPool;
 
+    /** Worker pool for multithreaded ({@code opts.workerThreads > 1}) sharded dispatch; null when single-threaded. */
+    private java.util.concurrent.ExecutorService workerPool;
+
+    /** Serializes writes to the single dispatch ring when sharded workers submit concurrently. */
+    private final Object dispatchLock = new Object();
+
     /** Batch context — package-private so test overrides of {@link #drainRaw()} can set the count. */
     final BatchCtx batchCtx = new BatchCtx();
 
@@ -192,6 +198,7 @@ public abstract class UserspaceScheduler {
         } finally {
             logExitDiagnostic();
             hasExited.set(true);
+            if (workerPool != null) workerPool.shutdownNow();
             cleanupBpf();
         }
     }
@@ -480,7 +487,11 @@ public abstract class UserspaceScheduler {
         var ev = new BatchEvent();
         ev.begin();
         try {
-            schedule(taskPool, batchCtx.count);
+            if (opts.workerThreads <= 1) {
+                schedule(taskPool, batchCtx.count);      // unchanged single-threaded path
+            } else {
+                dispatchSharded(taskPool, batchCtx.count, opts.workerThreads);
+            }
         } finally {
             ev.end();
             if (ev.shouldCommit()) {
@@ -515,6 +526,43 @@ public abstract class UserspaceScheduler {
      */
     public final void dispatchTask(QueuedTask t, int cpu) {
         dispatchInternal(t, cpu);
+    }
+
+    /** Route a pid to a worker index. Static + pure so the sharding invariant is unit-testable. */
+    public static int workerForPid(int pid, int workerThreads) {
+        if (workerThreads <= 1) return 0;
+        int h = pid * 0x9E3779B1;          // Fibonacci hashing; avoids clustering on sequential pids
+        return Math.floorMod(h, workerThreads);
+    }
+
+    /** Partition the batch by worker, run schedule() on each shard in parallel; submits are serialized. */
+    private void dispatchSharded(QueuedTask[] tasks, int count, int n) {
+        // Build per-worker sub-batches of copies (workers may run concurrently; flyweights are not safe to share).
+        java.util.List<java.util.List<QueuedTask>> shards = new java.util.ArrayList<>(n);
+        for (int i = 0; i < n; i++) shards.add(new java.util.ArrayList<>());
+        for (int i = 0; i < count; i++) {
+            QueuedTask t = tasks[i];
+            shards.get(workerForPid(t.pid, n)).add(t.copy());
+        }
+        if (workerPool == null) {
+            workerPool = java.util.concurrent.Executors.newFixedThreadPool(n, r -> {
+                Thread th = new Thread(r, "sched-worker");
+                th.setDaemon(true);
+                return th;
+            });
+        }
+        java.util.List<java.util.concurrent.Future<?>> futures = new java.util.ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            java.util.List<QueuedTask> shard = shards.get(i);
+            if (shard.isEmpty()) continue;
+            futures.add(workerPool.submit(() -> {
+                QueuedTask[] arr = shard.toArray(new QueuedTask[0]);
+                schedule(arr, arr.length);   // worker only sees its own pids → per-pid state is lock-free
+            }));
+        }
+        for (var f : futures) {
+            try { f.get(); } catch (Exception e) { System.err.println("[sched] worker failed: " + e); }
+        }
     }
 
     /**
@@ -725,7 +773,11 @@ public abstract class UserspaceScheduler {
      * @return 0 on success, non-zero on error
      */
     protected int submitDispatch(int targetCpu, int pid, long enqCnt, long sliceNs, long vtime) {
-        return bpfHandle.submitDispatchDecision(targetCpu, pid, enqCnt, sliceNs, vtime);
+        // Sharded workers may submit concurrently; the single dispatch ring is not thread-safe.
+        // TODO(perf): evaluate N dispatch rings instead of one lock
+        synchronized (dispatchLock) {
+            return bpfHandle.submitDispatchDecision(targetCpu, pid, enqCnt, sliceNs, vtime);
+        }
     }
 
     /**

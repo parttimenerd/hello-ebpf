@@ -26,5 +26,8 @@ public final class Opts {
     /** Soft policy() exception budget per second — if exceeded, log loudly and continue. */
     public int policyExceptionBudgetPerSec = 100;
 
+    /** Number of policy worker threads. 1 (default) = today's single-threaded loop, byte-identical. */
+    public int workerThreads = 1;
+
     public static Opts defaults() { return new Opts(); }
 }
