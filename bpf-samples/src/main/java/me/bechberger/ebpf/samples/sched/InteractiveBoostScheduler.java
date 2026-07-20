@@ -2,7 +2,6 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
-import me.bechberger.ebpf.bpf.userspace.Opts;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -72,12 +71,11 @@ public final class InteractiveBoostScheduler extends UserspaceScheduler {
             QueuedTask t = tasks[i];
             if (isInteractive(t)) {
                 int cpu = selectCpu(t.pid, t.prevCpu);
-                boolean cpuWasIdle = cpu != t.prevCpu; // selectCpu returns prevCpu when no idle CPU
+                boolean cpuWasIdle = cpu != t.prevCpu; // selectCpu returns a freshly-picked idle CPU, or prevCpu if none is idle
                 if (!cpuWasIdle) {
-                    // No idle CPU: an interactive task is about to queue behind a hog.
-                    // This is where we WANT to preempt a batch task on `cpu`.
+                    // No idle CPU: an interactive task will queue behind a batch hog.
+                    // preempt(hogPid) would evict it — but we'd need to track which PID owns `cpu`.
                     preemptWanted++;
-                    // preempt(t.pid);  // <-- NOT AVAILABLE in current framework
                 }
                 dispatchTask(t, cpu);
                 interactiveDispatches++;
@@ -120,38 +118,10 @@ public final class InteractiveBoostScheduler extends UserspaceScheduler {
         @Override
         public void run() {
             var sched = new InteractiveBoostScheduler();
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                sched.requestExit();
-                while (!sched.exited()) {
-                    try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-                }
-                System.err.println();
-                System.err.println("==== Final stats ====");
-                System.err.printf("interactive=%d batch=%d preemptWanted=%d  %s%n",
-                        sched.interactiveDispatches(), sched.batchDispatches(),
-                        sched.preemptWanted(), sched.formatStats());
-            }));
-            if (statsInterval > 0) {
-                long intervalNs = (long) statsInterval * 1_000_000_000L;
-                var t = new Thread(() -> {
-                    long deadline = System.nanoTime() + intervalNs;
-                    try {
-                        while (!sched.exited()) {
-                            Thread.sleep(200);
-                            if (System.nanoTime() >= deadline) {
-                                System.err.printf("[stats] interactive=%d batch=%d preemptWanted=%d  %s%n",
-                                        sched.interactiveDispatches(), sched.batchDispatches(),
-                                        sched.preemptWanted(), sched.formatStats());
-                                deadline += intervalNs;
-                            }
-                        }
-                    } catch (InterruptedException ignored) {}
-                }, "iboost-stats");
-                t.setDaemon(true);
-                t.start();
-            }
-            System.err.println("InteractiveBoostScheduler: attaching (Ctrl-C to detach)...");
-            sched.runUntilExit(Opts.defaults());
+            sched.runWithCli("InteractiveBoostScheduler", statsInterval,
+                    () -> String.format("interactive=%d batch=%d preemptWanted=%d",
+                            sched.interactiveDispatches(), sched.batchDispatches(),
+                            sched.preemptWanted()));
         }
     }
 

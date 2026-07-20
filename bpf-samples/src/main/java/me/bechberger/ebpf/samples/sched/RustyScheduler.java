@@ -5,7 +5,6 @@ import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.userspace.CpuTopology;
 import me.bechberger.ebpf.bpf.userspace.Domain;
 import me.bechberger.ebpf.bpf.userspace.DomainLoadBalancer;
-import me.bechberger.ebpf.bpf.userspace.Opts;
 import me.bechberger.ebpf.bpf.userspace.RustyLoadTracker;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
 import me.bechberger.femtocli.FemtoCli;
@@ -172,20 +171,14 @@ public class RustyScheduler extends UserspaceScheduler {
         @Option(names = {"--skip-kworkers"}, defaultValue = "true")
         boolean skipKworkers;
 
+        @Option(names = {"--stats-interval"}, defaultValue = "5")
+        int statsInterval;
+
         @Override
         public void run() {
             var sched = new RustyScheduler(CpuTopology.detect(), halfLifeMs * 1_000_000L,
                     skipKworkers, 10);
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                sched.requestExit();
-                while (!sched.exited()) {
-                    try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-                }
-                System.err.println();
-                System.err.println("==== Final stats ==== " + sched.formatStats());
-            }));
-            System.err.println("RustyScheduler: attaching (Ctrl-C to detach)...");
-            sched.runUntilExit(Opts.defaults());
+            sched.runWithCli("RustyScheduler", statsInterval, null);
         }
     }
 

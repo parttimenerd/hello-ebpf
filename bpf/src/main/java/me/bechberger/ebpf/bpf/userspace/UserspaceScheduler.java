@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -505,6 +506,62 @@ public abstract class UserspaceScheduler {
             s.ringDrained(), s.ringDropped(),
             s.dispatched(), s.dispatchFailed(),
             s.ringCanceled(), s.stallFallbacks(), s.heartbeatKicks());
+    }
+
+    /**
+     * Convenience runner for sample-scheduler {@code main} / CLI {@code run()} methods.
+     *
+     * <p>Registers a JVM shutdown hook that calls {@link #requestExit()}, waits for the
+     * scheduler to exit, prints the final stats line and (if histograms were recorded)
+     * the histogram section. Optionally prints periodic stats every {@code statsIntervalSec}
+     * seconds while running.
+     *
+     * <p>Callers can pass a {@code Supplier<String>} to append scheduler-specific fields
+     * to the stats line — e.g. {@code () -> "interactive=" + interactiveDispatches()}. Pass
+     * {@code null} to get just {@link #formatStats()}.
+     *
+     * <p>Example:
+     * <pre>{@code
+     *   sched.runWithCli("MyScheduler", statsInterval, () -> "custom=" + sched.myCount());
+     * }</pre>
+     *
+     * @param schedName       name printed in startup / shutdown messages
+     * @param statsIntervalSec seconds between periodic stderr stats (0 = disabled)
+     * @param extraStats      optional supplier of extra fields appended to the stats line
+     */
+    public void runWithCli(String schedName, int statsIntervalSec, Supplier<String> extraStats) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            requestExit();
+            while (!exited()) {
+                try { Thread.sleep(10); } catch (InterruptedException ignored) {}
+            }
+            System.err.println();
+            String line = formatStats();
+            if (extraStats != null) line = extraStats.get() + "  " + line;
+            System.err.println("==== Final stats ==== " + line);
+            printHistograms(System.err);
+        }, schedName + "-shutdown"));
+        if (statsIntervalSec > 0) {
+            long intervalNs = (long) statsIntervalSec * 1_000_000_000L;
+            var t = new Thread(() -> {
+                long deadline = System.nanoTime() + intervalNs;
+                try {
+                    while (!exited()) {
+                        Thread.sleep(200);
+                        if (System.nanoTime() >= deadline) {
+                            String line = formatStats();
+                            if (extraStats != null) line = extraStats.get() + "  " + line;
+                            System.err.println("[stats] " + line);
+                            deadline += intervalNs;
+                        }
+                    }
+                } catch (InterruptedException ignored) {}
+            }, schedName + "-stats");
+            t.setDaemon(true);
+            t.start();
+        }
+        System.err.println(schedName + ": attaching scheduler (Ctrl-C to detach)...");
+        runUntilExit(Opts.defaults());
     }
 
     /**
