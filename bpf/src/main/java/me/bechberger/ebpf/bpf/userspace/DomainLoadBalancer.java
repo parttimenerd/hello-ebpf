@@ -17,6 +17,24 @@ import java.util.List;
  * and (c) have not already been migrated, it picks the task whose load is closest to {@code xfer}
  * — preferring tasks cache-affine to the pull domain ({@code preferredDomMask} bit set) — but only
  * if the move reduces the pair's total imbalance. Migrations are recorded (no I/O).
+ *
+ * <p><b>Documented simplifications vs upstream rusty</b> (this is a faithful <em>core</em> port,
+ * not a bit-for-bit one — see the design doc's "Out of scope" section):
+ * <ol>
+ *   <li><b>One transfer per (push, pull) pair per round.</b> Upstream re-inserts the pull domain
+ *       after each transfer and keeps pulling into the least-loaded domain (recomputing
+ *       {@code pull_imbal}/{@code xfer}) until it leaves {@code NeedsPull} or hits
+ *       {@code push_cutoff}. This port moves at most one task per pair per round; the
+ *       {@code pushed >= pushCutoff} cap still bounds the push side. Balance converges over
+ *       repeated {@code tick()}s, but a single round's migration count/targets can differ from
+ *       upstream.</li>
+ *   <li><b>{@code toPush}/{@code toPull}/{@code xfer} are recomputed from live domain load</b>
+ *       each iteration, whereas upstream freezes {@code push_imbal}/{@code pull_imbal} at pop time.
+ *       Harmless given (1), but noted for faithfulness.</li>
+ *   <li><b>The "already migrated" guard is implicit:</b> a task is removed from its push domain's
+ *       list on migration, so it cannot move twice. (Upstream uses an explicit {@code migrated}
+ *       flag.)</li>
+ * </ol>
  */
 public final class DomainLoadBalancer {
 
