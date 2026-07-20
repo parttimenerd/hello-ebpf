@@ -4,6 +4,7 @@ import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.userspace.CpuTopology;
 import me.bechberger.ebpf.bpf.userspace.SchedulerHarness;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -12,8 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RustySchedulerHarnessTest {
 
     // Build a 2-domain topology (cpus {0,1} and {2,3}) via a fake sysfs tree.
-    private static CpuTopology twoDomainTopo() throws IOException {
-        Path root = Files.createTempDirectory("rusty-sysfs");
+    private static CpuTopology twoDomainTopo(Path root) throws IOException {
         for (int cpu = 0; cpu <= 3; cpu++) {
             Path idx = root.resolve("cpu" + cpu).resolve("cache").resolve("index3");
             Files.createDirectories(idx);
@@ -34,29 +34,35 @@ class RustySchedulerHarnessTest {
     }
 
     @Test
-    void everyDispatchTargetsCpuInsideTaskDomain() throws IOException {
-        var topo = twoDomainTopo();
+    void assignsDomainFromPrevCpuAndDispatchesEveryTask(@TempDir Path root) throws IOException {
+        var topo = twoDomainTopo(root);
         var sched = new RustyScheduler(topo, 1_000_000_000L, true, 10);
         var harness = SchedulerHarness.forScheduler(sched).withCpus(4).withVirtualClock(0);
 
-        // Task with prevCpu=0 -> domain 0 (cpus 0,1); prevCpu=2 -> domain 1 (cpus 2,3).
+        // prevCpu=0 -> domain 0 (cpus 0,1); prevCpu=2 -> domain 1 (cpus 2,3).
         harness.feed(task(1, 0, 0), task(2, 2, 0));
         harness.runBatch();
 
+        // Domain assignment is derived from prevCpu's domain.
+        assertEquals(topo.domainOfCpu(0), sched.domainOf(1).intValue());
+        assertEquals(topo.domainOfCpu(2), sched.domainOf(2).intValue());
+        assertNotEquals(sched.domainOf(1), sched.domainOf(2), "the two tasks land in different domains");
+
+        // Both tasks must be dispatched (offline there is no idle bitmap, so target is ANY_CPU).
+        assertEquals(2, harness.dispatches().size(), "every fed task must produce a dispatch");
+
+        // Any dispatch that DID target a concrete CPU must land inside the task's assigned domain.
         for (var d : harness.dispatches()) {
-            if (d.targetCpu() < 0) continue; // ANY_CPU is allowed when no idle in-domain
-            int expectedDom = topo.domainOfCpu(d.targetCpu());
-            Integer assigned = sched.domainOf(d.pid());
-            assertNotNull(assigned, "pid " + d.pid() + " must have an assigned domain");
-            assertEquals(assigned.intValue(), expectedDom,
-                    "dispatch of pid " + d.pid() + " landed on cpu " + d.targetCpu()
-                            + " in domain " + expectedDom + " but task is assigned domain " + assigned);
+            if (d.targetCpu() < 0) continue; // ANY_CPU: kernel picks within the domain's constraints
+            assertEquals(sched.domainOf(d.pid()).intValue(), topo.domainOfCpu(d.targetCpu()),
+                    "concrete dispatch of pid " + d.pid() + " on cpu " + d.targetCpu()
+                            + " must be inside its assigned domain");
         }
     }
 
     @Test
-    void imbalanceTriggersMigration() throws IOException {
-        var topo = twoDomainTopo();
+    void imbalanceTriggersMigration(@TempDir Path root) throws IOException {
+        var topo = twoDomainTopo(root);
         var sched = new RustyScheduler(topo, 1_000_000_000L, true, 10);
         var harness = SchedulerHarness.forScheduler(sched).withCpus(4).withVirtualClock(0);
 
@@ -70,7 +76,8 @@ class RustySchedulerHarnessTest {
             harness.feed(task(pids[0], 0, exec), task(pids[1], 0, exec), task(pids[2], 0, exec));
             harness.runBatch();
         }
-        // All three should currently be in domain 0.
+        // All three should currently be in domain 0 (pre-condition, so a domain-1 result below
+        // can only come from a real migration).
         for (int pid : pids) assertEquals(0, sched.domainOf(pid).intValue());
 
         harness.tick();
