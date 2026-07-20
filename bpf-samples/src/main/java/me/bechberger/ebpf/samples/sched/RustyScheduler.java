@@ -24,9 +24,9 @@ import java.util.Map;
  *
  * <p>Each task is assigned a {@link Domain} (default: one per last-level cache). On enqueue the
  * task is dispatched to an idle CPU inside its domain; if none is idle it goes to {@code ANY_CPU}.
- * Every ~1s {@code tick()} reads each task's decayed load, buckets by domain, runs rusty's
- * push/pull balancer ({@link DomainLoadBalancer}) and re-assigns migrated tasks' {@code target_dom}
- * — faithful to rusty, which only sets {@code target_dom} and lets the next enqueue act on it.
+ * Every ~1s {@code tick()} reads each task's decayed load and prunes tasks that have gone dormant.
+ * Cross-domain load balancing (rusty's push/pull {@link DomainLoadBalancer}) is wired into
+ * {@code tick()} in a later step; today {@code tick()} only maintains the decayed load metric.
  *
  * <p>See {@code docs/sched-ext/userspace.md} "Porting scx_rusty: domain load balancing".
  */
@@ -76,19 +76,19 @@ public class RustyScheduler extends UserspaceScheduler {
             load.onEnqueue(t.pid, t.execRuntime, now);
             idleTicks.put(t.pid, 0);
 
-            int cpu = pickIdleCpuInDomain(topo.cpuMask(dom));
+            int cpu = pickIdleCpuInDomain(dom);
             dispatchTask(t, cpu >= 0 ? cpu : ANY_CPU);
         }
     }
 
-    /** Scan the idle bitmap restricted to {@code domMask}; return an idle CPU or -1. */
-    private int pickIdleCpuInDomain(long domMask) {
+    /** Scan the idle bitmap restricted to {@code dom}'s CPUs; return an idle CPU or -1. */
+    private int pickIdleCpuInDomain(int dom) {
         int cpu = pickIdleCpu();               // framework's global idle pick
-        if (cpu >= 0 && (domMask & (1L << cpu)) != 0) return cpu;
-        // Fall back: scan the mask ourselves against the idle view.
+        if (cpu >= 0 && topo.domainOfCpu(cpu) == dom) return cpu;
+        // Fall back: scan the domain's mask ourselves against the idle view.
         MemorySegment idle = idleMaskView();
         if (idle == null) return -1;
-        long m = domMask;
+        long m = topo.cpuMask(dom);
         while (m != 0) {
             int c = Long.numberOfTrailingZeros(m);
             m &= (m - 1);

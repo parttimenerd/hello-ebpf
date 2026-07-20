@@ -66,7 +66,7 @@ public final class RustyLoadTracker {
     }
 
     /** Decayed-at-read task load = dutyCycle * weight. */
-    public double load(int pid, int weight, long nowNs) {
+    public double load(int pid, long weight, long nowNs) {
         return dutyCycle(pid, nowNs) * weight;
     }
 
