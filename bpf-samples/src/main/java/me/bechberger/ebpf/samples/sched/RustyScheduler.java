@@ -24,9 +24,12 @@ import java.util.Map;
  *
  * <p>Each task is assigned a {@link Domain} (default: one per last-level cache). On enqueue the
  * task is dispatched to an idle CPU inside its domain; if none is idle it goes to {@code ANY_CPU}.
- * Every ~1s {@code tick()} reads each task's decayed load and prunes tasks that have gone dormant.
- * Cross-domain load balancing (rusty's push/pull {@link DomainLoadBalancer}) is wired into
- * {@code tick()} in a later step; today {@code tick()} only maintains the decayed load metric.
+ * Every ~1s {@code tick()} reads each task's decayed load, buckets by domain, runs rusty's
+ * push/pull balancer ({@link DomainLoadBalancer}) and re-assigns migrated tasks' target domain
+ * — faithful to rusty, which only sets {@code target_dom} and lets the next enqueue act on it.
+ *
+ * <p>Task load in {@code tick()} is computed as {@code dutyCycle * weight} with a fixed weight of
+ * 100 (the default); per-pid weight tracking is out of scope for this single-NUMA port.
  *
  * <p>See {@code docs/sched-ext/userspace.md} "Porting scx_rusty: domain load balancing".
  */
@@ -106,17 +109,48 @@ public class RustyScheduler extends UserspaceScheduler {
     @Override
     protected void tick() {
         long now = nanoTime();
-        // Decay-at-read every tracked pid + prune stale ones.
+
+        // 1. Decay-at-read + prune stale pids.
+        List<Integer> stale = new ArrayList<>();
         for (int pid : load.trackedPids()) {
-            load.dutyCycle(pid, now);           // side-effects the decay
+            load.dutyCycle(pid, now); // side-effects the decay
             int ticks = idleTicks.merge(pid, 1, Integer::sum);
-            if (ticks > stalePidTicks) {
-                load.forget(pid);
-                idleTicks.remove(pid);
-                assignedDom.remove(pid);
-            }
+            if (ticks > stalePidTicks) stale.add(pid);
         }
-        // Balancing wired in Task 5.
+        for (int pid : stale) {
+            load.forget(pid);
+            idleTicks.remove(pid);
+            assignedDom.remove(pid);
+        }
+
+        int nrDom = topo.nrDomains();
+        if (nrDom < 2) return; // nothing to balance with a single domain
+
+        // 2. Build Domains from tracked load, bucketed by assigned domain.
+        Domain[] doms = new Domain[nrDom];
+        for (int d = 0; d < nrDom; d++) doms[d] = new Domain(d, topo.cpuMask(d));
+        double total = 0;
+        for (int pid : load.trackedPids()) {
+            Integer dom = assignedDom.get(pid);
+            if (dom == null) continue;
+            double taskLoad = load.load(pid, /*weight*/100, now);
+            // domMask: default all domains (affinity modeling simplified). preferredDomMask:
+            // the assigned domain (where it last ran) -> cache affinity.
+            long allDoms = nrDom >= 64 ? -1L : ((1L << nrDom) - 1);
+            long preferred = 1L << dom;
+            doms[dom].addTask(new DomainLoadBalancer.TaskLoad(pid, taskLoad, allDoms, preferred, false));
+            total += taskLoad;
+        }
+        double loadAvg = total / nrDom;
+
+        // 3. Run the balancer.
+        var migrations = DomainLoadBalancer.balance(java.util.Arrays.asList(doms), loadAvg,
+                new DomainLoadBalancer.Options(skipKworkers));
+
+        // 4. Apply: reassign target domain. Next enqueue dispatches into the new domain.
+        for (var m : migrations) {
+            assignedDom.put(m.pid(), m.toDom());
+        }
     }
 
     // Exposed for the harness test to inspect assignment.
