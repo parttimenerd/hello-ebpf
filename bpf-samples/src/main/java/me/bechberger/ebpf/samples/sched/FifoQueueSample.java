@@ -21,7 +21,18 @@ import java.util.ArrayDeque;
  * <p>This is the simplest possible demonstration that userland queues work:
  * tasks from batch N may sit in the deque until batch N+1 triggers the drain.
  */
-public final class FifoQueueSample extends UserspaceScheduler {
+@Command(name = "FifoQueueSample",
+        description = {
+            "Pure FIFO scheduler backed by a persistent userland ArrayDeque.",
+            "Tasks are copied from the flyweight pool and dispatched in arrival order."
+        },
+        mixinStandardHelpOptions = true)
+public final class FifoQueueSample extends UserspaceScheduler implements Runnable {
+
+    @Option(names = {"--stats-interval"},
+            description = "Seconds between stats prints to stderr (0 = disable).",
+            defaultValue = "5")
+    int statsInterval;
 
     private final ArrayDeque<QueuedTask> queue = new ArrayDeque<>();
 
@@ -38,28 +49,12 @@ public final class FifoQueueSample extends UserspaceScheduler {
         }
     }
 
-    @Command(name = "FifoQueueSample",
-            description = {
-                "Pure FIFO scheduler backed by a persistent userland ArrayDeque.",
-                "Tasks are copied from the flyweight pool and dispatched in arrival order."
-            },
-            mixinStandardHelpOptions = true)
-    static final class Cli implements Runnable {
-
-        @Option(names = {"--stats-interval"},
-                description = "Seconds between stats prints to stderr (0 = disable).",
-                defaultValue = "5")
-        int statsInterval;
-
-        @Override
-        public void run() {
-            var sched = new FifoQueueSample();
-            sched.runWithCli("FifoQueueSample", statsInterval,
-                    () -> "queued=" + sched.queue.size());
-        }
+    @Override
+    public void run() {
+        runWithCli("FifoQueueSample", statsInterval, () -> "queued=" + queue.size());
     }
 
     public static void main(String[] args) {
-        FemtoCli.run(new Cli(), args);
+        FemtoCli.run(new FifoQueueSample(), args);
     }
 }

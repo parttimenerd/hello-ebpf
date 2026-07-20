@@ -32,7 +32,18 @@ import java.util.ArrayDeque;
  * {@code schedule()} call, so nothing is truly deferred — only reordered
  * across batches.
  */
-public final class TwoQueueFifoSample extends UserspaceScheduler {
+@Command(name = "TwoQueueFifoSample",
+        description = {
+            "Two-queue FIFO: interactive tasks (low execRuntime) dispatched before batch tasks.",
+            "Uses QueuedTask.copy() to hold tasks in persistent ArrayDeques across batches.",
+        },
+        mixinStandardHelpOptions = true)
+public final class TwoQueueFifoSample extends UserspaceScheduler implements Runnable {
+
+    @Option(names = {"--stats-interval"},
+            description = "Seconds between stats prints to stderr (0 = disable).",
+            defaultValue = "5")
+    int statsInterval;
 
     private static final long INTERACTIVE_THRESHOLD_NS = 10_000_000L; // 10 ms total CPU
 
@@ -58,26 +69,12 @@ public final class TwoQueueFifoSample extends UserspaceScheduler {
         while (!lowPri.isEmpty())  dispatchTask(lowPri.pollFirst(),  ANY_CPU);
     }
 
-    @Command(name = "TwoQueueFifoSample",
-            description = {
-                "Two-queue FIFO: interactive tasks (low execRuntime) dispatched before batch tasks.",
-                "Uses QueuedTask.copy() to hold tasks in persistent ArrayDeques across batches.",
-            },
-            mixinStandardHelpOptions = true)
-    static final class Cli implements Runnable {
-
-        @Option(names = {"--stats-interval"},
-                description = "Seconds between stats prints to stderr (0 = disable).",
-                defaultValue = "5")
-        int statsInterval;
-
-        @Override
-        public void run() {
-            new TwoQueueFifoSample().runWithCli("TwoQueueFifoSample", statsInterval, null);
-        }
+    @Override
+    public void run() {
+        runWithCli("TwoQueueFifoSample", statsInterval, null);
     }
 
     public static void main(String[] args) {
-        FemtoCli.run(new Cli(), args);
+        FemtoCli.run(new TwoQueueFifoSample(), args);
     }
 }

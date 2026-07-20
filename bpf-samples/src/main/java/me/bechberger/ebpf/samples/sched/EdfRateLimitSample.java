@@ -46,7 +46,14 @@ import java.util.Map;
  * <p>Higher-weight tasks get a proportionally shorter rate-limit gap, so they win
  * more CPU — weight-proportional under a latency ceiling.
  */
-public final class EdfRateLimitSample extends UserspaceScheduler {
+@Command(name = "EdfRateLimitSample",
+        description = {"Earliest-deadline-first scheduler with per-pid rate limiting.",
+                       "Higher-weight tasks get a shorter rate-limit gap (more CPU)."},
+        mixinStandardHelpOptions = true)
+public final class EdfRateLimitSample extends UserspaceScheduler implements Runnable {
+
+    @Option(names = {"--stats-interval"}, defaultValue = "5")
+    int statsInterval;
 
     private static final long DEADLINE_NS = 20_000_000L;   // 20 ms scheduling deadline
     private static final long MIN_GAP_NS  = 4_000_000L;    // base 4 ms between dispatches
@@ -116,21 +123,12 @@ public final class EdfRateLimitSample extends UserspaceScheduler {
                 + " tracked=" + lastDispatchNs.size();
     }
 
-    @Command(name = "EdfRateLimitSample",
-            description = {"Earliest-deadline-first scheduler with per-pid rate limiting.",
-                           "Higher-weight tasks get a shorter rate-limit gap (more CPU)."},
-            mixinStandardHelpOptions = true)
-    static final class Cli implements Runnable {
-        @Option(names = {"--stats-interval"}, defaultValue = "5")
-        int statsInterval;
-
-        @Override
-        public void run() {
-            new EdfRateLimitSample().runWithCli("EdfRateLimitSample", statsInterval, null);
-        }
+    @Override
+    public void run() {
+        runWithCli("EdfRateLimitSample", statsInterval, null);
     }
 
     public static void main(String[] args) {
-        FemtoCli.run(new Cli(), args);
+        FemtoCli.run(new EdfRateLimitSample(), args);
     }
 }

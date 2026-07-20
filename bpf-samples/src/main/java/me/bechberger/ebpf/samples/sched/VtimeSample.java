@@ -39,7 +39,14 @@ import java.util.Map;
  * <p>Vtime is initialised to the current minimum across all tracked tasks so that
  * newly woken tasks don't get a huge catch-up burst.
  */
-public final class VtimeSample extends UserspaceScheduler {
+@Command(name = "VtimeSample",
+        description = {"Weight-proportional vtime fair-share scheduler.",
+                       "Dispatches the lowest-vtime task first each batch."},
+        mixinStandardHelpOptions = true)
+public final class VtimeSample extends UserspaceScheduler implements Runnable {
+
+    @Option(names = {"--stats-interval"}, defaultValue = "5")
+    int statsInterval;
 
     private static final long SLICE_NS = 5_000_000L;  // 5 ms base quantum
 
@@ -80,21 +87,12 @@ public final class VtimeSample extends UserspaceScheduler {
         vtimes.values().removeIf(vt -> vt > horizon);
     }
 
-    @Command(name = "VtimeSample",
-            description = {"Weight-proportional vtime fair-share scheduler.",
-                           "Dispatches the lowest-vtime task first each batch."},
-            mixinStandardHelpOptions = true)
-    static final class Cli implements Runnable {
-        @Option(names = {"--stats-interval"}, defaultValue = "5")
-        int statsInterval;
-
-        @Override
-        public void run() {
-            new VtimeSample().runWithCli("VtimeSample", statsInterval, null);
-        }
+    @Override
+    public void run() {
+        runWithCli("VtimeSample", statsInterval, null);
     }
 
     public static void main(String[] args) {
-        FemtoCli.run(new Cli(), args);
+        FemtoCli.run(new VtimeSample(), args);
     }
 }

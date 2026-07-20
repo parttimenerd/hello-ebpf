@@ -20,7 +20,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * dispatch within a batch, so this sample demonstrates per-task state retention
  * and {@code t.weight} use, not pure WRR queueing.
  */
-public final class WeightedRRSample extends UserspaceScheduler {
+@Command(name = "WeightedRRSample",
+        description = {"Weight-aware userspace scheduler demo.",
+                       "Tracks per-pid debt = sum(weight) - elapsed ticks."},
+        mixinStandardHelpOptions = true)
+public final class WeightedRRSample extends UserspaceScheduler implements Runnable {
+
+    @Option(names = {"--stats-interval"},
+            description = "Seconds between stats prints to stderr (0 = disable).",
+            defaultValue = "5")
+    int statsInterval;
 
     private final Map<Integer, Long> debt = new ConcurrentHashMap<>();
     private final Map<Integer, Long> lastSeenTick = new ConcurrentHashMap<>();
@@ -50,24 +59,12 @@ public final class WeightedRRSample extends UserspaceScheduler {
         return new HashMap<>(debt);
     }
 
-    @Command(name = "WeightedRRSample",
-            description = {"Weight-aware userspace scheduler demo.",
-                           "Tracks per-pid debt = sum(weight) - elapsed ticks."},
-            mixinStandardHelpOptions = true)
-    static final class Cli implements Runnable {
-
-        @Option(names = {"--stats-interval"},
-                description = "Seconds between stats prints to stderr (0 = disable).",
-                defaultValue = "5")
-        int statsInterval;
-
-        @Override
-        public void run() {
-            new WeightedRRSample().runWithCli("WeightedRRSample", statsInterval, null);
-        }
+    @Override
+    public void run() {
+        runWithCli("WeightedRRSample", statsInterval, null);
     }
 
     public static void main(String[] args) {
-        FemtoCli.run(new Cli(), args);
+        FemtoCli.run(new WeightedRRSample(), args);
     }
 }

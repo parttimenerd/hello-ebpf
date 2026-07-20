@@ -37,7 +37,14 @@ import me.bechberger.femtocli.annotations.Option;
  *   <li>{@code BATCH} — weight &lt; 20 (nice ≥ ~10): 50 ms target.</li>
  * </ul>
  */
-public final class LatencyTierEdfSample extends UserspaceScheduler {
+@Command(name = "LatencyTierEdfSample",
+        description = {"Latency-tiered EDF scheduler (INTERACTIVE/NORMAL/BATCH tiers).",
+                       "Lower-latency tiers are dispatched first even when they arrived later."},
+        mixinStandardHelpOptions = true)
+public final class LatencyTierEdfSample extends UserspaceScheduler implements Runnable {
+
+    @Option(names = {"--stats-interval"}, defaultValue = "5")
+    int statsInterval;
 
     enum Tier { INTERACTIVE, NORMAL, BATCH }
 
@@ -76,21 +83,12 @@ public final class LatencyTierEdfSample extends UserspaceScheduler {
         queue.drainEligible(nowNs, Integer.MAX_VALUE, t -> dispatchTask(t, classifier.decide(t)));
     }
 
-    @Command(name = "LatencyTierEdfSample",
-            description = {"Latency-tiered EDF scheduler (INTERACTIVE/NORMAL/BATCH tiers).",
-                           "Lower-latency tiers are dispatched first even when they arrived later."},
-            mixinStandardHelpOptions = true)
-    static final class Cli implements Runnable {
-        @Option(names = {"--stats-interval"}, defaultValue = "5")
-        int statsInterval;
-
-        @Override
-        public void run() {
-            new LatencyTierEdfSample().runWithCli("LatencyTierEdfSample", statsInterval, null);
-        }
+    @Override
+    public void run() {
+        runWithCli("LatencyTierEdfSample", statsInterval, null);
     }
 
     public static void main(String[] args) {
-        FemtoCli.run(new Cli(), args);
+        FemtoCli.run(new LatencyTierEdfSample(), args);
     }
 }

@@ -28,7 +28,14 @@ import me.bechberger.femtocli.annotations.Option;
  * its cores. A task is INTERACTIVE when its {@code weight} is at least {@link #INTERACTIVE_WEIGHT}
  * (nice ≤ 0), BATCH otherwise. On a single-CPU box both pools collapse to core 0.
  */
-public final class CorePartitionSample extends UserspaceScheduler {
+@Command(name = "CorePartitionSample",
+        description = {"CPU-partitioning scheduler: interactive tasks→low cores, batch→high cores.",
+                       "Prevents batch hogs from evicting latency-sensitive work."},
+        mixinStandardHelpOptions = true)
+public final class CorePartitionSample extends UserspaceScheduler implements Runnable {
+
+    @Option(names = {"--stats-interval"}, defaultValue = "5")
+    int statsInterval;
 
     enum Pool { INTERACTIVE, BATCH }
 
@@ -80,21 +87,12 @@ public final class CorePartitionSample extends UserspaceScheduler {
         return classifier.classOf(t);
     }
 
-    @Command(name = "CorePartitionSample",
-            description = {"CPU-partitioning scheduler: interactive tasks→low cores, batch→high cores.",
-                           "Prevents batch hogs from evicting latency-sensitive work."},
-            mixinStandardHelpOptions = true)
-    static final class Cli implements Runnable {
-        @Option(names = {"--stats-interval"}, defaultValue = "5")
-        int statsInterval;
-
-        @Override
-        public void run() {
-            new CorePartitionSample().runWithCli("CorePartitionSample", statsInterval, null);
-        }
+    @Override
+    public void run() {
+        runWithCli("CorePartitionSample", statsInterval, null);
     }
 
     public static void main(String[] args) {
-        FemtoCli.run(new Cli(), args);
+        FemtoCli.run(new CorePartitionSample(), args);
     }
 }
