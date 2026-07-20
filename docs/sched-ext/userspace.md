@@ -373,6 +373,92 @@ Full source with CLI, stats, and shutdown hook:
 | [`LatencyTierEdfSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LatencyTierEdfSample.java) | `TaskClassifier` tiers + `DeferredQueue` earliest-deadline-first ordering across the batch (**Experimental**) |
 | [`EdfRateLimitSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/EdfRateLimitSample.java) | Time-gated `DeferredQueue.deferUntil` — per-pid rate limiting with a weight-scaled gap (**Experimental**) |
 | [`CorePartitionSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CorePartitionSample.java) | `TaskClassifier` *placement* policies routing interactive vs batch work to disjoint core pools (**Experimental**) |
+| [`RustyScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustyScheduler.java) | scx_rusty-style per-LLC-domain push/pull load balancing, single-NUMA (**Experimental**) |
+
+## Porting scx_rusty: domain load balancing
+
+[`RustyScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustyScheduler.java)
+is a Java port of the userspace load-balancing core of
+[scx_rusty](https://github.com/sched-ext/scx). Upstream rusty groups CPUs into *domains*
+(one per last-level cache), tracks each task's load, and periodically pushes load from
+overloaded domains to underloaded ones — keeping tasks cache-warm while spreading work. This
+port implements that push/pull core at **single-NUMA scope**: the balancing algorithm is faithful
+to upstream, but the inter-NUMA layer, infeasible-weight correction, and BPF-side load tracking
+are deliberately left out (see *Simplifications* below).
+
+The port is built from three reusable, kernel-free pieces in
+`me.bechberger.ebpf.bpf.userspace`, plus the sample that wires them together:
+
+- **[`CpuTopology`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/CpuTopology.java)**
+  — reads `/sys/devices/system/cpu/cpuN/cache/indexK/{level,shared_cpu_list}` and groups CPUs
+  that share a last-level cache into one domain each. It never throws: missing or unreadable
+  cache info falls back to a single domain covering all online CPUs. Inject a fake sysfs root
+  (`CpuTopology.detect(Path)`) to build arbitrary topologies in tests.
+- **[`RustyLoadTracker`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/RustyLoadTracker.java)**
+  — a per-pid decayed duty-cycle metric, the userspace analogue of rusty's BPF ravg buckets.
+  Duty cycle is an exponentially-decayed EWMA of `execRuntime / wallTime`, updated on each enqueue
+  **and decayed again at read time** so a task that went dormant decays exactly as it would if
+  sampled continuously. Task load is `dutyCycle * weight`; the decay half-life is configurable
+  (`--half-life-ms`, default 1 s).
+- **[`DomainLoadBalancer`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/DomainLoadBalancer.java)**
+  — a pure function (no BPF, no I/O) porting rusty's `balance_within_node`. Given a list of
+  `Domain`s (each holding a load sum and a list of `TaskLoad{pid, load, domMask, preferredDomMask,
+  isKworker}`) and the average load, it pops the most-overloaded push domain, pulls into
+  underloaded domains least-loaded-first, and for each pair moves the task whose load is closest
+  to `xfer = min(pushImbal, pullImbal) * 0.5` — preferring tasks cache-affine to the pull domain,
+  and only if the move reduces the pair's total imbalance. It returns a list of `Migration`s and
+  mutates nothing the caller passed in.
+
+`RustyScheduler` itself is thin, because all the policy lives in those three pieces:
+
+- **`schedule()` (hot path):** assign each task a domain (from its `prevCpu`'s domain, or
+  round-robin for a brand-new task), record its load via `RustyLoadTracker.onEnqueue`, and
+  dispatch it to an idle CPU **inside its assigned domain** — falling back to `ANY_CPU` when the
+  domain has no idle CPU.
+- **`tick()` (cold path, ~1 s):** decay every tracked task, prune ones dormant past the stale
+  threshold, bucket the survivors' load into `Domain`s, run `DomainLoadBalancer.balance`, and
+  apply each `Migration` by reassigning the task's target domain. Like upstream rusty, the next
+  enqueue is what actually moves the task — `tick()` only sets `target_dom`.
+
+### Correctness evidence
+
+The balancing logic is proved offline, with no kernel or root, under the
+[`SchedulerHarness`](#offline-testing-with-schedulerharness-experimental):
+
+- [`DomainLoadBalancerTest`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/test/java/me/bechberger/ebpf/bpf/userspace/DomainLoadBalancerTest.java)
+  — the imbalance state machine and the push/pull engine (closest-to-`xfer`, cache-affinity
+  preference, infeasible-task and kworker skipping, only-if-reduces-imbalance guard).
+- [`CpuTopologyTest`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/test/java/me/bechberger/ebpf/bpf/userspace/CpuTopologyTest.java)
+  — LLC grouping and the single-domain fallback, via a fake sysfs tree.
+- [`RustyLoadMetricTest`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/test/java/me/bechberger/ebpf/bpf/userspace/RustyLoadMetricTest.java)
+  — the load metric: a busy task converges toward its weight, a mostly-sleeping task stays low,
+  a dormant task decays toward zero at read time.
+- [`RustySchedulerHarnessTest`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/test/java/me/bechberger/ebpf/samples/sched/RustySchedulerHarnessTest.java)
+  — end-to-end offline: domain assignment follows `prevCpu`, every fed task is dispatched, and a
+  domain piled with busy tasks triggers a real migration after `tick()`.
+
+[`RustySchedulerSmokeTest`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/test/java/me/bechberger/ebpf/samples/sched/RustySchedulerSmokeTest.java)
+additionally attaches the scheduler to a real kernel under `virtme-ng` and confirms it stays
+attached while draining tasks through the userspace ring.
+
+### Simplifications vs upstream rusty
+
+This is a faithful *core* port, not a bit-for-bit one:
+
+- **Single-NUMA only.** rusty balances within a NUMA node and then across nodes; this port does
+  only the within-node (domain) layer.
+- **Userspace load, not BPF ravg.** Load is computed in Java from `execRuntime` deltas
+  (decay-at-read) rather than read from rusty's BPF-side ravg buckets.
+- **No infeasible-weight correction.** rusty rescales weights when a task's affinity makes its
+  fair share unachievable; this port models affinity with a simple `domMask` and skips the
+  correction.
+- **Default weight 100.** Per-pid weight is not tracked through `tick()`; task load uses the
+  default weight. This suffices for the common case and keeps the port small.
+- **One transfer per (push, pull) pair per round.** Balance converges over repeated `tick()`s;
+  a single round's migration count can differ from upstream (documented in
+  `DomainLoadBalancer`'s Javadoc).
+- **64-CPU domain masks.** `Domain`/`CpuTopology` use a single `long` bitmask per domain, so CPU
+  indices ≥ 64 are not represented. Fine for typical single-socket hosts.
 
 ## 4. Running
 
