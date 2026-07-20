@@ -2,7 +2,6 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
-import me.bechberger.ebpf.bpf.userspace.Opts;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -64,37 +63,7 @@ public final class WeightedRRSample extends UserspaceScheduler {
 
         @Override
         public void run() {
-            var sched = new WeightedRRSample();
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                sched.requestExit();
-                while (!sched.exited()) {
-                    try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-                }
-                System.err.println();
-                System.err.println("==== Final stats ====");
-                System.err.println(sched.formatStats());
-                System.err.println("==== Histograms ====");
-                sched.printHistograms(System.err);
-            }));
-            if (statsInterval > 0) {
-                long intervalNs = (long) statsInterval * 1_000_000_000L;
-                var statsThread = new Thread(() -> {
-                    long deadline = System.nanoTime() + intervalNs;
-                    try {
-                        while (!sched.exited()) {
-                            Thread.sleep(200);
-                            if (System.nanoTime() >= deadline) {
-                                System.err.println("[stats] " + sched.formatStats());
-                                deadline += intervalNs;
-                            }
-                        }
-                    } catch (InterruptedException ignored) {}
-                }, "weighted-rr-stats");
-                statsThread.setDaemon(true);
-                statsThread.start();
-            }
-            System.err.println("WeightedRRSample: attaching scheduler (Ctrl-C to detach)...");
-            sched.runUntilExit(Opts.defaults());
+            new WeightedRRSample().runWithCli("WeightedRRSample", statsInterval, null);
         }
     }
 

@@ -2,7 +2,6 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
-import me.bechberger.ebpf.bpf.userspace.Opts;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -39,8 +38,6 @@ public final class FifoQueueSample extends UserspaceScheduler {
         }
     }
 
-    // ── CLI ──────────────────────────────────────────────────────────────────
-
     @Command(name = "FifoQueueSample",
             description = {
                 "Pure FIFO scheduler backed by a persistent userland ArrayDeque.",
@@ -57,40 +54,8 @@ public final class FifoQueueSample extends UserspaceScheduler {
         @Override
         public void run() {
             var sched = new FifoQueueSample();
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                sched.requestExit();
-                while (!sched.exited()) {
-                    try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-                }
-                System.err.println();
-                System.err.println("==== Final stats ====");
-                System.err.println(sched.formatStats());
-                System.err.println("==== Histograms ====");
-                sched.printHistograms(System.err);
-            }));
-
-            if (statsInterval > 0) {
-                long intervalNs = (long) statsInterval * 1_000_000_000L;
-                var t = new Thread(() -> {
-                    long deadline = System.nanoTime() + intervalNs;
-                    try {
-                        while (!sched.exited()) {
-                            Thread.sleep(200);
-                            if (System.nanoTime() >= deadline) {
-                                System.err.printf("[stats] %s  queued=%d%n",
-                                        sched.formatStats(), sched.queue.size());
-                                deadline += intervalNs;
-                            }
-                        }
-                    } catch (InterruptedException ignored) {}
-                }, "fifo-queue-stats");
-                t.setDaemon(true);
-                t.start();
-            }
-
-            System.err.println("FifoQueueSample: attaching FIFO queue scheduler (Ctrl-C to detach)...");
-            sched.runUntilExit(Opts.defaults());
+            sched.runWithCli("FifoQueueSample", statsInterval,
+                    () -> "queued=" + sched.queue.size());
         }
     }
 

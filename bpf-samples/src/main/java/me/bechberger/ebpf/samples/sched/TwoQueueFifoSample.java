@@ -2,7 +2,6 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
-import me.bechberger.ebpf.bpf.userspace.Opts;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -59,8 +58,6 @@ public final class TwoQueueFifoSample extends UserspaceScheduler {
         while (!lowPri.isEmpty())  dispatchTask(lowPri.pollFirst(),  ANY_CPU);
     }
 
-    // ── CLI ──────────────────────────────────────────────────────────────────
-
     @Command(name = "TwoQueueFifoSample",
             description = {
                 "Two-queue FIFO: interactive tasks (low execRuntime) dispatched before batch tasks.",
@@ -76,40 +73,7 @@ public final class TwoQueueFifoSample extends UserspaceScheduler {
 
         @Override
         public void run() {
-            var sched = new TwoQueueFifoSample();
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                sched.requestExit();
-                while (!sched.exited()) {
-                    try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-                }
-                System.err.println();
-                System.err.println("==== Final stats ====");
-                System.err.println(sched.formatStats());
-                System.err.println("==== Histograms ====");
-                sched.printHistograms(System.err);
-            }));
-
-            if (statsInterval > 0) {
-                long intervalNs = (long) statsInterval * 1_000_000_000L;
-                var t = new Thread(() -> {
-                    long deadline = System.nanoTime() + intervalNs;
-                    try {
-                        while (!sched.exited()) {
-                            Thread.sleep(200);
-                            if (System.nanoTime() >= deadline) {
-                                System.err.println("[stats] " + sched.formatStats());
-                                deadline += intervalNs;
-                            }
-                        }
-                    } catch (InterruptedException ignored) {}
-                }, "two-queue-stats");
-                t.setDaemon(true);
-                t.start();
-            }
-
-            System.err.println("TwoQueueFifoSample: attaching two-queue FIFO scheduler (Ctrl-C to detach)...");
-            sched.runUntilExit(Opts.defaults());
+            new TwoQueueFifoSample().runWithCli("TwoQueueFifoSample", statsInterval, null);
         }
     }
 

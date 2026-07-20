@@ -2,7 +2,6 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
-import me.bechberger.ebpf.bpf.userspace.Opts;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -163,45 +162,11 @@ public final class CmdlineBoostSample extends UserspaceScheduler {
         @Override
         public void run() {
             var sched = new CmdlineBoostSample();
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                sched.requestExit();
-                while (!sched.exited()) {
-                    try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-                }
-                System.err.println();
-                System.err.println("==== Final stats ====");
-                System.err.println(sched.formatStats());
-                System.err.println("==== Histograms ====");
-                sched.printHistograms(System.err);
-            }));
-
-            if (statsInterval > 0) {
-                long intervalNs = (long) statsInterval * 1_000_000_000L;
-                var statsThread = new Thread(() -> {
-                    long deadline = System.nanoTime() + intervalNs;
-                    try {
-                        while (!sched.exited()) {
-                            Thread.sleep(200);
-                            if (System.nanoTime() >= deadline) {
-                                System.err.println("[stats] " + sched.formatStats());
-                                int n = Runtime.getRuntime().availableProcessors();
-                                System.err.printf("[cache] %d pids tracked, batch CPUs [%d, %d)%n",
-                                        sched.cmdlineCache.size(), n / 2, n);
-                                deadline += intervalNs;
-                            }
-                        }
-                    } catch (InterruptedException ignored) {}
-                }, "cmdline-stats");
-                statsThread.setDaemon(true);
-                statsThread.start();
-            }
-
             int n = Runtime.getRuntime().availableProcessors();
             System.err.printf("CmdlineBoostSample: %d CPUs — interactive→[0,%d), batch→[%d,%d)%n",
                     n, n / 2, n / 2, n);
-            System.err.println("Attaching scheduler (Ctrl-C to detach)...");
-            sched.runUntilExit(Opts.defaults());
+            sched.runWithCli("CmdlineBoostSample", statsInterval,
+                    () -> "cached=" + sched.cmdlineCache.size());
         }
     }
 

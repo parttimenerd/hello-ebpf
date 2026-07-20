@@ -3,9 +3,11 @@ package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.userspace.DeferredQueue;
-import me.bechberger.ebpf.bpf.userspace.SchedulerRunner;
 import me.bechberger.ebpf.bpf.userspace.TaskClassifier;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
+import me.bechberger.femtocli.FemtoCli;
+import me.bechberger.femtocli.annotations.Command;
+import me.bechberger.femtocli.annotations.Option;
 
 /**
  * <b>Experimental</b> — API may change without notice.
@@ -74,7 +76,21 @@ public final class LatencyTierEdfSample extends UserspaceScheduler {
         queue.drainEligible(nowNs, Integer.MAX_VALUE, t -> dispatchTask(t, classifier.decide(t)));
     }
 
+    @Command(name = "LatencyTierEdfSample",
+            description = {"Latency-tiered EDF scheduler (INTERACTIVE/NORMAL/BATCH tiers).",
+                           "Lower-latency tiers are dispatched first even when they arrived later."},
+            mixinStandardHelpOptions = true)
+    static final class Cli implements Runnable {
+        @Option(names = {"--stats-interval"}, defaultValue = "5")
+        int statsInterval;
+
+        @Override
+        public void run() {
+            new LatencyTierEdfSample().runWithCli("LatencyTierEdfSample", statsInterval, null);
+        }
+    }
+
     public static void main(String[] args) {
-        SchedulerRunner.run(new LatencyTierEdfSample(), args);
+        FemtoCli.run(new Cli(), args);
     }
 }

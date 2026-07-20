@@ -2,9 +2,11 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
-import me.bechberger.ebpf.bpf.userspace.SchedulerRunner;
 import me.bechberger.ebpf.bpf.userspace.TaskClassifier;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
+import me.bechberger.femtocli.FemtoCli;
+import me.bechberger.femtocli.annotations.Command;
+import me.bechberger.femtocli.annotations.Option;
 
 /**
  * <b>Experimental</b> — API may change without notice.
@@ -78,7 +80,21 @@ public final class CorePartitionSample extends UserspaceScheduler {
         return classifier.classOf(t);
     }
 
+    @Command(name = "CorePartitionSample",
+            description = {"CPU-partitioning scheduler: interactive tasks→low cores, batch→high cores.",
+                           "Prevents batch hogs from evicting latency-sensitive work."},
+            mixinStandardHelpOptions = true)
+    static final class Cli implements Runnable {
+        @Option(names = {"--stats-interval"}, defaultValue = "5")
+        int statsInterval;
+
+        @Override
+        public void run() {
+            new CorePartitionSample().runWithCli("CorePartitionSample", statsInterval, null);
+        }
+    }
+
     public static void main(String[] args) {
-        SchedulerRunner.run(new CorePartitionSample(), args);
+        FemtoCli.run(new Cli(), args);
     }
 }

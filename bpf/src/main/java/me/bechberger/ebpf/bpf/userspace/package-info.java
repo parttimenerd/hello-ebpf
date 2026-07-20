@@ -3,7 +3,7 @@
  * Write a Linux sched_ext scheduler in Java — policy in Java, transport in BPF.
  *
  * <p>You subclass {@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler}, override one
- * or two hooks, and call {@link me.bechberger.ebpf.bpf.userspace.SchedulerRunner#run}. The
+ * or two hooks, and call {@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler#runWithCli}. The
  * fixed BPF transport (enqueue → user ring → dispatch ring) is loaded for you; you never
  * touch it. Every scheduling decision flows through your Java class.
  *
@@ -11,7 +11,13 @@
  * <pre>{@code
  * public final class RoundRobin extends UserspaceScheduler {
  *     protected int policy(QueuedTask t) { return ANY_CPU; }   // let BPF pick an idle CPU
- *     public static void main(String[] args) { SchedulerRunner.run(new RoundRobin(), args); }
+ *
+ *     @Command(name = "RoundRobin", mixinStandardHelpOptions = true)
+ *     static final class Cli implements Runnable {
+ *         @Option(names = {"--stats-interval"}, defaultValue = "5") int statsInterval;
+ *         public void run() { new RoundRobin().runWithCli("RoundRobin", statsInterval, null); }
+ *     }
+ *     public static void main(String[] args) { FemtoCli.run(new Cli(), args); }
  * }
  * }</pre>
  *
@@ -60,9 +66,10 @@
  *       a band, then route the band" pattern into a table:
  *       {@code builder().classify(fn).policy(BAND, placement).build()}. {@code classOf(t)} gives
  *       the band; {@code decide(t)} classifies and applies that band's placement in one call.</li>
- *   <li>{@link me.bechberger.ebpf.bpf.userspace.SchedulerRunner} — one-line {@code main}: wires
- *       the shutdown hook and the periodic {@code --stats-interval} printer, then calls
- *       {@code runUntilExit}.</li>
+ *   <li>{@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler#runWithCli runWithCli} — standard
+ *       CLI entry-point: wires the shutdown hook and the periodic {@code --stats-interval} stats
+ *       printer, then calls {@code runUntilExit}. Each scheduler exposes it via a FemtoCli
+ *       {@code Cli} inner class.</li>
  * </ul>
  * <p>See {@code me.bechberger.ebpf.samples.sched.LatencyTierEdfSample} for the canonical shape
  * that combines a {@code TaskClassifier} (tier lookup) with a {@code DeferredQueue} (EDF order).

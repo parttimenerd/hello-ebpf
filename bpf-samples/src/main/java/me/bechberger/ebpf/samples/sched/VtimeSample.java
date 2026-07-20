@@ -3,6 +3,9 @@ package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
+import me.bechberger.femtocli.FemtoCli;
+import me.bechberger.femtocli.annotations.Command;
+import me.bechberger.femtocli.annotations.Option;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +80,21 @@ public final class VtimeSample extends UserspaceScheduler {
         vtimes.values().removeIf(vt -> vt > horizon);
     }
 
+    @Command(name = "VtimeSample",
+            description = {"Weight-proportional vtime fair-share scheduler.",
+                           "Dispatches the lowest-vtime task first each batch."},
+            mixinStandardHelpOptions = true)
+    static final class Cli implements Runnable {
+        @Option(names = {"--stats-interval"}, defaultValue = "5")
+        int statsInterval;
+
+        @Override
+        public void run() {
+            new VtimeSample().runWithCli("VtimeSample", statsInterval, null);
+        }
+    }
+
     public static void main(String[] args) {
-        me.bechberger.ebpf.bpf.userspace.SchedulerRunner.run(new VtimeSample(), args);
+        FemtoCli.run(new Cli(), args);
     }
 }

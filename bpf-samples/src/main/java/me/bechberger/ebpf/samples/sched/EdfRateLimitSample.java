@@ -3,8 +3,10 @@ package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.userspace.DeferredQueue;
-import me.bechberger.ebpf.bpf.userspace.SchedulerRunner;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
+import me.bechberger.femtocli.FemtoCli;
+import me.bechberger.femtocli.annotations.Command;
+import me.bechberger.femtocli.annotations.Option;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -114,7 +116,21 @@ public final class EdfRateLimitSample extends UserspaceScheduler {
                 + " tracked=" + lastDispatchNs.size();
     }
 
+    @Command(name = "EdfRateLimitSample",
+            description = {"Earliest-deadline-first scheduler with per-pid rate limiting.",
+                           "Higher-weight tasks get a shorter rate-limit gap (more CPU)."},
+            mixinStandardHelpOptions = true)
+    static final class Cli implements Runnable {
+        @Option(names = {"--stats-interval"}, defaultValue = "5")
+        int statsInterval;
+
+        @Override
+        public void run() {
+            new EdfRateLimitSample().runWithCli("EdfRateLimitSample", statsInterval, null);
+        }
+    }
+
     public static void main(String[] args) {
-        SchedulerRunner.run(new EdfRateLimitSample(), args);
+        FemtoCli.run(new Cli(), args);
     }
 }
