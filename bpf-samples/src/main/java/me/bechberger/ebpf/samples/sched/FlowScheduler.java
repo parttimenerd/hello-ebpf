@@ -462,26 +462,31 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
 
         // Rotating tier dispatch: each phase starts from a different tier
         int phase = (int)(gen & 3L);
-        if (phase == 0) {
-            if (dispatchTierPriority()) return;
-            if (dispatchTierNormal())   return;
-            if (dispatchTierLow())      return;
-            if (dispatchTierDeficit())  return;
-        } else if (phase == 1) {
-            if (dispatchTierNormal())   return;
-            if (dispatchTierLow())      return;
-            if (dispatchTierDeficit())  return;
-            if (dispatchTierPriority()) return;
-        } else if (phase == 2) {
-            if (dispatchTierLow())      return;
-            if (dispatchTierDeficit())  return;
-            if (dispatchTierPriority()) return;
-            if (dispatchTierNormal())   return;
-        } else {
-            if (dispatchTierDeficit())  return;
-            if (dispatchTierPriority()) return;
-            if (dispatchTierNormal())   return;
-            if (dispatchTierLow())      return;
+        switch (phase) {
+            case 0:
+                if (dispatchTierPriority()) return;
+                if (dispatchTierNormal())   return;
+                if (dispatchTierLow())      return;
+                if (dispatchTierDeficit())  return;
+                break;
+            case 1:
+                if (dispatchTierNormal())   return;
+                if (dispatchTierLow())      return;
+                if (dispatchTierDeficit())  return;
+                if (dispatchTierPriority()) return;
+                break;
+            case 2:
+                if (dispatchTierLow())      return;
+                if (dispatchTierDeficit())  return;
+                if (dispatchTierPriority()) return;
+                if (dispatchTierNormal())   return;
+                break;
+            default:
+                if (dispatchTierDeficit())  return;
+                if (dispatchTierPriority()) return;
+                if (dispatchTierNormal())   return;
+                if (dispatchTierLow())      return;
+                break;
         }
 
         // No tasks anywhere — let prev keep its slice if still queued
