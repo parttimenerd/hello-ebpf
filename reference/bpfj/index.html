@@ -3148,7 +3148,7 @@ Use these inside <code>@BPFFunction</code> methods. Each call is translated to t
 <h2 id="tracing">Tracing<a class="headerlink" href="#tracing" title="Permanent link">&para;</a></h2>
 <h3 id="bpfjbpf_trace_printkfmt-args"><code>BPFJ.bpf_trace_printk(fmt, args...)</code><a class="headerlink" href="#bpfjbpf_trace_printkfmt-args" title="Permanent link">&para;</a></h3>
 <p>Write a formatted string to <code>/sys/kernel/debug/tracing/trace_pipe</code>. Useful for debugging.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">BPFJ</span><span class="p">.</span><span class="na">bpf_trace_printk</span><span class="p">(</span><span class="s">&quot;pid=%d file=%s\n&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">filename</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">BPFJ</span><span class="p">.</span><span class="na">bpf_trace_printk</span><span class="p">(</span><span class="s">"pid=%d file=%s\n"</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">filename</span><span class="p">);</span>
 </code></pre></div>
 <p>Expands to: <code>bpf_trace_printk(fmt, sizeof(fmt), args...)</code></p>
 <div class="admonition note">

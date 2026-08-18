@@ -2456,11 +2456,11 @@ tree (walks <code>real_parent</code> up to 8 levels) when <code>targetTgid != 0<
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="n">runConcurrentTest</span><span class="p">();</span><span class="w">  </span><span class="c1">// races are now far more likely to surface</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="n">sched</span><span class="p">.</span><span class="na">isSchedulerAttachedProperly</span><span class="p">();</span><span class="w">  </span><span class="c1">// watchdog hasn&#39;t fired?</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="n">sched</span><span class="p">.</span><span class="na">isSchedulerAttachedProperly</span><span class="p">();</span><span class="w">  </span><span class="c1">// watchdog hasn't fired?</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">}</span>
 </code></pre></div>
 <p>To run your test suite under chaos:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>./run.sh<span class="w"> </span>ChaosScheduler<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;java.*MyTestSuite&quot;</span><span class="k">)</span><span class="w"> </span><span class="p">&amp;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>./run.sh<span class="w"> </span>ChaosScheduler<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">"java.*MyTestSuite"</span><span class="k">)</span><span class="w"> </span><span class="p">&amp;</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mvn<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-pl<span class="w"> </span>mymodule
 </code></pre></div>
 <p>Or use the <code>SchedulerExtension</code> JUnit 5 integration — see the <a href="../cookbook/#testing-your-scheduler">Cookbook</a>.</p>

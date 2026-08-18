@@ -2575,6 +2575,24 @@ includes.</p>
 <td></td>
 </tr>
 <tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LatencyTierEdfSample.java">sched/LatencyTierEdfSample</a></td>
+<td>UserspaceScheduler, TaskClassifier, DeferredQueue</td>
+<td>Latency-tier classifier feeding an EDF DeferredQueue</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/EdfRateLimitSample.java">sched/EdfRateLimitSample</a></td>
+<td>UserspaceScheduler, DeferredQueue</td>
+<td>Per-task rate limiting via deferUntil time gates</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CorePartitionSample.java">sched/CorePartitionSample</a></td>
+<td>UserspaceScheduler, TaskClassifier</td>
+<td>Splits interactive/batch work onto disjoint core pools</td>
+<td></td>
+</tr>
+<tr>
 <td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HttpUtil.java">HttpUtil</a></td>
 <td>none (pure Java utility)</td>
 <td>URL query-string parser used by FirewallSpring controller</td>
@@ -2900,6 +2918,18 @@ includes.</p>
 <tr>
 <td>sched/LotterySample</td>
 <td>Lottery scheduler with weight-proportional CPU placement</td>
+</tr>
+<tr>
+<td>sched/LatencyTierEdfSample</td>
+<td>Latency-tier classifier feeding an EDF DeferredQueue</td>
+</tr>
+<tr>
+<td>sched/EdfRateLimitSample</td>
+<td>Per-task rate limiting via deferUntil time gates</td>
+</tr>
+<tr>
+<td>sched/CorePartitionSample</td>
+<td>Splits interactive/batch work onto disjoint core pools</td>
 </tr>
 </tbody>
 </table>

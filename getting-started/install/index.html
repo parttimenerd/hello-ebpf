@@ -2209,7 +2209,7 @@ configuration is needed.</p>
 <h2 id="4-verify-the-setup">4. Verify the setup<a class="headerlink" href="#4-verify-the-setup" title="Permanent link">&para;</a></h2>
 <p>Run <code>mvn package</code>. A successful build writes a <code>.bpf.c</code> file under
 <code>target/generated-sources/annotations/</code>. Its presence confirms the plugin ran:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>find<span class="w"> </span>target/generated-sources<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.bpf.c&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>find<span class="w"> </span>target/generated-sources<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.bpf.c"</span>
 </code></pre></div>
 <p>If the file is absent, check that both <code>annotationProcessor</code> and
 <code>-Xplugin:BPFCompilerPlugin</code> are present in the compiler configuration and

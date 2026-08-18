@@ -2553,7 +2553,7 @@ so if you missed a step the compiler will tell you which.</p>
 <p>When load fails, hello-ebpf attaches the verifier's own message to the
 thrown <code>BPFLoadException</code> and runs the log through
 <code>VerifierLogParser</code> + <code>VerifierFixSuggester</code>. You'll see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Verifier rejected the program: R1 invalid mem access &#39;map_value_or_null&#39;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Verifier rejected the program: R1 invalid mem access 'map_value_or_null'
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  at instruction offset 42
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Classified as: UNCHECKED_NULL_DEREF
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>

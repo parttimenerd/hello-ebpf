@@ -1357,6 +1357,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#helper-classes-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Helper classes (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-testing-with-schedulerharness-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline testing with SchedulerHarness (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1381,6 +1403,45 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#porting-scx_rusty-domain-load-balancing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Porting scx_rusty: domain load balancing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Porting scx_rusty: domain load balancing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#correctness-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correctness evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simplifications-vs-upstream-rusty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simplifications vs upstream rusty
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1445,6 +1506,17 @@
     <span class="md-ellipsis">
       
         JFR events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-trace-per-class-metrics-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision trace &amp; per-class metrics (Experimental)
       
     </span>
   </a>
@@ -2250,6 +2322,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#helper-classes-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Helper classes (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-testing-with-schedulerharness-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline testing with SchedulerHarness (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2274,6 +2368,45 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#porting-scx_rusty-domain-load-balancing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Porting scx_rusty: domain load balancing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Porting scx_rusty: domain load balancing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#correctness-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correctness evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simplifications-vs-upstream-rusty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simplifications vs upstream rusty
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2338,6 +2471,17 @@
     <span class="md-ellipsis">
       
         JFR events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-trace-per-class-metrics-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision trace &amp; per-class metrics (Experimental)
       
     </span>
   </a>
@@ -2585,6 +2729,52 @@ batches. To store a task in a data structure that persists beyond the current
 batch. The <code>enqCnt</code> stale-dispatch guard still applies — if the copied task was
 re-enqueued before you dispatch it, the dispatch is silently cancelled by the BPF
 transport and <code>ringCanceled</code> is incremented.</p>
+<h3 id="helper-classes-experimental">Helper classes (<strong>Experimental</strong>)<a class="headerlink" href="#helper-classes-experimental" title="Permanent link">&para;</a></h3>
+<p>Three helpers in <code>me.bechberger.ebpf.bpf.userspace</code> remove the boilerplate that
+every non-trivial policy re-implements. They are plain Java — no BPF, no kernel.</p>
+<ul>
+<li><strong><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/DeferredQueue.java"><code>DeferredQueue</code></a></strong> —
+  a copy-storing heap for sorted or time-gated scheduling. <code>deferOrdered(t, key)</code>
+  orders by a key (vtime, deadline); <code>deferUntil(t, notBeforeNs)</code> holds a task until
+  a wall-clock time; <code>drainEligible(nowNs, max, sink)</code> pops the eligible front in key
+  order. It stores <code>copy()</code>s, so entries survive across batches.</li>
+<li><strong><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/TaskClassifier.java"><code>TaskClassifier</code></a></strong> —
+  turns "classify a task into a band, then route the band" into a table:
+  <code>builder().classify(fn).policy(BAND, placement).build()</code>. <code>classOf(t)</code> returns the
+  band; <code>decide(t)</code> classifies and applies that band's placement in one call.</li>
+<li><strong><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/SchedulerRunner.java"><code>SchedulerRunner</code></a></strong> —
+  a one-line <code>main</code>: <code>SchedulerRunner.run(new MyScheduler(), args)</code> wires the
+  shutdown hook and the periodic <code>--stats-interval</code> printer, then calls <code>runUntilExit</code>.</li>
+</ul>
+<p><code>LatencyTierEdfSample</code> shows the canonical shape combining a <code>TaskClassifier</code> (tier
+lookup) with a <code>DeferredQueue</code> (earliest-deadline-first order across the batch).</p>
+<h3 id="offline-testing-with-schedulerharness-experimental">Offline testing with <code>SchedulerHarness</code> (<strong>Experimental</strong>)<a class="headerlink" href="#offline-testing-with-schedulerharness-experimental" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/SchedulerHarness.java"><code>SchedulerHarness</code></a>
+runs your <code>schedule</code>/<code>tick</code> against fabricated tasks in a plain JVM test — no root,
+no kernel — and records what was dispatched:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">var</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SchedulerHarness</span><span class="p">.</span><span class="na">forScheduler</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">MyScheduler</span><span class="p">()).</span><span class="na">withCpus</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">h</span><span class="p">.</span><span class="na">feed</span><span class="p">(</span><span class="n">task</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">),</span><span class="w"> </span><span class="n">task</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">)).</span><span class="na">runBatch</span><span class="p">();</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">assertEquals</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="n">h</span><span class="p">.</span><span class="na">dispatches</span><span class="p">().</span><span class="na">stream</span><span class="p">().</span><span class="na">map</span><span class="p">(</span><span class="n">SchedulerHarness</span><span class="p">.</span><span class="na">Dispatch</span><span class="p">::</span><span class="n">pid</span><span class="p">).</span><span class="na">toList</span><span class="p">());</span>
+</code></pre></div>
+<p><code>withCpus(n)</code> models a machine of any size — the scheduler's dispatch-range
+validation and <code>cpuCount()</code> follow it, so a CPU-targeting policy can be tested for a
+machine larger than the CI host. <strong>Read <code>cpuCount()</code>, not
+<code>Runtime.getRuntime().availableProcessors()</code>,</strong> when computing concrete CPU targets so
+placement honours <code>withCpus</code>.</p>
+<p>For time-dependent policies (rate limiting, EDF deadlines, <code>deferUntil</code>) install a
+<strong>virtual clock</strong> so tests are deterministic and instant:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">var</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SchedulerHarness</span><span class="p">.</span><span class="na">forScheduler</span><span class="p">(</span><span class="n">sched</span><span class="p">).</span><span class="na">withCpus</span><span class="p">(</span><span class="mi">8</span><span class="p">).</span><span class="na">withVirtualClock</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">h</span><span class="p">.</span><span class="na">feed</span><span class="p">(</span><span class="n">task</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">)).</span><span class="na">runBatch</span><span class="p">();</span><span class="w">       </span><span class="c1">// dispatches at t=0</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">h</span><span class="p">.</span><span class="na">clear</span><span class="p">();</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">h</span><span class="p">.</span><span class="na">advanceMillis</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="na">feed</span><span class="p">().</span><span class="na">runBatch</span><span class="p">();</span><span class="w">  </span><span class="c1">// the gate has now elapsed</span>
+</code></pre></div>
+<p>The virtual clock replaces the scheduler's time source, so this only works if your
+scheduler reads time through <code>nanoTime()</code> — <strong>never call <code>System.nanoTime()</code>
+directly</strong> in a scheduler you want to test. (<code>.feed()</code> with no arguments runs an empty
+batch, which advances time and triggers <code>schedule</code> without new arrivals.)</p>
+<p>The package-level Javadoc on <code>me.bechberger.ebpf.bpf.userspace</code> is the authoring
+guide that ties these pieces together.</p>
 <hr />
 <h2 id="example-interactive-vs-batch-partitioner">Example: Interactive-vs-batch partitioner<a class="headerlink" href="#example-interactive-vs-batch-partitioner" title="Permanent link">&para;</a></h2>
 <p>The standout advantage of a userspace scheduler over a kernelspace one is <strong>access
@@ -2605,77 +2795,77 @@ PID (cached), extracts the binary basename, and classifies each task as
 </ul>
 <p>The <code>tick()</code> callback runs once per second to purge dead PIDs from the cache by
 checking whether <code>/proc/&lt;pid&gt;</code> still exists — another thing BPF cannot do cheaply.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.QueuedTask</span><span class="p">;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.userspace.Opts</span><span class="p">;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.userspace.UserspaceScheduler</span><span class="p">;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.file.Files</span><span class="p">;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.file.Path</span><span class="p">;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Iterator</span><span class="p">;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Set</span><span class="p">;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.ConcurrentHashMap</span><span class="p">;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CmdlineBoostSample</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">UserspaceScheduler</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">INTERACTIVE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Set</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">            </span><span class="s">&quot;bash&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;zsh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;vim&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;nvim&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;emacs&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">            </span><span class="s">&quot;alacritty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;kitty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gnome-terminal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;firefox&quot;</span><span class="p">);</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BATCH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Set</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">            </span><span class="s">&quot;gcc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;g++&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;clang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;make&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ninja&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">            </span><span class="s">&quot;gradle&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mvn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;javac&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;cargo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pytest&quot;</span><span class="p">);</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w">   </span><span class="n">lastSeen</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">tickCount</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w">  </span><span class="n">batchRobin</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">    </span><span class="nd">@Override</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">policy</span><span class="p">(</span><span class="n">QueuedTask</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">bin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveBin</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">pid</span><span class="p">);</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">        </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">pid</span><span class="p">,</span><span class="w"> </span><span class="n">tickCount</span><span class="p">);</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">INTERACTIVE</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">bin</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">;</span>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">BATCH</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">bin</span><span class="p">))</span><span class="w">       </span><span class="k">return</span><span class="w"> </span><span class="n">nextBatchCpu</span><span class="p">();</span>
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">;</span>
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">    </span><span class="cm">/** Purge dead PIDs once per second. */</span>
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">    </span><span class="nd">@Override</span>
-<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">tick</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">        </span><span class="n">tickCount</span><span class="o">++</span><span class="p">;</span>
-<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">        </span><span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="p">.</span><span class="na">entrySet</span><span class="p">().</span><span class="na">iterator</span><span class="p">();</span>
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="na">hasNext</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">getKey</span><span class="p">();</span>
-<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">            </span><span class="kt">long</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tickCount</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">getOrDefault</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">tickCount</span><span class="p">);</span>
-<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">age</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">Files</span><span class="p">.</span><span class="na">exists</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/proc/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">pid</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">                </span><span class="n">it</span><span class="p">.</span><span class="na">remove</span><span class="p">();</span>
-<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">                </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
-<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>
-<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">resolveBin</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="p">.</span><span class="na">computeIfAbsent</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="w">                </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Files</span><span class="p">.</span><span class="na">readAllBytes</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/proc/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/cmdline&quot;</span><span class="p">));</span>
-<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">raw</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">raw</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">raw</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">end</span><span class="o">++</span><span class="p">;</span>
-<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="w">                </span><span class="n">String</span><span class="w"> </span><span class="n">argv0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="p">);</span>
-<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">slash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argv0</span><span class="p">.</span><span class="na">lastIndexOf</span><span class="p">(</span><span class="sc">&#39;/&#39;</span><span class="p">);</span>
-<a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">slash</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">argv0</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="n">slash</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">argv0</span><span class="p">;</span>
-<a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a><span class="w">        </span><span class="p">});</span>
-<a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a>
-<a id="__codelineno-4-66" name="__codelineno-4-66" href="#__codelineno-4-66"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">synchronized</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">nextBatchCpu</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">availableProcessors</span><span class="p">();</span>
-<a id="__codelineno-4-68" name="__codelineno-4-68" href="#__codelineno-4-68"></a><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">batchStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
-<a id="__codelineno-4-69" name="__codelineno-4-69" href="#__codelineno-4-69"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">batchStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">batchRobin</span><span class="o">++</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">batchStart</span><span class="p">));</span>
-<a id="__codelineno-4-70" name="__codelineno-4-70" href="#__codelineno-4-70"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-4-71" name="__codelineno-4-71" href="#__codelineno-4-71"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.QueuedTask</span><span class="p">;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.userspace.Opts</span><span class="p">;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.userspace.UserspaceScheduler</span><span class="p">;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.file.Files</span><span class="p">;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.file.Path</span><span class="p">;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Iterator</span><span class="p">;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Set</span><span class="p">;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.ConcurrentHashMap</span><span class="p">;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CmdlineBoostSample</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">UserspaceScheduler</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">INTERACTIVE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Set</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">            </span><span class="s">"bash"</span><span class="p">,</span><span class="w"> </span><span class="s">"sh"</span><span class="p">,</span><span class="w"> </span><span class="s">"zsh"</span><span class="p">,</span><span class="w"> </span><span class="s">"vim"</span><span class="p">,</span><span class="w"> </span><span class="s">"nvim"</span><span class="p">,</span><span class="w"> </span><span class="s">"emacs"</span><span class="p">,</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">            </span><span class="s">"alacritty"</span><span class="p">,</span><span class="w"> </span><span class="s">"kitty"</span><span class="p">,</span><span class="w"> </span><span class="s">"gnome-terminal"</span><span class="p">,</span><span class="w"> </span><span class="s">"firefox"</span><span class="p">);</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BATCH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Set</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">            </span><span class="s">"gcc"</span><span class="p">,</span><span class="w"> </span><span class="s">"g++"</span><span class="p">,</span><span class="w"> </span><span class="s">"clang"</span><span class="p">,</span><span class="w"> </span><span class="s">"make"</span><span class="p">,</span><span class="w"> </span><span class="s">"ninja"</span><span class="p">,</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">            </span><span class="s">"gradle"</span><span class="p">,</span><span class="w"> </span><span class="s">"mvn"</span><span class="p">,</span><span class="w"> </span><span class="s">"javac"</span><span class="p">,</span><span class="w"> </span><span class="s">"cargo"</span><span class="p">,</span><span class="w"> </span><span class="s">"pytest"</span><span class="p">);</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w">   </span><span class="n">lastSeen</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">tickCount</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w">  </span><span class="n">batchRobin</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">policy</span><span class="p">(</span><span class="n">QueuedTask</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">bin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveBin</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">pid</span><span class="p">);</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">        </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">pid</span><span class="p">,</span><span class="w"> </span><span class="n">tickCount</span><span class="p">);</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">INTERACTIVE</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">bin</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">;</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">BATCH</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">bin</span><span class="p">))</span><span class="w">       </span><span class="k">return</span><span class="w"> </span><span class="n">nextBatchCpu</span><span class="p">();</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">;</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="w">    </span><span class="cm">/** Purge dead PIDs once per second. */</span>
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">tick</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="w">        </span><span class="n">tickCount</span><span class="o">++</span><span class="p">;</span>
+<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a><span class="w">        </span><span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="p">.</span><span class="na">entrySet</span><span class="p">().</span><span class="na">iterator</span><span class="p">();</span>
+<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a><span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="na">hasNext</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a><span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">getKey</span><span class="p">();</span>
+<a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a><span class="w">            </span><span class="kt">long</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tickCount</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">getOrDefault</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">tickCount</span><span class="p">);</span>
+<a id="__codelineno-6-45" name="__codelineno-6-45" href="#__codelineno-6-45"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">age</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">Files</span><span class="p">.</span><span class="na">exists</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"/proc/"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">pid</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-46" name="__codelineno-6-46" href="#__codelineno-6-46"></a><span class="w">                </span><span class="n">it</span><span class="p">.</span><span class="na">remove</span><span class="p">();</span>
+<a id="__codelineno-6-47" name="__codelineno-6-47" href="#__codelineno-6-47"></a><span class="w">                </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+<a id="__codelineno-6-48" name="__codelineno-6-48" href="#__codelineno-6-48"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-6-49" name="__codelineno-6-49" href="#__codelineno-6-49"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-50" name="__codelineno-6-50" href="#__codelineno-6-50"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-51" name="__codelineno-6-51" href="#__codelineno-6-51"></a>
+<a id="__codelineno-6-52" name="__codelineno-6-52" href="#__codelineno-6-52"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">resolveBin</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-53" name="__codelineno-6-53" href="#__codelineno-6-53"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="p">.</span><span class="na">computeIfAbsent</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-54" name="__codelineno-6-54" href="#__codelineno-6-54"></a><span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-55" name="__codelineno-6-55" href="#__codelineno-6-55"></a><span class="w">                </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Files</span><span class="p">.</span><span class="na">readAllBytes</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"/proc/"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"/cmdline"</span><span class="p">));</span>
+<a id="__codelineno-6-56" name="__codelineno-6-56" href="#__codelineno-6-56"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">raw</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<a id="__codelineno-6-57" name="__codelineno-6-57" href="#__codelineno-6-57"></a><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-6-58" name="__codelineno-6-58" href="#__codelineno-6-58"></a><span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">raw</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">raw</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">end</span><span class="o">++</span><span class="p">;</span>
+<a id="__codelineno-6-59" name="__codelineno-6-59" href="#__codelineno-6-59"></a><span class="w">                </span><span class="n">String</span><span class="w"> </span><span class="n">argv0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="p">);</span>
+<a id="__codelineno-6-60" name="__codelineno-6-60" href="#__codelineno-6-60"></a><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">slash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argv0</span><span class="p">.</span><span class="na">lastIndexOf</span><span class="p">(</span><span class="sc">'/'</span><span class="p">);</span>
+<a id="__codelineno-6-61" name="__codelineno-6-61" href="#__codelineno-6-61"></a><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">slash</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">argv0</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="n">slash</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">argv0</span><span class="p">;</span>
+<a id="__codelineno-6-62" name="__codelineno-6-62" href="#__codelineno-6-62"></a><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-6-63" name="__codelineno-6-63" href="#__codelineno-6-63"></a><span class="w">        </span><span class="p">});</span>
+<a id="__codelineno-6-64" name="__codelineno-6-64" href="#__codelineno-6-64"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-65" name="__codelineno-6-65" href="#__codelineno-6-65"></a>
+<a id="__codelineno-6-66" name="__codelineno-6-66" href="#__codelineno-6-66"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">synchronized</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">nextBatchCpu</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-67" name="__codelineno-6-67" href="#__codelineno-6-67"></a><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">availableProcessors</span><span class="p">();</span>
+<a id="__codelineno-6-68" name="__codelineno-6-68" href="#__codelineno-6-68"></a><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">batchStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<a id="__codelineno-6-69" name="__codelineno-6-69" href="#__codelineno-6-69"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">batchStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">batchRobin</span><span class="o">++</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">batchStart</span><span class="p">));</span>
+<a id="__codelineno-6-70" name="__codelineno-6-70" href="#__codelineno-6-70"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-71" name="__codelineno-6-71" href="#__codelineno-6-71"></a><span class="p">}</span>
 </code></pre></div>
 <p>What's only possible here and not in kernelspace BPF:</p>
 <table>
@@ -2762,27 +2952,123 @@ checking whether <code>/proc/&lt;pid&gt;</code> still exists — another thing B
 <td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/ShowcaseScheduler.java"><code>ShowcaseScheduler</code></a></td>
 <td>Six-tier /proc-powered scheduler: cmdline + cgroup detection + I/O bytes/s + container CPU partition (<strong>Experimental</strong>)</td>
 </tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LatencyTierEdfSample.java"><code>LatencyTierEdfSample</code></a></td>
+<td><code>TaskClassifier</code> tiers + <code>DeferredQueue</code> earliest-deadline-first ordering across the batch (<strong>Experimental</strong>)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/EdfRateLimitSample.java"><code>EdfRateLimitSample</code></a></td>
+<td>Time-gated <code>DeferredQueue.deferUntil</code> — per-pid rate limiting with a weight-scaled gap (<strong>Experimental</strong>)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CorePartitionSample.java"><code>CorePartitionSample</code></a></td>
+<td><code>TaskClassifier</code> <em>placement</em> policies routing interactive vs batch work to disjoint core pools (<strong>Experimental</strong>)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustyScheduler.java"><code>RustyScheduler</code></a></td>
+<td>scx_rusty-style per-LLC-domain push/pull load balancing, single-NUMA (<strong>Experimental</strong>)</td>
+</tr>
 </tbody>
 </table>
+<h2 id="porting-scx_rusty-domain-load-balancing">Porting scx_rusty: domain load balancing<a class="headerlink" href="#porting-scx_rusty-domain-load-balancing" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustyScheduler.java"><code>RustyScheduler</code></a>
+is a Java port of the userspace load-balancing core of
+<a href="https://github.com/sched-ext/scx">scx_rusty</a>. Upstream rusty groups CPUs into <em>domains</em>
+(one per last-level cache), tracks each task's load, and periodically pushes load from
+overloaded domains to underloaded ones — keeping tasks cache-warm while spreading work. This
+port implements that push/pull core at <strong>single-NUMA scope</strong>: the balancing algorithm is faithful
+to upstream, but the inter-NUMA layer, infeasible-weight correction, and BPF-side load tracking
+are deliberately left out (see <em>Simplifications</em> below).</p>
+<p>The port is built from three reusable, kernel-free pieces in
+<code>me.bechberger.ebpf.bpf.userspace</code>, plus the sample that wires them together:</p>
+<ul>
+<li><strong><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/CpuTopology.java"><code>CpuTopology</code></a></strong>
+  — reads <code>/sys/devices/system/cpu/cpuN/cache/indexK/{level,shared_cpu_list}</code> and groups CPUs
+  that share a last-level cache into one domain each. It never throws: missing or unreadable
+  cache info falls back to a single domain covering all online CPUs. Inject a fake sysfs root
+  (<code>CpuTopology.detect(Path)</code>) to build arbitrary topologies in tests.</li>
+<li><strong><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/RustyLoadTracker.java"><code>RustyLoadTracker</code></a></strong>
+  — a per-pid decayed duty-cycle metric, the userspace analogue of rusty's BPF ravg buckets.
+  Duty cycle is an exponentially-decayed EWMA of <code>execRuntime / wallTime</code>, updated on each enqueue
+  <strong>and decayed again at read time</strong> so a task that went dormant decays exactly as it would if
+  sampled continuously. Task load is <code>dutyCycle * weight</code>; the decay half-life is configurable
+  (<code>--half-life-ms</code>, default 1 s).</li>
+<li><strong><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/DomainLoadBalancer.java"><code>DomainLoadBalancer</code></a></strong>
+  — a pure function (no BPF, no I/O) porting rusty's <code>balance_within_node</code>. Given a list of
+  <code>Domain</code>s (each holding a load sum and a list of <code>TaskLoad{pid, load, domMask, preferredDomMask,
+  isKworker}</code>) and the average load, it pops the most-overloaded push domain, pulls into
+  underloaded domains least-loaded-first, and for each pair moves the task whose load is closest
+  to <code>xfer = min(pushImbal, pullImbal) * 0.5</code> — preferring tasks cache-affine to the pull domain,
+  and only if the move reduces the pair's total imbalance. It returns a list of <code>Migration</code>s and
+  mutates nothing the caller passed in.</li>
+</ul>
+<p><code>RustyScheduler</code> itself is thin, because all the policy lives in those three pieces:</p>
+<ul>
+<li><strong><code>schedule()</code> (hot path):</strong> assign each task a domain (from its <code>prevCpu</code>'s domain, or
+  round-robin for a brand-new task), record its load via <code>RustyLoadTracker.onEnqueue</code>, and
+  dispatch it to an idle CPU <strong>inside its assigned domain</strong> — falling back to <code>ANY_CPU</code> when the
+  domain has no idle CPU.</li>
+<li><strong><code>tick()</code> (cold path, ~1 s):</strong> decay every tracked task, prune ones dormant past the stale
+  threshold, bucket the survivors' load into <code>Domain</code>s, run <code>DomainLoadBalancer.balance</code>, and
+  apply each <code>Migration</code> by reassigning the task's target domain. Like upstream rusty, the next
+  enqueue is what actually moves the task — <code>tick()</code> only sets <code>target_dom</code>.</li>
+</ul>
+<h3 id="correctness-evidence">Correctness evidence<a class="headerlink" href="#correctness-evidence" title="Permanent link">&para;</a></h3>
+<p>The balancing logic is proved offline, with no kernel or root, under the
+<a href="#offline-testing-with-schedulerharness-experimental"><code>SchedulerHarness</code></a>:</p>
+<ul>
+<li><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/test/java/me/bechberger/ebpf/bpf/userspace/DomainLoadBalancerTest.java"><code>DomainLoadBalancerTest</code></a>
+  — the imbalance state machine and the push/pull engine (closest-to-<code>xfer</code>, cache-affinity
+  preference, infeasible-task and kworker skipping, only-if-reduces-imbalance guard).</li>
+<li><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/test/java/me/bechberger/ebpf/bpf/userspace/CpuTopologyTest.java"><code>CpuTopologyTest</code></a>
+  — LLC grouping and the single-domain fallback, via a fake sysfs tree.</li>
+<li><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/test/java/me/bechberger/ebpf/bpf/userspace/RustyLoadMetricTest.java"><code>RustyLoadMetricTest</code></a>
+  — the load metric: a busy task converges toward its weight, a mostly-sleeping task stays low,
+  a dormant task decays toward zero at read time.</li>
+<li><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/test/java/me/bechberger/ebpf/samples/sched/RustySchedulerHarnessTest.java"><code>RustySchedulerHarnessTest</code></a>
+  — end-to-end offline: domain assignment follows <code>prevCpu</code>, every fed task is dispatched, and a
+  domain piled with busy tasks triggers a real migration after <code>tick()</code>.</li>
+</ul>
+<p><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/test/java/me/bechberger/ebpf/samples/sched/RustySchedulerSmokeTest.java"><code>RustySchedulerSmokeTest</code></a>
+additionally attaches the scheduler to a real kernel under <code>virtme-ng</code> and confirms it stays
+attached while draining tasks through the userspace ring.</p>
+<h3 id="simplifications-vs-upstream-rusty">Simplifications vs upstream rusty<a class="headerlink" href="#simplifications-vs-upstream-rusty" title="Permanent link">&para;</a></h3>
+<p>This is a faithful <em>core</em> port, not a bit-for-bit one:</p>
+<ul>
+<li><strong>Single-NUMA only.</strong> rusty balances within a NUMA node and then across nodes; this port does
+  only the within-node (domain) layer.</li>
+<li><strong>Userspace load, not BPF ravg.</strong> Load is computed in Java from <code>execRuntime</code> deltas
+  (decay-at-read) rather than read from rusty's BPF-side ravg buckets.</li>
+<li><strong>No infeasible-weight correction.</strong> rusty rescales weights when a task's affinity makes its
+  fair share unachievable; this port models affinity with a simple <code>domMask</code> and skips the
+  correction.</li>
+<li><strong>Default weight 100.</strong> Per-pid weight is not tracked through <code>tick()</code>; task load uses the
+  default weight. This suffices for the common case and keeps the port small.</li>
+<li><strong>One transfer per (push, pull) pair per round.</strong> Balance converges over repeated <code>tick()</code>s;
+  a single round's migration count can differ from upstream (documented in
+  <code>DomainLoadBalancer</code>'s Javadoc).</li>
+<li><strong>64-CPU domain masks.</strong> <code>Domain</code>/<code>CpuTopology</code> use a single <code>long</code> bitmask per domain, so CPU
+  indices ≥ 64 are not represented. Fine for typical single-socket hosts.</li>
+</ul>
 <h2 id="4-running">4. Running<a class="headerlink" href="#4-running" title="Permanent link">&para;</a></h2>
 <p>Build and launch with elevated capabilities:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>-E<span class="w"> </span>java<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>-XX:+UseZGC<span class="w"> </span>-XX:+ZGenerational<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-cp<span class="w"> </span>bpf-samples.jar<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>me.bechberger.ebpf.samples.sched.RustlandFifoSample
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>-E<span class="w"> </span>java<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>-XX:+UseZGC<span class="w"> </span>-XX:+ZGenerational<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-cp<span class="w"> </span>bpf-samples.jar<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>me.bechberger.ebpf.samples.sched.RustlandFifoSample
 </code></pre></div>
 <p>Expected output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>RustlandFifoSample: attaching scheduler (Ctrl-C to detach)...
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>[stats] drained=312 dropped=0 disp=312/-0 cancel=0 stall=0 kicks=4
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>[stats] drained=648 dropped=0 disp=648/-0 cancel=0 stall=0 kicks=8
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>^C
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>==== Final stats ====
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>drained=911 dropped=0 disp=911/-0 cancel=0 stall=0 kicks=11
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>==== Histograms ====
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ringConsumeUs       count       distribution
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>[1, 1]                  3       |*                              |
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>[2, 3]                 24       |********                       |
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>[4, 7]                221       |*******************************|
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>RustlandFifoSample: attaching scheduler (Ctrl-C to detach)...
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>[stats] drained=312 dropped=0 disp=312/-0 cancel=0 stall=0 kicks=4
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>[stats] drained=648 dropped=0 disp=648/-0 cancel=0 stall=0 kicks=8
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>^C
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>==== Final stats ====
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>drained=911 dropped=0 disp=911/-0 cancel=0 stall=0 kicks=11
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>==== Histograms ====
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ringConsumeUs       count       distribution
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>[1, 1]                  3       |*                              |
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>[2, 3]                 24       |********                       |
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>[4, 7]                221       |*******************************|
 </code></pre></div>
 <p>Ctrl-C calls <code>requestExit()</code> via a shutdown hook; the run loop returns at the next
 batch boundary, the scheduler is detached, and the JVM exits cleanly.</p>
@@ -2890,6 +3176,17 @@ with counters from both BPF and Java sides:</p>
 </table>
 <p>These are off by default in <code>default.jfc</code> — enable them in your <code>.jfc</code> if you
 want them in long-running recordings.</p>
+<h3 id="decision-trace-per-class-metrics-experimental">Decision trace &amp; per-class metrics (<strong>Experimental</strong>)<a class="headerlink" href="#decision-trace-per-class-metrics-experimental" title="Permanent link">&para;</a></h3>
+<p>Two opt-in aids for understanding <em>why</em> the scheduler did what it did:</p>
+<ul>
+<li><strong>Decision trace</strong> — set <code>Opts.decisionTraceCapacity &gt; 0</code> to keep a bounded ring
+  of the most recent decisions (<code>DISPATCH</code>, <code>PREEMPT</code>, <code>KICK</code>, <code>DROP</code>), readable via
+  <code>scheduler.recentDecisions()</code>. Off (capacity 0) by default so it costs nothing.</li>
+<li><strong>Per-class metrics</strong> — call <code>scheduler.setClassMetrics(classifier)</code> once with a
+  <code>TaskClassifier</code>; then <code>scheduler.perClass(band)</code> returns a <code>ClassMetrics</code>
+  (count, p50, p99 dispatch latency) per band. <code>ShowcaseScheduler</code> uses this to print
+  a per-tier breakdown from <code>formatStats()</code>.</li>
+</ul>
 <h3 id="where-to-look-when-something-is-wrong">Where to look when something is wrong<a class="headerlink" href="#where-to-look-when-something-is-wrong" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2953,9 +3250,12 @@ typically because:</p>
 <li><strong>Not a replacement for in-kernel schedulers.</strong> Even with ZGC the userspace
   round-trip adds 1–10 µs at p50 and significantly more at p99 under GC pressure.
   Use it where flexibility &gt; microbenchmark latency.</li>
-<li><strong><code>policy()</code> runs on a single thread.</strong> No concurrency, no shared mutable state
-  to worry about — but also no parallelism. Decisions must be cheap (target: &lt; 1 µs
-  per call).</li>
+<li><strong><code>policy()</code> runs on a single thread by default.</strong> Decisions must be cheap
+  (target: &lt; 1 µs per call). For CPU-bound policies you can opt into sharded parallel
+  dispatch by setting <code>Opts.workerThreads &gt; 1</code>, which partitions tasks across worker
+  threads by pid affinity (a given pid is always handled by the same worker, so per-pid
+  state stays single-writer). Leave it at the default <code>1</code> unless you have measured that
+  <code>policy()</code> is the bottleneck.</li>
 </ul>
 <hr />
 <p><em>Next: <a href="../callbacks/">Callbacks Reference</a></em></p>
