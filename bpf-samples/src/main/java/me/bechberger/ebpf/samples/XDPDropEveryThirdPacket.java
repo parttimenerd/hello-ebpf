@@ -17,23 +17,29 @@ import me.bechberger.ebpf.type.Ptr;
 @BPF(license = "GPL")
 public abstract class XDPDropEveryThirdPacket extends BPFProgram implements XDPHook {
 
+    // Define a global variable, readable from user- and kernel space
     final GlobalVariable<@Unsigned Integer> count = new GlobalVariable<>(0);
 
+    // A function that is compiled to C code
     @BPFFunction
     public boolean shouldDrop() {
         return count.get() % 3 == 1;
     }
 
+    // A network related hook, called on every incoming packet, running in kernel space
     @Override
     public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
         count.set(count.get() + 1);
         return shouldDrop() ? xdp_action.XDP_DROP : xdp_action.XDP_PASS;
     }
 
+    // The main method, running in user space
     public static void main(String[] args) throws InterruptedException {
+        // Load and attach the eBPF program
         try (XDPDropEveryThirdPacket program = BPFProgram.load(XDPDropEveryThirdPacket.class)) {
             program.xdpAttach();
             while (true) {
+                // print the packet count every second
                 System.out.println("Packet count " + program.count.get());
                 Thread.sleep(1000);
             }

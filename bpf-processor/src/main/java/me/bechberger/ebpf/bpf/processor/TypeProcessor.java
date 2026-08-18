@@ -111,10 +111,12 @@ public class TypeProcessor {
         if (fromInterfaces.isEmpty() && fromSuperclasses.isEmpty()) {
             return direct;
         }
-        // Deduplicate: class-level declarations take precedence; inherited types fill gaps.
-        var seen = new java.util.LinkedHashSet<TypeElement>(direct);
-        fromInterfaces.stream().filter(e -> !seen.contains(e)).forEach(seen::add);
-        fromSuperclasses.stream().filter(e -> !seen.contains(e)).forEach(seen::add);
+        // Deduplicate by qualified name: class-level declarations take precedence; inherited types fill gaps.
+        var seenNames = new java.util.LinkedHashSet<String>();
+        var seen = new java.util.ArrayList<TypeElement>();
+        for (TypeElement e : direct) { if (seenNames.add(e.getQualifiedName().toString())) seen.add(e); }
+        fromInterfaces.stream().filter(e -> seenNames.add(e.getQualifiedName().toString())).forEach(seen::add);
+        fromSuperclasses.stream().filter(e -> seenNames.add(e.getQualifiedName().toString())).forEach(seen::add);
         return List.copyOf(seen);
     }
 
@@ -317,16 +319,21 @@ public class TypeProcessor {
 
     boolean shouldGenerateCCode(TypeElement innerElement) {
         if (innerElement.getEnclosingElement().getKind() == ElementKind.INTERFACE && outerTypeElement.getKind() != ElementKind.INTERFACE) {
-            // Suppress when the interface was processed in this compilation round and
-            // already emitted the type in @InternalBody. But for cross-module @BPFInterface
-            // (loaded from a pre-compiled jar), @InternalBody is never populated, so we must
-            // emit the C definition here instead.
+            // Suppress when the interface was processed in this compilation round:
+            // CompilerPlugin (which runs AFTER annotation processing) will embed the
+            // struct definitions via @InternalBody.  We detect "same round" by checking
+            // whether the interface's source tree is available (i.e., it's being compiled
+            // now, not loaded from a pre-compiled jar).
             var enclosing = (TypeElement) innerElement.getEnclosingElement();
             var internalBody = enclosing.getAnnotation(me.bechberger.ebpf.annotations.bpf.InternalBody.class);
             if (internalBody != null && !internalBody.value().isBlank()) {
-                return false; // interface was processed in this round — structs are in @InternalBody
+                return false; // cross-module interface already has @InternalBody set — structs are there
             }
-            // cross-module interface: fall through and emit the C definition
+            // If the interface is being compiled in this round (source is available),
+            // CompilerPlugin will set @InternalBody — suppress emission here to avoid duplicates.
+            if (javacProcessingEnv.getElementUtils().getTree(enclosing) != null) {
+                return false; // source available → CompilerPlugin will handle it
+            }
         }
         return !getAnnotationMirror(innerElement, TYPE_ANNOTATION).map(a -> getAnnotationValue(a, "noCCodeGeneration", false)).orElse(false);
     }
@@ -358,7 +365,7 @@ public class TypeProcessor {
         Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField = t -> t.getSpecFieldName(definedTypes);
 
         while (true) {
-            var unprocessed = predefinedTypeElements.stream().filter(e -> !processedTypes.contains(e)).toList();
+            var unprocessed = predefinedTypeElements.stream().filter(e -> processedTypes.stream().noneMatch(p -> p.getQualifiedName().equals(e.getQualifiedName()))).toList();
             if (unprocessed.isEmpty()) {
                 break;
             }
@@ -368,7 +375,10 @@ public class TypeProcessor {
                         new InterfaceAdditions(List.of(), List.of(), List.of()));
             }
             alreadyDefinedTypes.put(type.get().getJavaName(), type.get());
-            processedTypes.add(unprocessed.getFirst());
+            var firstUnprocessed = unprocessed.getFirst();
+            if (processedTypes.stream().noneMatch(p -> p.getQualifiedName().equals(firstUnprocessed.getQualifiedName()))) {
+                processedTypes.add(firstUnprocessed);
+            }
         }
 
         var mapDefinitions = processDefinedMaps(outerTypeElement,
@@ -748,7 +758,9 @@ public class TypeProcessor {
         }
         alreadyDefinedTypes.put(name, type.get());
         currentlyDefining.remove(name);
-        processedTypes.add(typeElement);
+        if (processedTypes.stream().noneMatch(p -> p.getQualifiedName().equals(typeElement.getQualifiedName()))) {
+            processedTypes.add(typeElement);
+        }
         return type.get();
     }
 

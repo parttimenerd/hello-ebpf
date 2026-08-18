@@ -1235,6 +1235,24 @@ public interface CAST {
             }
         }
 
+        record DoWhileStatement(Statement body, Expression condition) implements Statement {
+
+            @Override
+            public List<? extends CAST> children() {
+                return List.of(body, condition);
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + "do {\n" + body.toPrettyStringWithoutBraces(indent + increment, increment) + "\n" + indent + "} while (" + stripPrint(condition) + ");";
+            }
+
+            @Override
+            public DoWhileStatement replaceReturnStatement(Statement newLastStatement) {
+                return new DoWhileStatement(body.replaceReturnStatement(newLastStatement), condition);
+            }
+        }
+
         record ForStatement(List<Statement> init, @Nullable Expression condition, List<Statement> increment,
                             Statement body) implements Statement {
 
@@ -1569,6 +1587,10 @@ public interface CAST {
 
         static Statement typedef(Declarator declarator, PrimaryExpression.Variable name) {
             return new Typedef(declarator, name);
+        }
+
+        static Statement doWhileStatement(Statement body, Expression condition) {
+            return new DoWhileStatement(body, condition);
         }
 
         static Statement caseStatement(Expression expression, Statement body) {

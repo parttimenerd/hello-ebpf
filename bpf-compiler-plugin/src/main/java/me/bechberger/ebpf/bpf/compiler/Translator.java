@@ -78,6 +78,8 @@ class Translator {
     private final List<FunctionDeclarationStatement> syntheticFunctions = new ArrayList<>();
     /** Per-method counter for synthetic-function naming. */
     private int syntheticLambdaCounter = 0;
+    /** Per-method counter for switch-expression temp variable naming. */
+    private int switchExprCounter = 0;
     /**
      * Local carrier map for {@code @BPFAbstraction} variables.
      * Maps Java local variable name → C carrier expression that {@code $this} resolves to.
@@ -554,12 +556,12 @@ class Translator {
                         + "See: cookbook §Loops");
                 yield null;
             }
-            case SwitchTree switchTree -> {
-                logError(statement, "Switch statements are not supported in BPF programs.\n"
-                        + "Why: clang lowers switches to jump tables, which the verifier rejects on most kernels.\n"
-                        + "Fix: use chained 'if (x == A) ... else if (x == B) ...'.\n"
-                        + "See: cookbook §Control flow");
-                yield null;
+            case SwitchTree switchTree -> translateSwitchStatement(switchTree);
+            case DoWhileLoopTree doWhileTree -> {
+                var body = translate(doWhileTree.getStatement());
+                var condition = callIfNonNull(doWhileTree.getCondition(), this::translate);
+                yield body != null && condition != null
+                        ? new CAST.Statement.DoWhileStatement(body, condition) : null;
             }
             case TryTree ignored -> {
                 logError(statement, "Try-catch is not supported in BPF programs.\n"
@@ -584,6 +586,190 @@ class Translator {
             return new VerbatimStatement(cReturnsVoid ? "return;" : "return 0;");
         }
         return callIfNonNull(translate(returnTree.getExpression()), ReturnStatement::new);
+    }
+
+    /**
+     * Translate a Java {@code switch} statement to a C {@code switch} statement.
+     *
+     * <p>Only the STATEMENT case kind (traditional {@code case X: ... break;}) is accepted.
+     * Arrow-syntax cases ({@code case X ->}) belong to switch <em>expressions</em> and are
+     * handled by {@link #translateSwitchExpression}.
+     *
+     * <p>Fall-through is preserved as-is: the caller is responsible for inserting {@code break}
+     * where needed, exactly as in C.  A missing {@code default} is fine.
+     *
+     * <p>Multi-label cases ({@code case A, B:}) are expanded to sibling {@code case} lines.
+     */
+    @Nullable
+    private CAST.Statement translateSwitchStatement(SwitchTree switchTree) {
+        var selector = translate(switchTree.getExpression());
+        if (selector == null) return null;
+
+        var caseStatements = new ArrayList<CAST.Statement.Statement>();
+        for (CaseTree caseTree : switchTree.getCases()) {
+            if (caseTree.getCaseKind() == CaseTree.CaseKind.RULE) {
+                logError(switchTree,
+                        "Arrow-syntax cases (case X ->) are not supported inside a switch statement.\n"
+                        + "Use a switch expression instead: 'var r = switch(x) { case A -> ...; }', or use traditional 'case A: ... break;' syntax.");
+                return null;
+            }
+            // Translate the body statements (may be empty for fall-through)
+            var bodyStmts = new ArrayList<CAST.Statement.Statement>();
+            for (StatementTree s : caseTree.getStatements()) {
+                var t = translate(s);
+                if (t == null) return null;
+                bodyStmts.add(t);
+            }
+            CAST.Statement.Statement body = bodyStmts.isEmpty()
+                    ? new VerbatimStatement("")
+                    : (bodyStmts.size() == 1 ? bodyStmts.get(0) : new CompoundStatement(bodyStmts));
+
+            // Expand multi-label cases: case A, B: → case A: \n case B: <body>
+            var labels = caseTree.getLabels();
+            boolean hasDefault = labels.isEmpty()
+                    || (labels.size() == 1 && labels.get(0) instanceof DefaultCaseLabelTree);
+            if (hasDefault) {
+                // default:
+                caseStatements.add(new CAST.Statement.DefaultStatement(body));
+            } else {
+                for (int i = 0; i < labels.size(); i++) {
+                    var lbl = labels.get(i);
+                    CAST.Expression labelExpr;
+                    if (lbl instanceof ConstantCaseLabelTree ccl) {
+                        labelExpr = translate(ccl.getConstantExpression());
+                    } else {
+                        // Default case label — shouldn't normally end up here, but guard anyway
+                        caseStatements.add(new CAST.Statement.DefaultStatement(body));
+                        continue;
+                    }
+                    if (labelExpr == null) return null;
+                    // Only the last label in the group gets the body; preceding ones fall through.
+                    CAST.Statement.Statement caseBody = (i == labels.size() - 1)
+                            ? body : new VerbatimStatement("");
+                    caseStatements.add(new CAST.Statement.CaseStatement(labelExpr, caseBody));
+                }
+            }
+        }
+        return new CAST.Statement.SwitchStatement(selector,
+                new CompoundStatement(caseStatements));
+    }
+
+    /**
+     * Translate a Java arrow-syntax switch expression to a GNU C statement expression:
+     * <pre>{@code
+     *   switch (x) {
+     *     case A -> 1;
+     *     case B -> 2;
+     *     default -> 0;
+     *   }
+     * }</pre>
+     * becomes (via a GNU C statement-expression):
+     * <pre>{@code
+     *   ({
+     *     <type> __swexpr_N;
+     *     if ((x) == A) { __swexpr_N = 1; }
+     *     else if ((x) == B) { __swexpr_N = 2; }
+     *     else { __swexpr_N = 0; }
+     *     __swexpr_N;
+     *   })
+     * }</pre>
+     *
+     * <p>Only RULE cases ({@code case X ->}) are accepted; traditional fall-through cases belong
+     * to {@link #translateSwitchStatement}.
+     */
+    @Nullable
+    private CAST.Expression translateSwitchExpression(SwitchExpressionTree switchExpr) {
+        var selector = translate(switchExpr.getExpression());
+        if (selector == null) return null;
+
+        // Infer result type from the switch expression's type in the AST.
+        var exprTypeMirror = compilerPlugin.trees.getTypeMirror(methodPath.path(switchExpr));
+        var exprElement = compilerPlugin.trees.getElement(methodPath.path());
+        var resultType = exprTypeMirror != null
+                ? translateType(exprElement, exprTypeMirror)
+                : null;
+
+        var tempName = "__swexpr_" + (switchExprCounter++);
+
+        // Build the if-else chain for each case.
+        // Process cases in reverse to build the nested else-if structure.
+        var cases = switchExpr.getCases();
+        CAST.Statement.Statement chain = null;
+        for (int i = cases.size() - 1; i >= 0; i--) {
+            CaseTree c = cases.get(i);
+            if (c.getCaseKind() != CaseTree.CaseKind.RULE) {
+                logError(switchExpr,
+                        "Traditional (non-arrow) cases inside a switch expression are not supported.\n"
+                        + "Use arrow syntax: 'case X -> expr;'");
+                return null;
+            }
+
+            // The body of an arrow case is either a YieldTree-wrapped expression or a block.
+            CAST.Expression caseValue = null;
+            var body = c.getBody();
+            if (body instanceof YieldTree yieldTree) {
+                caseValue = translate(yieldTree.getValue());
+            } else if (body instanceof ExpressionTree exprBody) {
+                caseValue = translate(exprBody);
+            } else {
+                logError(switchExpr, "Unsupported switch expression arm body: " + body);
+                return null;
+            }
+            if (caseValue == null) return null;
+
+            var assignment = new CAST.Statement.ExpressionStatement(
+                    new CAST.Expression.OperatorExpression(Operator.ASSIGNMENT,
+                            variable(tempName), caseValue));
+            var thenBlock = new CompoundStatement(List.of(assignment));
+
+            var labels = c.getLabels();
+            if (labels.isEmpty() || (labels.size() == 1 && labels.get(0) instanceof DefaultCaseLabelTree)) {
+                // default -> : unconditional assignment, used as the else branch
+                chain = thenBlock;
+            } else {
+                // Build (selector == label1) || (selector == label2) || ...
+                CAST.Expression condition = null;
+                for (var lbl : labels) {
+                    if (lbl instanceof DefaultCaseLabelTree) {
+                        // default mixed with other labels — treat as else (no condition appended)
+                        chain = thenBlock;
+                        condition = null;
+                        break;
+                    }
+                    if (!(lbl instanceof ConstantCaseLabelTree ccl)) {
+                        logError(switchExpr, "Unsupported case label type: " + lbl);
+                        return null;
+                    }
+                    var labelExpr = translate(ccl.getConstantExpression());
+                    if (labelExpr == null) return null;
+                    // Wrap selector in parens to guard against operator-precedence surprises.
+                    var cmp = new CAST.Expression.OperatorExpression(Operator.EQUAL,
+                            new VerbatimExpression("(" + selector.toPrettyString() + ")"),
+                            labelExpr);
+                    condition = condition == null ? cmp
+                            : new CAST.Expression.OperatorExpression(Operator.LOGICAL_OR, condition, cmp);
+                }
+                if (condition != null) {
+                    chain = new CAST.Statement.IfStatement(condition, thenBlock, chain);
+                }
+            }
+        }
+
+        // Assemble as a GNU statement expression: ({ type tmp; if...; tmp; })
+        var decl = resultType != null
+                ? new CAST.Statement.VariableDefinition(resultType, variable(tempName), null)
+                : new VerbatimStatement("__auto_type " + tempName + ";");
+
+        var stmts = new ArrayList<CAST.Statement.Statement>();
+        stmts.add(decl);
+        if (chain != null) stmts.add(chain);
+        stmts.add(new CAST.Statement.ExpressionStatement(variable(tempName)));
+
+        return new VerbatimExpression("({\n"
+                + stmts.stream()
+                        .map(s -> "  " + s.toPrettyString())
+                        .collect(java.util.stream.Collectors.joining("\n"))
+                + "\n})");
     }
 
     @Nullable
@@ -1035,13 +1221,7 @@ class Translator {
                 yield null;
             }
             case MemberReferenceTree mref -> translateMethodReference(mref);
-            case SwitchExpressionTree switchExpr -> {
-                logError(expression, "Switch expressions are not supported in BPF programs.\n"
-                        + "Why: clang lowers switches to jump tables, which the verifier rejects on most kernels.\n"
-                        + "Fix: rewrite using the ternary operator or chained 'if (x == A) ... else ...'.\n"
-                        + "See: cookbook §Control flow");
-                yield null;
-            }
+            case SwitchExpressionTree switchExpr -> translateSwitchExpression(switchExpr);
             case InstanceOfTree ignored -> {
                 logError(expression, "'instanceof' is not supported in BPF programs.\n"
                         + "Why: BPF has no Java runtime, no class hierarchy, and no vtables.\n"

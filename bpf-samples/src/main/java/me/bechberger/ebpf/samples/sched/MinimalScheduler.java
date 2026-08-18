@@ -29,7 +29,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "minimal_scheduler")
 @Property(name = "timeout_ms", value = "10000")
-public abstract class MinimalScheduler extends SchedulerBase implements Scheduler {
+public abstract class MinimalScheduler extends SchedulerBase {
 
     // SchedulerBase.init() already calls scx_bpf_create_dsq(SHARED_DSQ_ID, -1)
     final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);

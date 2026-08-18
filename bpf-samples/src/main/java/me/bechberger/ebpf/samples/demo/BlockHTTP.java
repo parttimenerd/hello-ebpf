@@ -10,7 +10,7 @@ import static me.bechberger.ebpf.runtime.XdpDefinitions.*;
 
 
 /**
- * Block incoming packets from or to the HTTP port
+ * Block incoming packets on the HTTP port
  */
 @BPF(license = "GPL")
 public abstract class BlockHTTP extends BPFProgram implements XDPHook, BasePacketParser {
@@ -19,7 +19,7 @@ public abstract class BlockHTTP extends BPFProgram implements XDPHook, BasePacke
     public xdp_action xdpHandlePacket(XDPContext ctx) {
         PacketInfo info = new PacketInfo();
         if (parsePacket(ctx, Ptr.of(info))) {
-            if (info.sourcePort == HTTP_PORT) {
+            if (info.destinationPort == HTTP_PORT) {
                 BPFJ.bpf_trace_printk("Dropping http packet");
                 return xdp_action.XDP_DROP;
             }
