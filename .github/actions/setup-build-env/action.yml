@@ -1,0 +1,53 @@
+name: 'Setup build environment'
+description: 'Install clang, libbpf, bpftool, and Maven reactor prerequisites (rawbpf + bpf-runtime)'
+
+inputs:
+  clang-package:
+    description: 'clang apt package to install (e.g. clang-19 or clang)'
+    default: 'clang-19'
+  github-token:
+    description: 'GitHub token for authenticated bpftool API lookup'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install system dependencies
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          ${{ inputs.clang-package }} libbpf-dev \
+          linux-tools-common linux-tools-$(uname -r) linux-tools-generic \
+          gcc-multilib || true
+
+    - name: Install bpftool from GitHub releases
+      shell: bash
+      run: |
+        BPFTOOL_VER=$(curl -sf -H "Authorization: Bearer ${{ inputs.github-token }}" \
+          https://api.github.com/repos/libbpf/bpftool/releases/latest \
+          | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+        if [ -z "$BPFTOOL_VER" ]; then
+          echo "Could not determine bpftool version, falling back to apt"
+          sudo apt-get install -y bpftool || sudo apt-get install -y linux-tools-generic
+        else
+          echo "Installing bpftool v${BPFTOOL_VER}"
+          curl -fsSL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" \
+            | sudo tar -xz -C /usr/local/bin/ bpftool
+          sudo chmod +x /usr/local/bin/bpftool
+        fi
+        echo "/usr/local/bin/bpftool" > .bpftool.path
+
+    - name: Install reactor prerequisites (annotations, shared, bpf-processor)
+      shell: bash
+      run: ./mvnw -ntp -B install -DskipTests -N && ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
+
+    - name: Install bpf-runtime
+      shell: bash
+      run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml -Dmaven.compiler.proc=none
+      env:
+        MAVEN_OPTS: "-Xss16m -Xmx5g"
+
+    - name: Install rawbpf
+      shell: bash
+      run: ./mvnw -ntp -B install -DskipTests -f rawbpf/pom.xml

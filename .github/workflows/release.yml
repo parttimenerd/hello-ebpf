@@ -54,10 +54,9 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-tools-$(uname -r) gcc-multilib
-
-      - name: Build
-        run: ./mvnw -ntp -B --file pom.xml verify
+      - uses: ./.github/actions/setup-build-env
+        with:
+          github-token: ${{ github.token }}
 
       - name: Build
         run: ./mvnw -Ppublication -ntp -B --file pom.xml verify
@@ -66,7 +65,7 @@ jobs:
         run: |
           mkdir -p ~/.m2
           echo $SETTINGS_FILE > ~/.m2/settings.xml
-          mvn -ntp -B clean source:jar deploy
+          ./mvnw -ntp -B clean source:jar deploy
         env:
           MAVEN_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.JRELEASER_NEXUS2_PASSWORD }}

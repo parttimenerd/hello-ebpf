@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   JAVA_VERSION: '22'
   JAVA_DISTRO: 'sapmachine'
@@ -17,11 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Cancel previous run
-        uses: styfle/cancel-workflow-action@0.12.0
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -69,25 +68,9 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-tools-$(uname -r) gcc-multilib
-
-      - name: Install bpftool from GitHub releases
-        run: |
-          BPFTOOL_VER=$(curl -s https://api.github.com/repos/libbpf/bpftool/releases/latest | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
-          curl -sL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" | sudo tar -xz -C /usr/local/bin/ bpftool
-          sudo chmod +x /usr/local/bin/bpftool
-          echo "/usr/local/bin/bpftool" > .bpftool.path
-
-      - name: Install reactor prerequisites (annotations + bpf-processor)
-        run: ./mvnw -ntp -B install -DskipTests -N && ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
-
-      - name: Install bpf-runtime
-        run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml -Dmaven.compiler.proc=none
-        env:
-          MAVEN_OPTS: "-Xss16m -Xmx5g"
-
-      - name: Install rawbpf
-        run: ./mvnw -ntp -B install -DskipTests -f rawbpf/pom.xml
+      - uses: ./.github/actions/setup-build-env
+        with:
+          github-token: ${{ github.token }}
 
       - name: Build
         run: ./mvnw -Ppublication -ntp -B --file pom.xml verify
@@ -96,7 +79,7 @@ jobs:
         run: |
           mkdir -p ~/.m2
           echo $SETTINGS_FILE > ~/.m2/settings.xml
-          mvn -ntp -B clean source:jar deploy
+          ./mvnw -ntp -B clean source:jar deploy
         env:
           MAVEN_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.JRELEASER_NEXUS2_PASSWORD }}

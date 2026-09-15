@@ -135,6 +135,8 @@
         <module>bpf-processor</module>
         <module>bpf-compiler-plugin</module>
         <module>bpf-compiler-plugin-test</module>
+        <module>rawbpf</module>
+        <module>bpf-runtime</module>
         <module>bpf</module>
         <module>bpf-gen</module>
         <module>bpf-samples</module>
