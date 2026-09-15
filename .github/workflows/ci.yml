@@ -10,9 +10,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  sanity:
+    name: Sanity checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: All pom.xml subdirs are declared as modules
+        run: |
+          missing=()
+          for dir in */; do
+            dir="${dir%/}"
+            [ -f "$dir/pom.xml" ] || continue
+            grep -q "<module>${dir}</module>" pom.xml && continue
+            missing+=("$dir")
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "ERROR: subdirectories with pom.xml not listed in root pom.xml <modules>:"
+            printf '  %s\n' "${missing[@]}"
+            exit 1
+          fi
+          echo "OK: all pom.xml subdirs are declared as modules"
+
   build:
     name: Build
     runs-on: ubuntu-latest
+    needs: sanity
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
